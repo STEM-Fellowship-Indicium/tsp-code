@@ -89,12 +89,30 @@ class CNN(NNModule):
     ## End of init function
     ##
 
+    ##
+    ## The forward function is used to define the forward pass of the network
+    ##
     def forward(self, x: Tensor) -> Tensor:
         return self.sequence(x)
 
         ##
         ## End of forward function
         ##
+
+    ##
+    ## Test function
+    ##
+    def test(self) -> None:
+        input = Tensor(1, 1, 28, 28)
+
+        # Print the input
+        print(input)
+
+        # Pass the input through the network
+        output = self.forward(input)
+
+        # Print the output
+        print(output)
 
     ##
     ## End of class
