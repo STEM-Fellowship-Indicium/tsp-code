@@ -232,16 +232,16 @@ if __name__ == "__main__":
     node1 = Node(0, 0, 0)
     node2 = Node(1, 1, 1)
     edge1 = Edge(0, node1, node2)
-    graph = Graph([node1, node2], [edge1])
-    print(json.loads(graph.to_json()))
+    graph1 = Graph([node1, node2], [edge1])
+    print(graph1.to_map())
 
     # todays date in the format of year-month-day-hour-minute-second
     date = datetime.datetime.now().strftime("%Y-%m-%d-%H-%M-%S")
-    graph.export(f"data/graph-{date}.json")
+    graph1.export(f"data/graph-{date}.json")
 
     # Test import
     graph2 = Graph.import_graph(f"data/graph-{date}.json")
-    print(json.loads(graph2.to_json()))
+    print(graph2.to_map())
 
     # Delete the file
     import os
