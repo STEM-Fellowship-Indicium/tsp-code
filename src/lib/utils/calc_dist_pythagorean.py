@@ -44,5 +44,21 @@ def calc_dist_pythagorean(points: np.ndarray) -> np.ndarray:
 
 
 ##
+## This tests the calc_dist_pythagorean function only if we're executing THIS current file.
+##
+## This is so that if we import the function from another file, this
+## code (in the 'if' statement) won't run.
+##
+if __name__ == "__main__":
+    # Generate random points
+    from generate_points import generate_points
+
+    points = generate_points(10)
+
+    # Calculate the distances
+    distances = calc_dist_pythagorean(points)
+    print(distances)
+
+##
 ## End of file
 ##

@@ -220,7 +220,10 @@ class Graph:
 
 
 ##
-## Execute the test
+## This tests the graph class only if we're executing THIS current file.
+##
+## This is so that if we import the Graph class from another file, this
+## code (in the 'if' statement) won't run.
 ##
 if __name__ == "__main__":
     import datetime

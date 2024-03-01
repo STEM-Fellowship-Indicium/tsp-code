@@ -93,7 +93,10 @@ class Node:
 
 
 ##
-## Execute the test
+## This tests the node class only if we're executing THIS current file.
+##
+## This is so that if we import the Node class from another file, this
+## code (in the 'if' statement) won't run.
 ##
 if __name__ == "__main__":
     node = Node(0, 1, 2)
