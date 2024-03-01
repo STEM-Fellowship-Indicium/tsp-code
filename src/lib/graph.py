@@ -110,6 +110,11 @@ if __name__ == "__main__":
     graph2 = Graph.import_graph(f"data/graph-{date}.json")
     print(json.loads(graph2.to_json()))
 
+    # Delete the file
+    import os
+
+    os.remove(f"data/graph-{date}.json")
+
 ##
 ## End of file
 ##
