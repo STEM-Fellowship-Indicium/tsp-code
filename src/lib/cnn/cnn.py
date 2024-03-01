@@ -91,7 +91,7 @@ class CNN(nn.Module):
         x = self.fc(x)
 
         # We need to reshape the output to match the expected output shape
-        return x.view(1, -1)
+        return x.view(self.in_channels, -1)
 
     ##
     ## End of class
@@ -113,10 +113,14 @@ if __name__ == "__main__":
     ##
     criterion = nn.CrossEntropyLoss()
     optimizer = optim.Adam(model.parameters(), lr=0.001)
+    batch_size = 1
 
     # Sample input tensor (x) and target tensor (y)
-    x = torch.randn(1, 1, 100, 100).to(device)
-    y = torch.randint(0, 100, (1,)).to(device)
+    x = torch.randn(
+        model.in_channels, model.in_channels, model.max_nodes, model.max_nodes
+    ).to(device)
+
+    y = torch.randint(low=0, high=100, size=(batch_size,)).to(device)
 
     # Forward pass and loss calculation
     output = model(x)
