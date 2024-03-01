@@ -36,3 +36,12 @@ def calc_dist_pythagorean(points):
             distances[j, i] = dist  # The distance matrix is symmetric
 
     return distances
+
+    ##
+    ## End of function
+    ##
+
+
+##
+## End of file
+##

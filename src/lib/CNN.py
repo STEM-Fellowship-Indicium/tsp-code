@@ -16,6 +16,8 @@ from torch.nn import (
     ReLU,
 )
 
+from generate_points import generate_points
+
 
 ##
 ## Pytorch Convolutional Neural Network
@@ -25,64 +27,49 @@ from torch.nn import (
 ##
 class CNN(NNModule):
     ##
-    ## The number of input channels and the number of classes
-    ## are used to define the input and output size of the network
+    ## The number of input channels are used to define the input size
+    ## and the number of output channels are used to define the output size.
     ##
     ## The input size is the number of nodes in the graph
     ## The output size is the number of nodes in the graph
     ##
-    def __init__(self, in_channels: int, num_classes: int) -> None:
+    def __init__(self, in_channels: int) -> None:
         super(CNN, self).__init__()
 
+        if in_channels < 1:
+            raise ValueError("Invalid number of input channels")
+
+        ##
+        ## Define the sequence that will be used to take in a graph
+        ## and return the shortest tour of nodes.
+        ##
+        ## This is done by using a test dataset of graphs and their
+        ## shortest tours to train the network to predict the shortest
+        ## tour of a graph.
+        ##
+        ## The sequence is defined as follows:
+        ##
         self.sequence = Sequential(
             ##
             ## Convolutional layer 1
             ##
-            ## We use the provided in channels with 8 output channels
+            ## We use the provided in channels with 32 output channels
             ## The kernel size is 3x3 with a stride of 1 and padding of 1 to
             ## maintain the input shape
             ##
-            Conv2d(in_channels, 8, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1)),
-            ##
-            ## Activation function
-            ##
+            Conv2d(in_channels, 32, kernel_size=3, stride=1, padding=1),
             ReLU(),
             ##
-            ## Max pooling layer
+            ## Since we're already using a 1 channel input, we don't need
+            ## a max pooling layer. We've already reduced the input size
+            ## to the lowest possible which optimizes the network.
             ##
-            ## We use a kernel size of 2x2 and a stride of 2 to reduce the
-            ## input size by half
+            ## There's also no need for another convolutional layer.
             ##
-            ## This is done to reduce the number of parameters and computation
-            ## in the network. (faster training and less overfitting)
-            ##
-            MaxPool2d(kernel_size=(2, 2), stride=(2, 2)),
-            ##
-            ## Convolutional layer 2
-            ##
-            Conv2d(8, 16, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1)),
-            ##
-            ## Activation function
-            ##
-            ReLU(),
-            ##
-            ## Max pooling layer
-            ##
-            MaxPool2d(kernel_size=(2, 2), stride=(2, 2)),
-            ##
-            ## Flatten the input tensor
-            ##
-            ## This is done to convert the 2D tensor into a 1D tensor
-            ## to be used as input for the fully connected layer
+            ## We'll instead just return the output
             ##
             Flatten(),
-            ##
-            ## Fully connected layer
-            ##
-            ## The input size is 16 * 7 * 7 because of the max pooling layers
-            ## The output size is the number of classes
-            ##
-            Linear(16 * 7 * 7, num_classes),
+            Linear(20, 32),
         )
 
     ##
@@ -103,13 +90,19 @@ class CNN(NNModule):
     ## Test function
     ##
     def test(self) -> None:
-        input = Tensor(1, 1, 28, 28)
+        # Generate points and convert to tensor
+        input = generate_points(10)
+        input = Tensor(input)
 
-        # Print the input
-        print(input)
+        # Convert the input to 3D tensor with 1 channel
+        input = input.view(1, 2, 10)
 
         # Pass the input through the network
         output = self.forward(input)
+        print(output)
+
+        # Set the correct answer for the test
+        # correct = Tensor([1, 2, 3, 4, 5, 6, 7, 8, 9, 10])
 
         # Print the output
         print(output)
@@ -122,3 +115,6 @@ class CNN(NNModule):
 ##
 ## End of file
 ##
+if __name__ == "__main__":
+    cnn = CNN(1)
+    cnn.test()
