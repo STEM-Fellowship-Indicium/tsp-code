@@ -114,7 +114,10 @@ class CNN(NNModule):
 ##
 
 ##
-## Execute the test
+## This tests the cnn class only if we're executing THIS current file.
+##
+## This is so that if we import the CNN class from another file, this
+## code (in the 'if' statement) won't run.
 ##
 if __name__ == "__main__":
     from lib.utils import generate_points

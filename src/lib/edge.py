@@ -94,7 +94,10 @@ class Edge:
 
 
 ##
-## Execute the test
+## This tests the edge class only if we're executing THIS current file.
+##
+## This is so that if we import the Edge class from another file, this
+## code (in the 'if' statement) won't run.
 ##
 if __name__ == "__main__":
     n1 = Node(1, 0, 0)

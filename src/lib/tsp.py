@@ -84,7 +84,10 @@ class TSP:
 
 
 ##
-## Execute the test
+## This tests the tsp class only if we're executing THIS current file.
+##
+## This is so that if we import the TSP class from another file, this
+## code (in the 'if' statement) won't run.
 ##
 if __name__ == "__main__":
     # Create a new graph
