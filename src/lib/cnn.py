@@ -34,6 +34,14 @@ class CNN(NNModule):
     ## The output size is the number of nodes in the graph
     ##
     def __init__(self, in_channels: int) -> None:
+        """Initializer for the CNN class
+
+        Args:
+            in_channels (int): The number of input channels
+
+        Raises:
+            ValueError: If the number of input channels is less than 1
+        """
         super(CNN, self).__init__()
 
         if in_channels < 1:
@@ -80,6 +88,14 @@ class CNN(NNModule):
     ## The forward function is used to define the forward pass of the network
     ##
     def forward(self, x: Tensor) -> Tensor:
+        """Forward pass of the network
+
+        Args:
+            x (Tensor): The input tensor
+
+        Returns:
+            Tensor: The output tensor
+        """
         return self.sequence(x)
 
         ##
@@ -87,34 +103,34 @@ class CNN(NNModule):
         ##
 
     ##
-    ## Test function
-    ##
-    def test(self) -> None:
-        # Generate points and convert to tensor
-        input = generate_points(10)
-        input = Tensor(input)
-
-        # Convert the input to 3D tensor with 1 channel
-        input = input.view(1, 2, 10)
-
-        # Pass the input through the network
-        output = self.forward(input)
-        print(output)
-
-        # Set the correct answer for the test
-        # correct = Tensor([1, 2, 3, 4, 5, 6, 7, 8, 9, 10])
-
-        # Print the output
-        print(output)
-
-    ##
     ## End of class
     ##
 
 
 ##
-## End of file
+## This tests the cnn class only if we're executing THIS current file.
+##
+## This is so that if we import the CNN class from another file, this
+## code (in the 'if' statement) won't run.
 ##
 if __name__ == "__main__":
+    # Create a new CNN with 1 input channel
     cnn = CNN(1)
-    cnn.test()
+
+    # Generate points then convert the input to 3D tensor with 1 channel
+    input = Tensor(generate_points(10))
+    input = input.view(1, 2, 10)
+
+    # Pass the input through the network
+    output = cnn.forward(input)
+    print(output)
+
+    # Set the correct answer for the test
+    # correct = Tensor([1, 2, 3, 4, 5, 6, 7, 8, 9, 10])
+
+    # Print the output
+    print(output)
+
+##
+## End of file
+##

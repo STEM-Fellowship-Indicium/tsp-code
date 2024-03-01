@@ -15,6 +15,13 @@ class Edge:
     ## Constructor
     ##
     def __init__(self, index: int, start: Node, end: Node):
+        """Initializer for the Edge class
+
+        Args:
+            index (int): The index of the edge
+            start (Node): The start node of the edge
+            end (Node): The end node of the edge
+        """
         self.index = index
         self.start = start
         self.end = end
@@ -27,6 +34,11 @@ class Edge:
     ## String representation of the edge
     ##
     def __str__(self):
+        """String representation of the edge
+
+        Returns:
+            _type_: The string representation of the edge
+        """
         return f"{self.start} -> {self.end}"
 
         ##
@@ -37,6 +49,11 @@ class Edge:
     ## Convert the edge to a map
     ##
     def to_map(self) -> dict:
+        """Convert the edge to a map
+
+        Returns:
+            dict: The map of the edge
+        """
         return {
             "index": self.index,
             "start": self.start.to_map(),
@@ -51,6 +68,11 @@ class Edge:
     ## Convert the edge to a json map
     ##
     def to_json(self) -> str:
+        """Convert the edge to a json map
+
+        Returns:
+            str: The json map of the edge
+        """
         return json.dumps(self.to_map())
 
         ##
