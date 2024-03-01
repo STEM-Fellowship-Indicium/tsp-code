@@ -4,7 +4,7 @@
 ##
 ## Run the main file
 ##
-from lib.calculate_distances_pythagorean import calculate_distances_pythagorean
+from lib.calc_dist_pythagorean import calc_dist_pythagorean
 from lib.generate_points import generate_points
 
 ##
@@ -20,8 +20,6 @@ if __name__ == "__main__":
     for i, point in enumerate(points):
         print(f"Point {i}: (x={point[0]}, y={point[1]})")
 
-    distances = calculate_distances_pythagorean(
-        points
-    )  # Calculate distances between points
+    distances = calc_dist_pythagorean(points)  # Calculate distances between points
     print("\nDistances between points:")
     print(distances)
