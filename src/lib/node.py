@@ -14,6 +14,13 @@ class Node:
     ## Constructor
     ##
     def __init__(self, index: int, x: int, y: int):
+        """Initializer for the Node class
+
+        Args:
+            index (int): The index of the node
+            x (int): The x coordinate of the node
+            y (int): The y coordinate of the node
+        """
         self.index = index
         self.x = x
         self.y = y
@@ -26,6 +33,11 @@ class Node:
     ## String representation of the node
     ##
     def __str__(self):
+        """String representation of the node
+
+        Returns:
+            _type_: The string representation of the node
+        """
         return f"({self.x}, {self.y})"
 
         ##
@@ -36,6 +48,11 @@ class Node:
     ## Convert the node to a map
     ##
     def to_map(self) -> dict:
+        """Convert the node to a map
+
+        Returns:
+            dict: The map of the node
+        """
         return {
             "index": self.index,
             "x": self.x,
@@ -50,6 +67,11 @@ class Node:
     ## Convert the node to a json map
     ##
     def to_json(self) -> str:
+        """Convert the node to a json map
+
+        Returns:
+            str: The json map of the node
+        """
         return json.dumps(self.to_map())
 
         ##

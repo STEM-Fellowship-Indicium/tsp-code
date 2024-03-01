@@ -17,6 +17,12 @@ class Graph:
     ## Constructor
     ##
     def __init__(self, nodes: List[Node], edges: List[Edge]):
+        """Initializer for the Graph class
+
+        Args:
+            nodes (List[Node]): The nodes of the graph
+            edges (List[Edge]): The edges of the graph
+        """
         self.nodes = nodes
         self.edges = edges
 
@@ -28,15 +34,29 @@ class Graph:
     ## Convert the graph to a map
     ##
     def to_map(self) -> dict:
+        """Convert the graph to a map
+
+        Returns:
+            dict: The map of the graph
+        """
         return {
             "nodes": [node.to_map() for node in self.nodes],
             "edges": [edge.to_map() for edge in self.edges],
         }
 
+        ##
+        ## End of function
+        ##
+
     ##
     ## Convert the graph to a json map
     ##
     def to_json(self) -> str:
+        """Convert the graph to a json map
+
+        Returns:
+            str: The json map of the graph
+        """
         return json.dumps(self.to_map())
 
         ##
@@ -48,6 +68,14 @@ class Graph:
     ##
     @staticmethod
     def import_graph(filename: str) -> "Graph":
+        """Import a graph from a file
+
+        Args:
+            filename (str): The name of the file to import the graph from
+
+        Returns:
+            Graph: The graph that was imported
+        """
         # Open the file
         with open(filename, "r") as file:
             # Load the graph from the file
@@ -75,6 +103,11 @@ class Graph:
     ## Export the graph to a file
     ##
     def export(self, filename: str) -> None:
+        """Export the graph to a file
+
+        Args:
+            filename (str): The name of the file to export the graph to
+        """
         # Open the file (create it if it doesn't exist)
         with open(filename, "w") as file:
             json.dump(self.to_map(), file, indent=4)
