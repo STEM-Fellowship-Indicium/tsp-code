@@ -88,6 +88,23 @@ class Node:
         ##
 
     ##
+    ## Normalize the node
+    ##
+    ## This takes a node and normalizes its x and y values to be between 0 and 1
+    ##
+    def normalize(self) -> None:
+        """Normalize the node"""
+        min_x = min_y = 0
+        max_x = max_y = 100
+
+        self.x = (self.x - min_x) / (max_x - min_x)
+        self.y = (self.y - min_y) / (max_y - min_y)
+
+        ##
+        ## End of function
+        ##
+
+    ##
     ## End of class
     ##
 

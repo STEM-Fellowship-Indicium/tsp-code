@@ -89,6 +89,17 @@ class Edge:
         ##
 
     ##
+    ## Normalize the edge
+    ##
+    def normalize(self) -> None:
+        """Normalize the edge"""
+        self.start.normalize()
+        self.end.normalize()
+
+        ##
+        ## End of function
+
+    ##
     ## End of class
     ##
 
