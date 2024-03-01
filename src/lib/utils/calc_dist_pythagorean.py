@@ -9,16 +9,17 @@ import numpy as np
 ##
 ## This function calculates the pythagorean distance between every two points.
 ##
-def calc_dist_pythagorean(points):
-    """
-    calculates the pythagorean distance between every two points.
+def calc_dist_pythagorean(points: np.ndarray) -> np.ndarray:
+    """Calculate distances using the pythagorean theorem
 
-    Parameters:
-        points (numpy.ndarray): An array of points in R^2.
+    Args:
+        points (np.ndarray): An array of points in R^2
+
     Returns:
-    an array containing the distances between every two points
+        np.ndarray: A matrix of distances between every two points
     """
 
+    # Store the number of points
     num_points = len(points)
 
     # Initialize a matrix to store distances

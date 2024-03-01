@@ -1,11 +1,7 @@
 ##
-## Imports here
-
+## Imports
 ##
-## Run the main file
-##
-from lib.calc_dist_pythagorean import calc_dist_pythagorean
-from lib.generate_points import generate_points
+from lib.utils import generate_points, calc_dist_pythagorean
 
 ##
 ## Execute the main function

@@ -1,8 +1,17 @@
 ##
+## Adjust to relative path
+##
+if __name__ == "__main__":
+    import sys
+
+    sys.path.append("src")
+
+
+##
 ## Imports
 ##
 import json
-from node import Node
+from lib.node import Node
 
 
 ##
@@ -14,7 +23,7 @@ class Edge:
     ##
     ## Constructor
     ##
-    def __init__(self, index: int, start: Node, end: Node):
+    def __init__(self, index: int, start: Node, end: Node) -> None:
         """Initializer for the Edge class
 
         Args:
@@ -33,7 +42,7 @@ class Edge:
     ##
     ## String representation of the edge
     ##
-    def __str__(self):
+    def __str__(self) -> str:
         """String representation of the edge
 
         Returns:
@@ -85,10 +94,7 @@ class Edge:
 
 
 ##
-## This tests the edge class only if we're executing THIS current file.
-##
-## This is so that if we import the Edge class from another file, this
-## code (in the 'if' statement) won't run.
+## Execute the test
 ##
 if __name__ == "__main__":
     n1 = Node(1, 0, 0)
