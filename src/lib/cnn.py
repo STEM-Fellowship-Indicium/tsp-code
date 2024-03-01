@@ -1,6 +1,11 @@
 ##
-## path: src/lib/example.py
+## Adjust to relative path
 ##
+if __name__ == "__main__":
+    import sys
+
+    sys.path.append("src")
+
 
 ##
 ## Imports
@@ -10,13 +15,10 @@ from torch.nn import (
     Module as NNModule,
     Linear,
     Conv2d,
-    MaxPool2d,
     Flatten,
     Sequential,
     ReLU,
 )
-
-from generate_points import generate_points
 
 
 ##
@@ -108,12 +110,15 @@ class CNN(NNModule):
 
 
 ##
-## This tests the cnn class only if we're executing THIS current file.
+## End of file
 ##
-## This is so that if we import the CNN class from another file, this
-## code (in the 'if' statement) won't run.
+
+##
+## Execute the test
 ##
 if __name__ == "__main__":
+    from lib.utils import generate_points
+
     # Create a new CNN with 1 input channel
     cnn = CNN(1)
 
@@ -130,7 +135,3 @@ if __name__ == "__main__":
 
     # Print the output
     print(output)
-
-##
-## End of file
-##

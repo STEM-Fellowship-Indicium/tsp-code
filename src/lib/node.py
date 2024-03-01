@@ -1,4 +1,13 @@
 ##
+## Adjust to relative path
+##
+if __name__ == "__main__":
+    import sys
+
+    sys.path.append("src")
+
+
+##
 ## Imports
 ##
 import json
@@ -13,7 +22,7 @@ class Node:
     ##
     ## Constructor
     ##
-    def __init__(self, index: int, x: int, y: int):
+    def __init__(self, index: int, x: int, y: int) -> None:
         """Initializer for the Node class
 
         Args:
@@ -32,7 +41,7 @@ class Node:
     ##
     ## String representation of the node
     ##
-    def __str__(self):
+    def __str__(self) -> str:
         """String representation of the node
 
         Returns:
@@ -84,15 +93,13 @@ class Node:
 
 
 ##
-## This tests the node class only if we're executing THIS current file.
-##
-## This is so that if we import the Node class from another file, this
-## code (in the 'if' statement) won't run.
+## Execute the test
 ##
 if __name__ == "__main__":
     node = Node(0, 1, 2)
     print(node)
     print(node.to_json())
+
 
 ##
 ## End of file

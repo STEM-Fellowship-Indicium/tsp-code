@@ -1,10 +1,24 @@
 ##
+## Adjust to relative path
+##
+if __name__ == "__main__":
+    import sys
+
+    sys.path.append("src")
+
+
+##
 ## Imports
 ##
+import json
 from typing import List
-from node import Node
-from edge import Edge
-import json, datetime
+
+##
+## Import node from anywhere
+##
+from lib.node import Node
+from lib.edge import Edge
+from lib.utils import generate_points
 
 
 ##
@@ -16,7 +30,7 @@ class Graph:
     ##
     ## Constructor
     ##
-    def __init__(self, nodes: List[Node], edges: List[Edge]):
+    def __init__(self, nodes: List[Node], edges: List[Edge]) -> None:
         """Initializer for the Graph class
 
         Args:
@@ -25,6 +39,90 @@ class Graph:
         """
         self.nodes = nodes
         self.edges = edges
+
+        ##
+        ## End of function
+        ##
+
+    ##
+    ## String representation of the graph
+    ##
+    def __str__(self) -> str:
+        """String representation of the graph
+
+        Returns:
+            _type_: The string representation of the graph
+        """
+        return f"Nodes: {self.nodes}\nEdges: {self.edges}"
+
+        ##
+        ## End of function
+        ##
+
+    ##
+    ## Generate a random graph
+    ##
+    ## We'll use our custom generate_points function to generate a random
+    ## graph with n nodes.
+    ##
+    @staticmethod
+    def rand(num_nodes: int) -> "Graph":
+        """Generate a random graph
+
+        Args:
+            num_nodes (int): The number of nodes to generate
+
+        Returns:
+            Graph: The random graph
+        """
+
+        # Generate n points with x and y values between 0 and 100
+        points = generate_points(num_nodes)
+
+        # Create the nodes
+        nodes = [Node(i, points[i][0], points[i][1]) for i in range(num_nodes)]
+
+        # Create the edges
+        edges = [Edge(i, nodes[i], nodes[i + 1]) for i in range(num_nodes - 1)]
+
+        # Return the graph
+        return Graph(nodes, edges)
+
+        ##
+        ## End of function
+        ##
+
+    ##
+    ## Get the node with the given index
+    ##
+    def get_node(self, index: int) -> Node:
+        """Get the node with the given index
+
+        Args:
+            index (int): The index of the node to get
+
+        Returns:
+            Node: The node with the given index
+        """
+        return next(node for node in self.nodes if node.index == index)
+
+        ##
+        ## End of function
+        ##
+
+    ##
+    ## Get the edge with the given index
+    ##
+    def get_edge(self, index: int) -> Edge:
+        """Get the edge with the given index
+
+        Args:
+            index (int): The index of the edge to get
+
+        Returns:
+            Edge: The edge with the given index
+        """
+        return next(edge for edge in self.edges if edge.index == index)
 
         ##
         ## End of function
@@ -122,12 +220,11 @@ class Graph:
 
 
 ##
-## This tests the grapg class only if we're executing THIS current file.
-##
-## This is so that if we import the Graph class from another file, this
-## code (in the 'if' statement) won't run.
+## Execute the test
 ##
 if __name__ == "__main__":
+    import datetime
+
     # Test the graph class
     node1 = Node(0, 0, 0)
     node2 = Node(1, 1, 1)
@@ -147,6 +244,7 @@ if __name__ == "__main__":
     import os
 
     os.remove(f"data/graph-{date}.json")
+
 
 ##
 ## End of file

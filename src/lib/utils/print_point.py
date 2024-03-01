@@ -1,18 +1,19 @@
 ##
 ## Imports
 ##
+import numpy as np
 
 
 ##
 ## Function to print a point
 ##
-def print_point(points, index):
+def print_point(points: np.ndarray, index: int) -> None:
     """
     Prints the details of a specified point.
 
-    Parameters:
-    points (numpy.ndarray): An array of points in R^2.
-    index (int): The index of the point to print.
+    Args:
+        points (numpy.ndarray): An array of points in R^2.
+        index (int): The index of the point to print.
     """
 
     if index < len(points):
