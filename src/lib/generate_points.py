@@ -24,3 +24,12 @@ def generate_points(n):
     points = np.random.rand(n, 2)
 
     return points
+
+    ##
+    ## End of function
+    ##
+
+
+##
+## End of file
+##
