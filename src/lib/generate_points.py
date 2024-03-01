@@ -21,6 +21,6 @@ def generate_points(n):
     """
 
     # Generate n points with x and y values between 0 and 1
-    points = np.random.rand(n, 2)
+    points = np.random.randint(0, 101, size=(n, 2))
 
     return points
