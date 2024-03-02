@@ -134,7 +134,7 @@ class Graph:
     ##
     ## Generate a random graph
     ##
-    ## We'll use our custom generate_points function to generate a random
+    ## We'll use our custom generate_nodes function to generate a random
     ## graph with n nodes.
     ##
     @staticmethod
