@@ -11,6 +11,8 @@ if __name__ == "__main__":
 ## Imports
 ##
 from lib.graph import Graph
+from lib.tour import Tour
+from lib.types.tspalgorithm import TSPAlgorithm
 
 
 ##
@@ -22,19 +24,60 @@ from lib.graph import Graph
 ##
 class TSP:
     ##
+    ## Get the shortest tour
+    ##
+    @staticmethod
+    def get_shortest_tour(graph: Graph, algorithm: TSPAlgorithm) -> Tour:
+        """Get the shortest tour for the given algorithm
+
+        Args:
+            graph (Graph): The graph to solve
+            algorithm (TSPAlgorithm): The algorithm to use
+
+        Returns:
+            Tour: The shortest tour
+        """
+        # Get the shortest tour based on the algorithm
+        if algorithm == TSPAlgorithm.BruteForce:
+            return TSP.brute_force(graph)
+        elif algorithm == TSPAlgorithm.GeneticAlgorithm:
+            return TSP.genetic(graph)
+        elif algorithm == TSPAlgorithm.SimulatedAnnealing:
+            return TSP.simulated_annealing(graph)
+
+        # Return the shortest tour
+        return Tour(algorithm=TSPAlgorithm.NoneType)
+
+        ##
+        ## End of function
+        ##
+
+    ##
     ## Brute force algorithm
     ##
     @staticmethod
-    def brute_force(graph: Graph) -> None:
+    def brute_force(graph: Graph) -> Tour:
         """Brute force algorithm for the TSP
 
         Args:
             graph (Graph): The graph to solve
         """
-        for node in graph.nodes:
-            print(node)
+        # Store the shortest tour
+        shortest_tour: Tour = Tour(algorithm=TSPAlgorithm.SimulatedAnnealing)
 
-        return
+        ##
+        ## This is a placeholder.
+        ##
+        ## TODO: Implement the brute force algorithm
+        ##
+        for edge in graph.edges:
+            print(edge)
+
+        # Set the shortest tour nodes (the shortest path)
+        shortest_tour.nodes = []
+
+        # Return the shortest tour
+        return shortest_tour
 
         ##
         ## End of function
@@ -44,16 +87,28 @@ class TSP:
     ## Genetic algorithm
     ##
     @staticmethod
-    def genetic(graph: Graph) -> None:
+    def genetic(graph: Graph) -> Tour:
         """Genetic algorithm for the TSP
 
         Args:
             graph (Graph): The graph to solve
         """
+        # Store the shortest tour
+        shortest_tour: Tour = Tour(algorithm=TSPAlgorithm.SimulatedAnnealing)
+
+        ##
+        ## This is a placeholder.
+        ##
+        ## TODO: Implement the genetic algorithm
+        ##
         for edge in graph.edges:
             print(edge)
 
-        return
+        # Set the shortest tour nodes (the shortest path)
+        shortest_tour.nodes = []
+
+        # Return the shortest tour
+        return shortest_tour
 
         ##
         ## End of function
@@ -63,16 +118,28 @@ class TSP:
     ## Simulated annealing algorithm
     ##
     @staticmethod
-    def simulated_annealing(graph: Graph) -> None:
+    def simulated_annealing(graph: Graph) -> Tour:
         """Simulated annealing algorithm for the TSP
 
         Args:
             graph (Graph): The graph to solve
         """
+        # Store the shortest tour
+        shortest_tour: Tour = Tour(algorithm=TSPAlgorithm.SimulatedAnnealing)
+
+        ##
+        ## This is a placeholder.
+        ##
+        ## TODO: Implement the simulated annealing algorithm
+        ##
         for edge in graph.edges:
             print(edge)
 
-        return
+        # Set the shortest tour nodes (the shortest path)
+        shortest_tour.nodes = []
+
+        # Return the shortest tour
+        return shortest_tour
 
         ##
         ## End of function
