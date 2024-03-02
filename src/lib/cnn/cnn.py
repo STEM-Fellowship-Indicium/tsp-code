@@ -31,7 +31,9 @@ class CNN(nn.Module):
         ##
         self.max_nodes = 100  # Maximum number of nodes in the graph
         self.in_channels = 1  # Number of input channels (assuming the graph is unweighted or weights are normalized)
-        self.size = 3200  # Size of the input tensor
+        self.size = (
+            3200  # Size of the flattened output from the second convolutional layer
+        )
 
         ## Convolutional Layer 1
         ##

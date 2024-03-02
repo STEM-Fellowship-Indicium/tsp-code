@@ -34,6 +34,8 @@ class GraphDataset(Dataset):
         self.graphs = []
         self.tours = []
 
+        self.set_rand()
+
         ##
         ## End of function
         ##
@@ -109,8 +111,6 @@ if __name__ == "__main__":
 
     # Create a dataset
     dataset = GraphDataset(num_samples=10, num_nodes=20)
-    # Set the dataset to random graphs
-    dataset.set_rand()
     # Create a dataloader
     dataloader = DataLoader(dataset, batch_size=2, shuffle=True)
     # Iterate over the dataloader
