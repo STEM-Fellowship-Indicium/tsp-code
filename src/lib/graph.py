@@ -67,7 +67,7 @@ class Graph:
         Returns:
             _type_: The string representation of the graph
         """
-        return f"{[str(node) for node in self.nodes]}, {[str(edge) for edge in self.edges]} -> {self.adj_matrix} -> {self.shortest_tour}"
+        return f"{[str(node) for node in self.nodes]}, {[str(edge) for edge in self.edges]}"
 
         ##
         ## End of function

@@ -23,7 +23,10 @@ class Tour:
     ## Constructor
     ##
     def __init__(
-        self, nodes: List[Node] = [], algorithm: TSPAlgorithm = TSPAlgorithm.NoneType
+        self,
+        nodes: List[Node] = [],
+        distance: int = 0,
+        algorithm: TSPAlgorithm = TSPAlgorithm.NoneType,
     ) -> None:
         """Initializer for the Tour class
 
@@ -33,6 +36,7 @@ class Tour:
         """
         self.nodes = nodes
         self.algorithm = algorithm
+        self.distance = distance
 
         ##
         ## End of function
@@ -47,7 +51,7 @@ class Tour:
         Returns:
             str: The string representation of the tour
         """
-        return f"Tour: {[str(node) for node in self.nodes]} using {self.algorithm}"
+        return f"{[str(node) for node in self.nodes]}"
 
         ##
         ## End of function
@@ -96,7 +100,7 @@ class Tour:
 ##
 if __name__ == "__main__":
     nodes = [Node(0, 0, 0), Node(1, 1, 1), Node(2, 2, 2)]
-    tour = Tour(nodes, TSPAlgorithm.BruteForce)
+    tour = Tour(nodes, 10, TSPAlgorithm.SimulatedAnnealing)
     print(tour)
 
 ##
