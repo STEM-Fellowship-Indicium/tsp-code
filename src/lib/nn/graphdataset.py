@@ -127,17 +127,22 @@ class GraphDataset(Dataset):
         Returns:
             torch.Tensor: The shortest tour
         """
-        n = dist.size(0)
+        # Initialize the tour
         tour = [0]
-        visited = {0}
-        for _ in range(n - 1):
-            last = tour[-1]
-            nearest = min(
-                (i for i in range(n) if i not in visited), key=lambda x: dist[last, x]
-            )
-            tour.append(nearest)
-            visited.add(nearest)
-        return torch.tensor(tour)
+        # Create a list of unvisited nodes
+        unvisited = list(range(1, self.num_nodes))
+        # Iterate over the unvisited nodes
+        while unvisited:
+            # Get the current node
+            current = tour[-1]
+            # Get the distances from the current node to the unvisited nodes
+            distances = dist[current, unvisited]
+            # Get the index of the nearest unvisited node
+            nearest_idx = distances.argmin().item()
+            # Add the nearest unvisited node to the tour
+            tour.append(unvisited.pop(nearest_idx))
+
+        return torch.tensor(tour, dtype=torch.int64)
 
         ##
         ## End of function
