@@ -22,7 +22,9 @@ class GraphDataset(Dataset):
     ##
     ## Constructor
     ##
-    def __init__(self, num_samples: int, num_nodes: int) -> None:
+    def __init__(
+        self, num_samples: int = 10, num_nodes: int = 10, node_features: int = 2
+    ) -> None:
         """Initializes the GraphDataset class
 
         Args:
@@ -31,6 +33,7 @@ class GraphDataset(Dataset):
         """
         self.num_samples = num_samples
         self.num_nodes = num_nodes
+        self.num_features = node_features  # x, y coordinates
         self.graphs = []
         self.tours = []
 
@@ -81,18 +84,60 @@ class GraphDataset(Dataset):
     def set_rand(self) -> None:
         """Set the dataset to random graphs"""
         for _ in range(self.num_samples):
-            # Generate random points
-            points = np.random.rand(self.num_nodes, 2)
+            nodes = torch.rand((self.num_nodes, self.num_features), dtype=torch.float32)
+            dist = self.dist(nodes)
+            tour = self.nearest_neighbor(dist)
 
-            # Calculate the distance matrix
-            distance_matrix = np.zeros((self.num_nodes, self.num_nodes))
-            for i in range(self.num_nodes):
-                for j in range(self.num_nodes):
-                    distance_matrix[i, j] = np.linalg.norm(points[i] - points[j])
+            self.graphs.append(nodes)
+            self.tours.append(tour)
 
-            # Add the graph and the shortest tour to the dataset
-            self.graphs.append(distance_matrix)
-            self.tours.append(np.random.permutation(self.num_nodes))
+        ##
+        ## End of function
+        ##
+
+    ##
+    ## Calculate the distance matrix
+    ##
+    def dist(self, nodes: torch.Tensor) -> torch.Tensor:
+        """Calculate the distance matrix
+
+        Args:
+            nodes (torch.Tensor): The nodes
+
+        Returns:
+            torch.Tensor: The distance matrix
+        """
+        # Get the x and y coordinates of the nodes
+        x, y = nodes[:, 0], nodes[:, 1]
+        # Calculate the distance matrix
+        return torch.sqrt((x.unsqueeze(1) - x) ** 2 + (y.unsqueeze(1) - y) ** 2)
+
+        ##
+        ## End of function
+
+    ##
+    ## Nearest neighbor algorithm
+    ##
+    def nearest_neighbor(self, dist: torch.Tensor) -> torch.Tensor:
+        """Nearest neighbor algorithm
+
+        Args:
+            dist (torch.Tensor): The distance matrix
+
+        Returns:
+            torch.Tensor: The shortest tour
+        """
+        n = dist.size(0)
+        tour = [0]
+        visited = {0}
+        for _ in range(n - 1):
+            last = tour[-1]
+            nearest = min(
+                (i for i in range(n) if i not in visited), key=lambda x: dist[last, x]
+            )
+            tour.append(nearest)
+            visited.add(nearest)
+        return torch.tensor(tour)
 
         ##
         ## End of function

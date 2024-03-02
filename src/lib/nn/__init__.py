@@ -1,5 +1,5 @@
 ##
 ## Exports
 ##
-from .cnn import *
+from .gnn import *
 from .graphdataset import *
