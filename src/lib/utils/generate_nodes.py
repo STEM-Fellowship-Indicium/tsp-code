@@ -19,7 +19,7 @@ from lib.node import Node
 ##
 ## This function create a random array of points in R^2
 ##
-def generate_points(n: int) -> List[Node]:
+def generate_nodes(n: int) -> List[Node]:
     """
     Generates n random nodes in R^2.
 
@@ -45,13 +45,13 @@ def generate_points(n: int) -> List[Node]:
 
 
 ##
-## This tests the generate_points function only if we're executing THIS current file.
+## This tests the generate_nodes function only if we're executing THIS current file.
 ##
 ## This is so that if we import the function from another file, this
 ## code (in the 'if' statement) won't run.
 ##
 if __name__ == "__main__":
-    print(generate_points(10))
+    print(generate_nodes(10))
 
 ##
 ## End of file

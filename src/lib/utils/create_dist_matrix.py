@@ -10,6 +10,7 @@ if __name__ == "__main__":
 ## Imports
 ##
 import numpy as np
+from typing import List
 from lib.node import Node
 from lib.utils.calculate_node_distance import calculate_node_distance
 
@@ -19,7 +20,7 @@ from lib.utils.calculate_node_distance import calculate_node_distance
 ##
 ## This function calculates the pythagorean distance between every two points.
 ##
-def create_dist_matrix(nodes: list[Node]) -> list[list[int]]:
+def create_dist_matrix(nodes: List[Node]) -> List[list[int]]:
     """Create a distance matrix for the given nodes
 
     Args:
