@@ -12,10 +12,6 @@ if __name__ == "__main__":
 ##
 import json
 from typing import List
-
-##
-## Import node from anywhere
-##
 from lib.node import Node
 from lib.edge import Edge
 from lib.utils import generate_points
@@ -30,15 +26,29 @@ class Graph:
     ##
     ## Constructor
     ##
-    def __init__(self, nodes: List[Node], edges: List[Edge]) -> None:
+    def __init__(
+        self,
+        edges: List[Edge],
+        nodes: List[Node] = [],
+        adj_matrix: List[List[int]] = [],
+    ):
         """Initializer for the Graph class
 
         Args:
             nodes (List[Node]): The nodes of the graph
             edges (List[Edge]): The edges of the graph
         """
-        self.nodes = nodes
+
         self.edges = edges
+
+        self.nodes = nodes
+        if len(self.nodes) == 0:
+            self.set_nodes_to_edges()
+
+        self.adj_matrix = adj_matrix
+        self.node_idxs = [node.idx for node in nodes]
+
+        self.set_adj_matrix()
 
         ##
         ## End of function
@@ -53,7 +63,65 @@ class Graph:
         Returns:
             _type_: The string representation of the graph
         """
-        return f"Nodes: {self.nodes}\nEdges: {self.edges}"
+        return f"Graph: {self.nodes}, {self.edges}, {self.adj_matrix}"
+
+        ##
+        ## End of function
+        ##
+
+    ##
+    ## Set the nodes to the edges (start and end nodes of the edges)
+    ##
+    def set_nodes_to_edges(self, edges: List[Node] = []) -> List[Node]:
+        """Set the nodes to the edges (start and end nodes of the edges)
+
+        Args:
+            edges (List[Node], optional): The edges to set the nodes to. Defaults to [] which uses current edges.
+
+        Returns:
+            List[Node]: The previous nodes
+        """
+
+        # Save the previous nodes
+        self.prev_nodes = self.nodes
+        self.nodes = []
+
+        # Use the given edges if they exist
+        if len(edges) > 0:
+            self.edges = edges
+
+        # Add the start and end nodes of the edges to the nodes list
+        for edge in self.edges:
+            if edge.start not in self.nodes:
+                self.nodes.append(edge.start)
+            if edge.end not in self.nodes:
+                self.nodes.append(edge.end)
+
+        # Return the previous nodes
+        return self.prev_nodes
+
+        ##
+        ## End of function
+        ##
+
+    ##
+    ## Create adjacency matrix
+    ##
+    def set_adj_matrix(self) -> None:
+        """Create adjacency matrix"""
+        num_nodes = len(self.nodes)
+
+        # Fill the adj matrix with a bunch of arrays of 0s
+        self.adj_matrix = [[0] * num_nodes for _ in range(num_nodes)]
+
+        # Fill the adj matrix with the weights of the edges
+        for edge in self.edges:
+            start = edge.start.idx
+            end = edge.end.idx
+
+            # Set the weight of the edge in the adj matrix
+            self.adj_matrix[start][end] = edge.weight
+            self.adj_matrix[end][start] = edge.weight
 
         ##
         ## End of function
@@ -86,43 +154,43 @@ class Graph:
         edges = [Edge(i, nodes[i], nodes[i + 1]) for i in range(num_nodes - 1)]
 
         # Return the graph
-        return Graph(nodes, edges)
+        return Graph(edges, nodes)
 
         ##
         ## End of function
         ##
 
     ##
-    ## Get the node with the given index
+    ## Get the node with the given idx
     ##
-    def get_node(self, index: int) -> Node:
-        """Get the node with the given index
+    def get_node(self, idx: int) -> Node:
+        """Get the node with the given idx
 
         Args:
-            index (int): The index of the node to get
+            idx (int): The idx of the node to get
 
         Returns:
-            Node: The node with the given index
+            Node: The node with the given idx
         """
-        return next(node for node in self.nodes if node.index == index)
+        return next(node for node in self.nodes if node.idx == idx)
 
         ##
         ## End of function
         ##
 
     ##
-    ## Get the edge with the given index
+    ## Get the edge with the given idx
     ##
-    def get_edge(self, index: int) -> Edge:
-        """Get the edge with the given index
+    def get_edge(self, idx: int) -> Edge:
+        """Get the edge with the given idx
 
         Args:
-            index (int): The index of the edge to get
+            idx (int): The idx of the edge to get
 
         Returns:
-            Edge: The edge with the given index
+            Edge: The edge with the given idx
         """
-        return next(edge for edge in self.edges if edge.index == index)
+        return next(edge for edge in self.edges if edge.idx == idx)
 
         ##
         ## End of function
@@ -140,6 +208,7 @@ class Graph:
         return {
             "nodes": [node.to_map() for node in self.nodes],
             "edges": [edge.to_map() for edge in self.edges],
+            "adj_matrix": self.adj_matrix,
         }
 
         ##
@@ -180,18 +249,20 @@ class Graph:
             graph = json.load(file)
 
         # Create the nodes and edges
-        nodes = [Node(node["index"], node["x"], node["y"]) for node in graph["nodes"]]
+        adj_matrix = graph["adj_matrix"]
+        nodes = [Node(node["idx"], node["x"], node["y"]) for node in graph["nodes"]]
         edges = [
             Edge(
-                edge["index"],
-                nodes[edge["start"]["index"]],
-                nodes[edge["end"]["index"]],
+                edge["idx"],
+                nodes[edge["start"]["idx"]],
+                nodes[edge["end"]["idx"]],
+                edge["weight"],
             )
             for edge in graph["edges"]
         ]
 
         # Return the graph
-        return Graph(nodes, edges)
+        return Graph(edges, nodes, adj_matrix)
 
         ##
         ## End of function
@@ -215,6 +286,19 @@ class Graph:
         ##
 
     ##
+    ## Print the graph
+    ##
+    def print(self) -> None:
+        """Print the graph"""
+        print(f"Nodes: {[str(node) for node in self.nodes]}")
+        print(f"Edges: {[str(edge) for edge in self.edges]}")
+        print(f"Adjacency matrix: {self.adj_matrix}")
+
+        ##
+        ## End of function
+        ##
+
+    ##
     ## End of class
     ##
 
@@ -232,8 +316,9 @@ if __name__ == "__main__":
     node1 = Node(0, 0, 0)
     node2 = Node(1, 1, 1)
     edge1 = Edge(0, node1, node2)
-    graph1 = Graph([node1, node2], [edge1])
+    graph1 = Graph([edge1], [node1, node2])
     print(graph1.to_map())
+    graph1.print()
 
     # todays date in the format of year-month-day-hour-minute-second
     date = datetime.datetime.now().strftime("%Y-%m-%d-%H-%M-%S")

@@ -23,17 +23,18 @@ class Edge:
     ##
     ## Constructor
     ##
-    def __init__(self, index: int, start: Node, end: Node) -> None:
+    def __init__(self, idx: int, start: Node, end: Node, weight: int = 1) -> None:
         """Initializer for the Edge class
 
         Args:
-            index (int): The index of the edge
+            idx (int): The idx of the edge
             start (Node): The start node of the edge
             end (Node): The end node of the edge
         """
-        self.index = index
+        self.idx = idx
         self.start = start
         self.end = end
+        self.weight = weight
 
         ##
         ## End of function
@@ -48,7 +49,7 @@ class Edge:
         Returns:
             _type_: The string representation of the edge
         """
-        return f"{self.start} -> {self.end}"
+        return f"{self.start} --{self.weight}--> {self.end}"
 
         ##
         ## End of function
@@ -64,7 +65,8 @@ class Edge:
             dict: The map of the edge
         """
         return {
-            "index": self.index,
+            "idx": self.idx,
+            "weight": self.weight,
             "start": self.start.to_map(),
             "end": self.end.to_map(),
         }
@@ -98,6 +100,18 @@ class Edge:
 
         ##
         ## End of function
+        ##
+
+    ##
+    ## Print the edge
+    ##
+    def print(self) -> None:
+        """Print the edge"""
+        print(f"Edge {self.idx}: {self.start} --{self.weight}--> {self.end}")
+
+        ##
+        ## End of function
+        ##
 
     ##
     ## End of class
@@ -113,11 +127,13 @@ class Edge:
 if __name__ == "__main__":
     n1 = Node(1, 0, 0)
     n2 = Node(2, 1, 1)
-    e = Edge(1, n1, n2)
+    e = Edge(1, n1, n2, weight=10)
     print(e.to_json())
     print(str(e))
     print(e.start)
     print(e.end)
+
+    e.print()
 
 ##
 ## End of file
