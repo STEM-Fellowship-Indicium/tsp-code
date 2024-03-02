@@ -14,8 +14,8 @@ import json
 from typing import List
 from lib.node import Node
 from lib.edge import Edge
-from lib.utils import generate_points
 from lib.tour import Tour
+from lib.utils import generate_nodes
 
 
 ##
@@ -148,14 +148,15 @@ class Graph:
             Graph: The random graph
         """
 
-        # Generate n points with x and y values between 0 and 100
-        points = generate_points(num_nodes)
-
-        # Create the nodes
-        nodes = [Node(i, points[i][0], points[i][1]) for i in range(num_nodes)]
+        # Generate the nodes
+        nodes = generate_nodes(num_nodes)
 
         # Create the edges
-        edges = [Edge(i, nodes[i], nodes[i + 1]) for i in range(num_nodes - 1)]
+        edges = [
+            Edge(idx, nodes[i], nodes[j])
+            for idx, i in enumerate(range(num_nodes))
+            for j in range(i + 1, num_nodes)
+        ]
 
         # Return the graph
         return Graph(edges, nodes)
@@ -299,6 +300,7 @@ class Graph:
         """Print the graph"""
         print(f"Nodes: {[str(node) for node in self.nodes]}")
         print(f"Edges: {[str(edge) for edge in self.edges]}")
+        print(f"Shortest tour: {self.shortest_tour}")
         print(f"Adjacency matrix: {self.adj_matrix}")
 
         ##
