@@ -15,6 +15,7 @@ from typing import List
 from lib.node import Node
 from lib.edge import Edge
 from lib.utils import generate_points
+from lib.tour import Tour
 
 
 ##
@@ -31,23 +32,26 @@ class Graph:
         edges: List[Edge],
         nodes: List[Node] = [],
         adj_matrix: List[List[int]] = [],
-    ):
+        shortest_tour: Tour = None,
+    ) -> None:
         """Initializer for the Graph class
 
         Args:
             nodes (List[Node]): The nodes of the graph
             edges (List[Edge]): The edges of the graph
+            adj_matrix (List[List[int]]): The adjacency matrix of the graph
+            shortest_tour (Tour): The shortest path of the graph
         """
 
         self.edges = edges
+        self.shortest_tour = shortest_tour
+        self.adj_matrix = adj_matrix
 
         self.nodes = nodes
         if len(self.nodes) == 0:
             self.set_nodes_to_edges()
 
-        self.adj_matrix = adj_matrix
         self.node_idxs = [node.idx for node in nodes]
-
         self.set_adj_matrix()
 
         ##
@@ -63,7 +67,7 @@ class Graph:
         Returns:
             _type_: The string representation of the graph
         """
-        return f"Graph: {self.nodes}, {self.edges}, {self.adj_matrix}"
+        return f"{[str(node) for node in self.nodes]}, {[str(edge) for edge in self.edges]} -> {self.adj_matrix} -> {self.shortest_tour}"
 
         ##
         ## End of function
@@ -209,6 +213,9 @@ class Graph:
             "nodes": [node.to_map() for node in self.nodes],
             "edges": [edge.to_map() for edge in self.edges],
             "adj_matrix": self.adj_matrix,
+            "shortest_tour": (
+                self.shortest_tour.to_map() if self.shortest_tour else "None"
+            ),
         }
 
         ##
