@@ -22,15 +22,15 @@ class Node:
     ##
     ## Constructor
     ##
-    def __init__(self, index: int, x: int, y: int) -> None:
+    def __init__(self, idx: int, x: int, y: int) -> None:
         """Initializer for the Node class
 
         Args:
-            index (int): The index of the node
+            idx (int): The idx of the node
             x (int): The x coordinate of the node
             y (int): The y coordinate of the node
         """
-        self.index = index
+        self.idx = idx
         self.x = x
         self.y = y
 
@@ -63,7 +63,7 @@ class Node:
             dict: The map of the node
         """
         return {
-            "index": self.index,
+            "idx": self.idx,
             "x": self.x,
             "y": self.y,
         }
@@ -105,6 +105,17 @@ class Node:
         ##
 
     ##
+    ## Print the node
+    ##
+    def print(self) -> None:
+        """Print the node"""
+        print(f"Node {self.idx}: ({self.x}, {self.y})")
+
+        ##
+        ## End of function
+        ##
+
+    ##
     ## End of class
     ##
 
@@ -119,6 +130,7 @@ if __name__ == "__main__":
     node = Node(0, 1, 2)
     print(node)
     print(node.to_json())
+    node.print()
 
 
 ##
