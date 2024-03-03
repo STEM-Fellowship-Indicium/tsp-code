@@ -22,6 +22,27 @@ import itertools, math
 ##
 class TSPAlgorithms:
     ##
+    ## Set the shortest tour
+    ##
+    @staticmethod
+    def set_shortest_tour(graph: Graph, algorithm: TSPAlgorithm) -> None:
+        """Set the shortest tour for the given algorithm
+
+        Args:
+            graph (Graph): The graph to solve
+            algorithm (TSPAlgorithm): The algorithm to use
+        """
+        # Get the shortest tour based on the algorithm
+        shortest_tour = TSPAlgorithms.get_shortest_tour(graph, algorithm)
+
+        # Set the shortest tour
+        graph.shortest_tour = shortest_tour
+
+        ##
+        ## End of function
+        ##
+
+    ##
     ## Get the shortest tour
     ##
     @staticmethod
