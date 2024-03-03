@@ -23,6 +23,7 @@ class TSPAlgorithm:
     BruteForce: str = "BruteForce"
     GeneticAlgorithm: str = "GeneticAlgorithm"
     SimulatedAnnealing: str = "SimulatedAnnealing"
+    GreedyHeuristic: str = "GreedyHeuristic"
 
     ##
     ## End of class
