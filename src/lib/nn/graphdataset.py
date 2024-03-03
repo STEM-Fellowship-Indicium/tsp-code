@@ -12,7 +12,6 @@ if __name__ == "__main__":
 ##
 import torch
 from torch.utils.data import Dataset
-import numpy as np
 
 
 ##

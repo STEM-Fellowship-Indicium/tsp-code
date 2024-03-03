@@ -1,5 +1,5 @@
 ##
 ## Class Exports
 ##
-from .tspalgos import *
+from .tspalgorithms import *
 from .tspvisual import *
