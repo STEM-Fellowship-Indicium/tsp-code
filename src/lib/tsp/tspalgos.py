@@ -18,13 +18,9 @@ import itertools, math
 
 
 ##
-## TSP type
+## TSP Algorithms
 ##
-## TSP.BruteForce: Brute force algorithm
-## TSP.GeneticAlgorithm: Genetic algorithm
-## TSP.SimulatedAnnealing: Simulated annealing algorithm
-##
-class TSP:
+class TSPAlgorithms:
     ##
     ## Get the shortest tour
     ##
@@ -41,11 +37,13 @@ class TSP:
         """
         # Get the shortest tour based on the algorithm
         if algorithm == TSPAlgorithm.BruteForce:
-            return TSP.brute_force(graph)
+            return TSPAlgorithms.brute_force(graph)
+
         elif algorithm == TSPAlgorithm.GeneticAlgorithm:
-            return TSP.genetic(graph)
+            return TSPAlgorithms.genetic(graph)
+
         elif algorithm == TSPAlgorithm.SimulatedAnnealing:
-            return TSP.simulated_annealing(graph)
+            return TSPAlgorithms.simulated_annealing(graph)
 
         # Return the shortest tour
         return Tour(algorithm=TSPAlgorithm.NoneType)
@@ -67,13 +65,12 @@ class TSP:
         # Store the shortest tour
         shortest_tour: Tour = Tour(algorithm=TSPAlgorithm.BruteForce)
 
-        ##
-        ## TODO: Implement the brute force algorithm
-        ##
+        # Variables
         distance_matrix = create_dist_matrix(graph.nodes)
         n = len(graph.nodes)
         shortest_distance = math.inf
 
+        # Find the shortest tour
         for path in itertools.permutations(range(n)):
             distance = 0
             for i in range(n - 1):
@@ -167,25 +164,25 @@ if __name__ == "__main__":
 
     # Solve the graph using the brute force algorithm
     start = time.time()
-    res = TSP.brute_force(graph)
+    res = TSPAlgorithms.brute_force(graph)
     speed = time.time() - start
     print(f"Brute force algorithm\nResult:{res}\nSpeed: {speed}s")
 
     # Save the graph and shortest tour to file (testing)
-    graph.shortest_tour = res
-    graph.export("data/tsp-test.json")
+    # graph.shortest_tour = res
+    # graph.export("data/tsp-test.json")
 
     # Solve the graph using the genetic algorithm
-    start = time.time()
-    res = TSP.genetic(graph)
-    speed = time.time() - start
-    print(f"\n\nGenetic algorithm\nResult:{res}\nSpeed: {speed}s")
+    # start = time.time()
+    # res = TSPAlgorithms.genetic(graph)
+    # speed = time.time() - start
+    # print(f"\n\nGenetic algorithm\nResult:{res}\nSpeed: {speed}s")
 
     # Solve the graph using the simulated annealing algorithm
-    start = time.time()
-    res = TSP.simulated_annealing(graph)
-    speed = time.time() - start
-    print(f"\n\nSimulated annealing algorithm\nResult:{res}\nSpeed: {speed}s")
+    # start = time.time()
+    # res = TSPAlgorithms.simulated_annealing(graph)
+    # speed = time.time() - start
+    # print(f"\n\nSimulated annealing algorithm\nResult:{res}\nSpeed: {speed}s")
 
 
 ##

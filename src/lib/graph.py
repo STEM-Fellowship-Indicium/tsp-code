@@ -12,10 +12,12 @@ if __name__ == "__main__":
 ##
 import json
 from typing import List
+
+from matplotlib import pyplot as plt
 from lib.node import Node
 from lib.edge import Edge
 from lib.tour import Tour
-from lib.utils import generate_nodes
+from lib.utils.generate_nodes import generate_nodes
 
 
 ##
@@ -146,6 +148,28 @@ class Graph:
         ##
         ## End of function
         ##
+
+    ##
+    ## Draw the graph
+    ##
+    def draw(self) -> None:
+        # Create a new figure
+        plt.figure()
+
+        # Draw the nodes
+        for node in self.nodes:
+            plt.plot(node.x, node.y, "o", color="blue")
+
+        # Draw the edges
+        for edge in self.edges:
+            plt.plot(
+                [edge.start.x, edge.end.x],
+                [edge.start.y, edge.end.y],
+                color="black",
+            )
+
+        # Show the graph
+        plt.show()
 
     ##
     ## Set the nodes to the edges (start and end nodes of the edges)
@@ -281,12 +305,16 @@ class Graph:
     ##
     ## Export the graph to a file
     ##
-    def export(self, filename: str) -> None:
+    def export(self, filename: str = None) -> None:
         """Export the graph to a file
 
         Args:
             filename (str): The name of the file to export the graph to
         """
+        if filename is None:
+            date = datetime.datetime.now().strftime("%Y-%m-%d-%H-%M-%S")
+            file = f"data/graph-{date}.json"
+
         # Open the file (create it if it doesn't exist)
         with open(filename, "w") as file:
             json.dump(self.to_map(), file, indent=4)
@@ -321,30 +349,35 @@ class Graph:
 ## code (in the 'if' statement) won't run.
 ##
 if __name__ == "__main__":
-    import datetime
+    import datetime, os
 
-    # Test the graph class
+    ##
+    ## Test 1
+    ##
     node1 = Node(0, 0, 0)
     node2 = Node(1, 1, 1)
     edge1 = Edge(0, node1, node2)
     graph1 = Graph([edge1], [node1, node2])
     graph1.print()
 
-    # todays date in the format of year-month-day-hour-minute-second
+    # Todays date in the format of year-month-day-hour-minute-second
     date = datetime.datetime.now().strftime("%Y-%m-%d-%H-%M-%S")
-    graph1.export(f"data/graph-{date}.json")
+    graph1.export(f"data/graph-test-{date}.json")
 
-    # Test import
-    graph2 = Graph.import_json(f"data/graph-{date}.json")
+    ##
+    ## Test 2
+    ##
+    graph2 = Graph.import_json(f"data/graph-test-{date}.json")
     graph2.print()
 
-    graph3 = Graph.rand(10)
-    graph3.print()
-
     # Delete the file
-    import os
+    os.remove(f"data/graph-test-{date}.json")
 
-    os.remove(f"data/graph-{date}.json")
+    ##
+    ## Test 3
+    ##
+    graph3 = Graph.rand(10)
+    graph3.draw()
 
 
 ##

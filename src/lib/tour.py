@@ -11,7 +11,7 @@ if __name__ == "__main__":
 ##
 from typing import List
 from lib.node import Node
-from lib.types import TSPAlgorithm
+from lib.types.tspalgorithm import TSPAlgorithm
 import json
 
 
@@ -127,7 +127,7 @@ class Tour:
 ##
 if __name__ == "__main__":
     nodes = [Node(0, 0, 0), Node(1, 1, 1), Node(2, 2, 2)]
-    tour = Tour(nodes, 10, TSPAlgorithm.SimulatedAnnealing)
+    tour = Tour(nodes, 10, TSPAlgorithm.BruteForce)
     print(tour)
 
 ##
