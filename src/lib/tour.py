@@ -58,6 +58,32 @@ class Tour:
         ##
 
     ##
+    ## Import tour from map
+    ##
+    @staticmethod
+    def from_map(map: dict = None) -> "Tour":
+        """Import the tour from a map
+
+        Args:
+            map (dict): The map to import the tour from
+
+        Returns:
+            Tour: The tour from the json string
+        """
+        if map is None:
+            return None
+
+        nodes = [Node.from_map(node) for node in map["nodes"]]
+        distance = map["distance"]
+        algorithm = map["algorithm"]
+
+        return Tour(nodes, distance, algorithm)
+
+        ##
+        ## End of function
+        ##
+
+    ##
     ## Convert the tour to a dictionary
     ##
     def to_map(self) -> dict:
@@ -69,6 +95,7 @@ class Tour:
         return {
             "nodes": [node.to_map() for node in self.nodes],
             "algorithm": self.algorithm,
+            "distance": self.distance,
         }
 
         ##
