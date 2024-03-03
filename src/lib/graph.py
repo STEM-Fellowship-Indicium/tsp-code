@@ -152,7 +152,7 @@ class Graph:
     ##
     ## Draw the graph
     ##
-    def draw(self, tours: List[Tour]) -> None:
+    def draw(self, tours: List[Tour] = [], colors: List[str] = []) -> None:
         # Create a new figure
         plt.figure()
 
@@ -165,19 +165,25 @@ class Graph:
             plt.plot(
                 [edge.start.x, edge.end.x],
                 [edge.start.y, edge.end.y],
-                color="black",
+                color=(0.1, 0.1, 0.1, 0.8),
             )
-            
+
         # Draw the tours red
-        for tour in tours:
-            for i in range(len(tour)) - 1):
+        for i, tour in enumerate(tours):
+            color = colors[i] if len(colors) - 1 >= i else "red"
+
+            for j in range(len(tour.nodes) - 1):
                 plt.plot(
-                    [tour[i].x, tour[i + 1].x],
-                    [tour[i].y, tour[i + 1].y],
-                    color=[
-                        (min((i + 1) * 0.1, 1), min((i + 1) * 0.1, 1), min((i + 1) * 0.1, 1))
-                    ]
+                    [tour.nodes[j].x, tour.nodes[j + 1].x],
+                    [tour.nodes[j].y, tour.nodes[j + 1].y],
+                    color=color,
                 )
+
+            plt.plot(
+                [tour.nodes[-1].x, tour.nodes[0].x],
+                [tour.nodes[-1].y, tour.nodes[0].y],
+                color=color,
+            )
 
         # Show the graph
         plt.show()

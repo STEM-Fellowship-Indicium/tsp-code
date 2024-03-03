@@ -224,9 +224,9 @@ if __name__ == "__main__":
 
     # Solve the graph using the brute force algorithm
     start = time.time()
-    res = TSPAlgorithms.brute_force(graph)
+    brute_res = TSPAlgorithms.brute_force(graph)
     speed = time.time() - start
-    print(f"Brute force algorithm\nResult:{res}\nSpeed: {speed}s")
+    print(f"Brute force algorithm\nResult:{brute_res}\nSpeed: {speed}s")
 
     # Save the graph and shortest tour to file (testing)
     # graph.shortest_tour = res
@@ -234,21 +234,26 @@ if __name__ == "__main__":
 
     # Solve the graph using the genetic algorithm
     start = time.time()
-    res = TSPAlgorithms.genetic(graph)
+    gen_res = TSPAlgorithms.genetic(graph)
     speed = time.time() - start
-    print(f"\n\nGenetic algorithm\nResult:{res}\nSpeed: {speed}s")
+    print(f"\n\nGenetic algorithm\nResult:{gen_res}\nSpeed: {speed}s")
 
     # Solve the graph using the simulated annealing algorithm
     start = time.time()
-    res = TSPAlgorithms.simulated_annealing(graph)
+    sim_anneal_res = TSPAlgorithms.simulated_annealing(graph)
     speed = time.time() - start
-    print(f"\n\nSimulated annealing algorithm\nResult:{res}\nSpeed: {speed}s")
+    print(
+        f"\n\nSimulated annealing algorithm\nResult:{sim_anneal_res}\nSpeed: {speed}s"
+    )
 
     # Solve the graph using the greedy heuristic algorithm
     start = time.time()
-    res = TSPAlgorithms.greedy_heuristic(graph)
+    greedy_res = TSPAlgorithms.greedy_heuristic(graph)
     speed = time.time() - start
-    print(f"\n\nGreedy heuristic algorithm\nResult:{res}\nSpeed: {speed}s")
+    print(f"\n\nGreedy heuristic algorithm\nResult:{greedy_res}\nSpeed: {speed}s")
+
+    # Plot the graph and tours
+    graph.draw(tours=[brute_res, greedy_res], colors=["yellow", "red"])
 
 
 ##
