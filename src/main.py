@@ -9,7 +9,7 @@ from lib.tsp.tspvisual import TSPVisual
 ##
 if __name__ == "__main__":
     # Create a new graph
-    graph = Graph.rand(num_nodes=7)
+    graph = Graph.rand(num_nodes=20)
 
     # Visualize the graph
     TSPVisual.brute_force(graph)

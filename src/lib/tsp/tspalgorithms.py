@@ -14,7 +14,7 @@ from lib.graph import Graph
 from lib.tour import Tour
 from lib.types.tspalgorithm import TSPAlgorithm
 from lib.utils.create_dist_matrix import create_dist_matrix
-import itertools, math
+import itertools, math, random
 
 
 ##
@@ -91,7 +91,13 @@ class TSPAlgorithms:
         n = len(graph.nodes)
         shortest_distance = math.inf
 
-        # Find the shortest tour
+        ## Find the shortest tour
+        ##
+        ## itertools.permutations returns all possible permutations of the nodes.
+        ## For example: [0, 1, 2], [0, 2, 1], [1, 0, 2], [1, 2, 0], [2, 0, 1], [2, 1, 0]
+        ##
+        ## https://www.geeksforgeeks.org/python-itertools-permutations/
+        ##
         for path in itertools.permutations(range(n)):
             distance = 0
             for i in range(n - 1):
@@ -113,6 +119,59 @@ class TSPAlgorithms:
         ##
 
     ##
+    ## Greedy Heuristic
+    ##
+    @staticmethod
+    def greedy_heuristic(graph: Graph) -> Tour:
+        """Greedy heuristic algorithm for the TSP
+
+        Args:
+            graph (Graph): The graph to solve
+        """
+        # Store the shortest tour
+        shortest_tour: Tour = Tour(algorithm=TSPAlgorithm.GreedyHeuristic)
+
+        # Variables
+        distance_matrix = create_dist_matrix(graph.nodes)
+        n = len(graph.nodes)
+        visited = [False] * n
+        shortest_distance = 0
+        shortest_tour.nodes = [graph.nodes[0]]
+
+        # Find the shortest tour
+        for _ in range(n - 1):
+            current_node = shortest_tour.nodes[-1]
+            visited[graph.nodes.index(current_node)] = True
+            min_distance = math.inf
+            next_node = None
+
+            for i in range(n):
+                if not visited[i]:
+                    if (
+                        distance_matrix[graph.nodes.index(current_node)][i]
+                        < min_distance
+                    ):
+                        min_distance = distance_matrix[graph.nodes.index(current_node)][
+                            i
+                        ]
+                        next_node = graph.nodes[i]
+
+            shortest_tour.nodes.append(next_node)
+            shortest_distance += min_distance
+
+        shortest_distance += distance_matrix[
+            graph.nodes.index(shortest_tour.nodes[-1])
+        ][0]
+        shortest_tour.distance = shortest_distance
+
+        # Return the shortest tour
+        return shortest_tour
+
+        ##
+        ## End of function
+        ##
+
+    ##
     ## Genetic algorithm
     ##
     @staticmethod
@@ -122,18 +181,8 @@ class TSPAlgorithms:
         Args:
             graph (Graph): The graph to solve
         """
-        # Store the shortest tour
-        shortest_tour: Tour = Tour(algorithm=TSPAlgorithm.GeneticAlgorithm)
 
-        ##
-        ## TODO: Implement the genetic algorithm
-        ##
-
-        # Set the shortest tour nodes (the shortest path)
-        shortest_tour.nodes = []
-
-        # Return the shortest tour
-        return shortest_tour
+        return
 
         ##
         ## End of function
@@ -149,18 +198,8 @@ class TSPAlgorithms:
         Args:
             graph (Graph): The graph to solve
         """
-        # Store the shortest tour
-        shortest_tour: Tour = Tour(algorithm=TSPAlgorithm.SimulatedAnnealing)
 
-        ##
-        ## TODO: Implement the simulated annealing algorithm
-        ##
-
-        # Set the shortest tour nodes (the shortest path)
-        shortest_tour.nodes = []
-
-        # Return the shortest tour
-        return shortest_tour
+        return
 
         ##
         ## End of function
@@ -194,16 +233,22 @@ if __name__ == "__main__":
     # graph.export("data/tsp-test.json")
 
     # Solve the graph using the genetic algorithm
-    # start = time.time()
-    # res = TSPAlgorithms.genetic(graph)
-    # speed = time.time() - start
-    # print(f"\n\nGenetic algorithm\nResult:{res}\nSpeed: {speed}s")
+    start = time.time()
+    res = TSPAlgorithms.genetic(graph)
+    speed = time.time() - start
+    print(f"\n\nGenetic algorithm\nResult:{res}\nSpeed: {speed}s")
 
     # Solve the graph using the simulated annealing algorithm
-    # start = time.time()
-    # res = TSPAlgorithms.simulated_annealing(graph)
-    # speed = time.time() - start
-    # print(f"\n\nSimulated annealing algorithm\nResult:{res}\nSpeed: {speed}s")
+    start = time.time()
+    res = TSPAlgorithms.simulated_annealing(graph)
+    speed = time.time() - start
+    print(f"\n\nSimulated annealing algorithm\nResult:{res}\nSpeed: {speed}s")
+
+    # Solve the graph using the greedy heuristic algorithm
+    start = time.time()
+    res = TSPAlgorithms.greedy_heuristic(graph)
+    speed = time.time() - start
+    print(f"\n\nGreedy heuristic algorithm\nResult:{res}\nSpeed: {speed}s")
 
 
 ##
