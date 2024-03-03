@@ -68,6 +68,26 @@ class TSPVisual:
         plt.show()
 
     ##
+    ## Greedy heuristic algorithm with visualization
+    ##
+    @staticmethod
+    def greedy_heuristic(graph: Graph) -> None:
+        """Visualize the greedy heuristic algorithm for the TSP
+
+        Args:
+            graph (Graph): The graph to solve
+
+        Returns:
+            None
+        """
+
+        return
+
+        ##
+        ## End of function
+        ##
+
+    ##
     ## Genetic algorithm visualization
     ##
     @staticmethod
@@ -124,6 +144,9 @@ class TSPVisual:
 if __name__ == "__main__":
     # Create a new graph
     graph = Graph.rand(7)
+
+    # Greedy heuristic visual
+    TSPVisual.greedy_heuristic(graph)
 
     # Brute force visual
     TSPVisual.brute_force(graph)
