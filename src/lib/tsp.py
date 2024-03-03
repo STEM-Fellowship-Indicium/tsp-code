@@ -171,6 +171,10 @@ if __name__ == "__main__":
     speed = time.time() - start
     print(f"Brute force algorithm\nResult:{res}\nSpeed: {speed}s")
 
+    # Save the graph and shortest tour to file (testing)
+    graph.shortest_tour = res
+    graph.export("data/tsp-test.json")
+
     # Solve the graph using the genetic algorithm
     start = time.time()
     res = TSP.genetic(graph)

@@ -30,7 +30,7 @@ def generate_nodes(n: int) -> List[Node]:
         List[Node]: A list of n nodes.
     """
 
-    # Generate n points with x and y values between 0 and 1
+    # Generate n points with x and y values between 0 and 1 (int16)
     points: np.ndarray = np.random.randint(0, 101, size=(n, 2))
 
     # Create the nodes
@@ -51,7 +51,7 @@ def generate_nodes(n: int) -> List[Node]:
 ## code (in the 'if' statement) won't run.
 ##
 if __name__ == "__main__":
-    print(generate_nodes(10))
+    print([node.to_map() for node in generate_nodes(5)])
 
 ##
 ## End of file

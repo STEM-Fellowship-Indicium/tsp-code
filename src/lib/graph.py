@@ -74,6 +74,80 @@ class Graph:
         ##
 
     ##
+    ## Generate a random graph
+    ##
+    ## We'll use our custom generate_nodes function to generate a random
+    ## graph with n nodes.
+    ##
+    @staticmethod
+    def rand(num_nodes: int) -> "Graph":
+        """Generate a random graph
+
+        Args:
+            num_nodes (int): The number of nodes to generate
+
+        Returns:
+            Graph: The random graph
+        """
+
+        # Generate the nodes
+        nodes = generate_nodes(num_nodes)
+
+        # Create the edges
+        edges = [
+            Edge(idx, nodes[i], nodes[j])
+            for idx, i in enumerate(range(num_nodes))
+            for j in range(i + 1, num_nodes)
+        ]
+
+        # Return the graph
+        return Graph(edges, nodes)
+
+        ##
+        ## End of function
+        ##
+
+    ##
+    ## Import a graph from a file
+    ##
+    @staticmethod
+    def import_json(filename: str) -> "Graph":
+        """Import a graph from a file
+
+        Args:
+            filename (str): The name of the file to import the graph from
+
+        Returns:
+            Graph: The graph that was imported
+        """
+        # Open the file
+        with open(filename, "r") as file:
+            # Load the graph from the file
+            graph = json.load(file)
+
+        # Create the nodes and edges
+        adj_matrix = graph["adj_matrix"]
+        shortest_tour = Tour.from_map(graph["shortest_tour"])
+
+        nodes = [Node(node["idx"], node["x"], node["y"]) for node in graph["nodes"]]
+        edges = [
+            Edge(
+                edge["idx"],
+                nodes[edge["start"]["idx"]],
+                nodes[edge["end"]["idx"]],
+                edge["weight"],
+            )
+            for edge in graph["edges"]
+        ]
+
+        # Return the graph
+        return Graph(edges, nodes, adj_matrix, shortest_tour)
+
+        ##
+        ## End of function
+        ##
+
+    ##
     ## Set the nodes to the edges (start and end nodes of the edges)
     ##
     def set_nodes_to_edges(self, edges: List[Node] = []) -> List[Node]:
@@ -132,40 +206,6 @@ class Graph:
         ##
 
     ##
-    ## Generate a random graph
-    ##
-    ## We'll use our custom generate_nodes function to generate a random
-    ## graph with n nodes.
-    ##
-    @staticmethod
-    def rand(num_nodes: int) -> "Graph":
-        """Generate a random graph
-
-        Args:
-            num_nodes (int): The number of nodes to generate
-
-        Returns:
-            Graph: The random graph
-        """
-
-        # Generate the nodes
-        nodes = generate_nodes(num_nodes)
-
-        # Create the edges
-        edges = [
-            Edge(idx, nodes[i], nodes[j])
-            for idx, i in enumerate(range(num_nodes))
-            for j in range(i + 1, num_nodes)
-        ]
-
-        # Return the graph
-        return Graph(edges, nodes)
-
-        ##
-        ## End of function
-        ##
-
-    ##
     ## Get the node with the given idx
     ##
     def get_node(self, idx: int) -> Node:
@@ -215,7 +255,7 @@ class Graph:
             "edges": [edge.to_map() for edge in self.edges],
             "adj_matrix": self.adj_matrix,
             "shortest_tour": (
-                self.shortest_tour.to_map() if self.shortest_tour else "None"
+                self.shortest_tour.to_map() if self.shortest_tour else None
             ),
         }
 
@@ -232,45 +272,7 @@ class Graph:
         Returns:
             str: The json map of the graph
         """
-        return json.dumps(self.to_map())
-
-        ##
-        ## End of function
-        ##
-
-    ##
-    ## Import a graph from a file
-    ##
-    @staticmethod
-    def import_graph(filename: str) -> "Graph":
-        """Import a graph from a file
-
-        Args:
-            filename (str): The name of the file to import the graph from
-
-        Returns:
-            Graph: The graph that was imported
-        """
-        # Open the file
-        with open(filename, "r") as file:
-            # Load the graph from the file
-            graph = json.load(file)
-
-        # Create the nodes and edges
-        adj_matrix = graph["adj_matrix"]
-        nodes = [Node(node["idx"], node["x"], node["y"]) for node in graph["nodes"]]
-        edges = [
-            Edge(
-                edge["idx"],
-                nodes[edge["start"]["idx"]],
-                nodes[edge["end"]["idx"]],
-                edge["weight"],
-            )
-            for edge in graph["edges"]
-        ]
-
-        # Return the graph
-        return Graph(edges, nodes, adj_matrix)
+        return json.dumps(self.to_map(), indent=4)
 
         ##
         ## End of function
@@ -326,7 +328,6 @@ if __name__ == "__main__":
     node2 = Node(1, 1, 1)
     edge1 = Edge(0, node1, node2)
     graph1 = Graph([edge1], [node1, node2])
-    print(graph1.to_map())
     graph1.print()
 
     # todays date in the format of year-month-day-hour-minute-second
@@ -334,8 +335,11 @@ if __name__ == "__main__":
     graph1.export(f"data/graph-{date}.json")
 
     # Test import
-    graph2 = Graph.import_graph(f"data/graph-{date}.json")
-    print(graph2.to_map())
+    graph2 = Graph.import_json(f"data/graph-{date}.json")
+    graph2.print()
+
+    graph3 = Graph.rand(10)
+    graph3.print()
 
     # Delete the file
     import os

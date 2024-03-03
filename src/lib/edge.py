@@ -56,6 +56,33 @@ class Edge:
         ##
 
     ##
+    ## Edge from map
+    ##
+    @staticmethod
+    def from_map(map: dict = None) -> "Edge":
+        """Create an edge from a map
+
+        Args:
+            map (dict): The map to create the edge from
+
+        Returns:
+            Edge: The edge created from the map
+        """
+        if map is None:
+            return None
+
+        return Edge(
+            map["idx"],
+            Node.from_map(map["start"]),
+            Node.from_map(map["end"]),
+            map["weight"],
+        )
+
+        ##
+        ## End of function
+        ##
+
+    ##
     ## Convert the edge to a map
     ##
     def to_map(self) -> dict:

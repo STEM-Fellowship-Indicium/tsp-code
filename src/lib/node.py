@@ -22,7 +22,7 @@ class Node:
     ##
     ## Constructor
     ##
-    def __init__(self, idx: int, x: int, y: int) -> None:
+    def __init__(self, idx: int, x: float, y: float) -> None:
         """Initializer for the Node class
 
         Args:
@@ -54,6 +54,28 @@ class Node:
         ##
 
     ##
+    ## Node from map
+    ##
+    @staticmethod
+    def from_map(map: dict = None) -> "Node":
+        """Create a node from a map
+
+        Args:
+            map (dict): The map to create the node from
+
+        Returns:
+            Node: The node created from the map
+        """
+        if map is None:
+            return None
+
+        return Node(map["idx"], map["x"], map["y"])
+
+        ##
+        ## End of function
+        ##
+
+    ##
     ## Convert the node to a map
     ##
     def to_map(self) -> dict:
@@ -64,8 +86,8 @@ class Node:
         """
         return {
             "idx": self.idx,
-            "x": self.x,
-            "y": self.y,
+            "x": float(self.x),
+            "y": float(self.y),
         }
 
         ##
@@ -81,7 +103,7 @@ class Node:
         Returns:
             str: The json map of the node
         """
-        return json.dumps(self.to_map())
+        return json.dumps(self.to_map(), indent=4)
 
         ##
         ## End of function
