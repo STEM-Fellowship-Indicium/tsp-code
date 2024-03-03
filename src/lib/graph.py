@@ -175,7 +175,7 @@ class Graph:
                     [tour[i].x, tour[i + 1].x],
                     [tour[i].y, tour[i + 1].y],
                     color=[
-                        ((i + 1) * 0.1, (i + 1) * 0.1, (i + 1) * 0.1)
+                        (min((i + 1) * 0.1, 1), min((i + 1) * 0.1, 1), min((i + 1) * 0.1, 1))
                     ]
                 )
 
