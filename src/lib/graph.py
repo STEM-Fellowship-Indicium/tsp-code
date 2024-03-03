@@ -272,7 +272,7 @@ class Graph:
         Returns:
             str: The json map of the graph
         """
-        return json.dumps(self.to_map())
+        return json.dumps(self.to_map(), indent=4)
 
         ##
         ## End of function
@@ -338,10 +338,13 @@ if __name__ == "__main__":
     graph2 = Graph.import_json(f"data/graph-{date}.json")
     graph2.print()
 
+    graph3 = Graph.rand(10)
+    graph3.print()
+
     # Delete the file
     import os
 
-    # os.remove(f"data/graph-{date}.json")
+    os.remove(f"data/graph-{date}.json")
 
 
 ##

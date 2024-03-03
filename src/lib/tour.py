@@ -111,7 +111,7 @@ class Tour:
         Returns:
             str: The json representation of the tour
         """
-        return json.dumps(self.to_map())
+        return json.dumps(self.to_map(), indent=4)
 
         ##
         ## End of function

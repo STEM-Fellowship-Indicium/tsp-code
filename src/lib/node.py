@@ -22,7 +22,7 @@ class Node:
     ##
     ## Constructor
     ##
-    def __init__(self, idx: int, x: int, y: int) -> None:
+    def __init__(self, idx: int, x: float, y: float) -> None:
         """Initializer for the Node class
 
         Args:
@@ -86,8 +86,8 @@ class Node:
         """
         return {
             "idx": self.idx,
-            "x": self.x,
-            "y": self.y,
+            "x": float(self.x),
+            "y": float(self.y),
         }
 
         ##
@@ -103,7 +103,7 @@ class Node:
         Returns:
             str: The json map of the node
         """
-        return json.dumps(self.to_map())
+        return json.dumps(self.to_map(), indent=4)
 
         ##
         ## End of function
