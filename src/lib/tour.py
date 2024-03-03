@@ -26,7 +26,7 @@ class Tour:
         self,
         nodes: List[Node] = [],
         distance: int = 0,
-        algorithm: TSPAlgorithm = TSPAlgorithm.NoneType,
+        algorithm: str = TSPAlgorithm.NoneType,
     ) -> None:
         """Initializer for the Tour class
 

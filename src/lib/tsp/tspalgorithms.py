@@ -25,7 +25,7 @@ class TSPAlgorithms:
     ## Set the shortest tour
     ##
     @staticmethod
-    def set_shortest_tour(graph: Graph, algorithm: TSPAlgorithm) -> None:
+    def set_shortest_tour(graph: Graph, algorithm: str) -> None:
         """Set the shortest tour for the given algorithm
 
         Args:
@@ -46,7 +46,7 @@ class TSPAlgorithms:
     ## Get the shortest tour
     ##
     @staticmethod
-    def get_shortest_tour(graph: Graph, algorithm: TSPAlgorithm) -> Tour:
+    def get_shortest_tour(graph: Graph, algorithm: str) -> Tour:
         """Get the shortest tour for the given algorithm
 
         Args:
@@ -65,6 +65,9 @@ class TSPAlgorithms:
 
         elif algorithm == TSPAlgorithm.SimulatedAnnealing:
             return TSPAlgorithms.simulated_annealing(graph)
+
+        elif algorithm == TSPAlgorithm.GreedyHeuristic:
+            return TSPAlgorithms.greedy_heuristic(graph)
 
         # Return the shortest tour
         return Tour(algorithm=TSPAlgorithm.NoneType)
