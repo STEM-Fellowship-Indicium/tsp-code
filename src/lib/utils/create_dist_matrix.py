@@ -20,14 +20,14 @@ from lib.utils.calculate_node_distance import calculate_node_distance
 ##
 ## This function calculates the pythagorean distance between every two points.
 ##
-def create_dist_matrix(nodes: List[Node]) -> List[list[int]]:
+def create_dist_matrix(nodes: List[Node]) -> List[List[int]]:
     """Create a distance matrix for the given nodes
 
     Args:
-        nodes (list[Node]): The nodes to create the distance matrix for
+        nodes (List[Node]): The nodes to create the distance matrix for
 
     Returns:
-        list[list[int]]: The distance matrix
+        List[List[int]]: The distance matrix
     """
     # Create the distance matrix
     dist_matrix = np.zeros((len(nodes), len(nodes)))
