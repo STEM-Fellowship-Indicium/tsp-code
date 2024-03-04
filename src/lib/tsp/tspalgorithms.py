@@ -83,13 +83,11 @@ class TSPAlgorithms:
         Args:
             graph (Graph): The graph to solve
         """
-        # Store the shortest tour
-        shortest_tour: Tour = Tour(algorithm=TSPAlgorithm.BruteForce)
-
         # Variables
         distance_matrix = create_dist_matrix(graph.nodes)
         n = len(graph.nodes)
         shortest_distance = math.inf
+        shortest_tour_node_idxs = []
 
         ## Find the shortest tour
         ##
@@ -106,13 +104,14 @@ class TSPAlgorithms:
 
             if distance < shortest_distance:
                 shortest_distance = distance
-                shortest_tour.nodes = path
-
-        shortest_tour.nodes = [graph.nodes[i] for i in shortest_tour.nodes]
-        shortest_tour.distance = shortest_distance
+                shortest_tour_node_idxs = path
 
         # Return the shortest tour
-        return shortest_tour
+        return Tour(
+            nodes=[graph.nodes[idx] for idx in shortest_tour_node_idxs],
+            distance=shortest_distance,
+            algorithm=TSPAlgorithm.BruteForce,
+        )
 
         ##
         ## End of function
@@ -128,19 +127,22 @@ class TSPAlgorithms:
         Args:
             graph (Graph): The graph to solve
         """
-        # Store the shortest tour
-        shortest_tour: Tour = Tour(algorithm=TSPAlgorithm.GreedyHeuristic)
-
         # Variables
         distance_matrix = create_dist_matrix(graph.nodes)
         n = len(graph.nodes)
         visited = [False] * n
         shortest_distance = 0
-        shortest_tour.nodes = [graph.nodes[0]]
+        shortest_tour_nodes = [graph.nodes[0]]
 
-        # Find the shortest tour
+        ##
+        ## Find the shortest tour. This is done by starting at the first node,
+        ## then going to the closest node, then going to the closest node from
+        ## that node, and so on.
+        ##
+        ## Since this is a heuristic, it may not always find the shortest tour.
+        ##
         for _ in range(n - 1):
-            current_node = shortest_tour.nodes[-1]
+            current_node = shortest_tour_nodes[-1]
             visited[graph.nodes.index(current_node)] = True
             min_distance = math.inf
             next_node = None
@@ -156,16 +158,20 @@ class TSPAlgorithms:
                         ]
                         next_node = graph.nodes[i]
 
-            shortest_tour.nodes.append(next_node)
+            shortest_tour_nodes.append(next_node)
             shortest_distance += min_distance
 
+        # Add the distance from the last node to the first node
         shortest_distance += distance_matrix[
-            graph.nodes.index(shortest_tour.nodes[-1])
+            graph.nodes.index(shortest_tour_nodes[-1])
         ][0]
-        shortest_tour.distance = shortest_distance
 
         # Return the shortest tour
-        return shortest_tour
+        return Tour(
+            nodes=shortest_tour_nodes,
+            distance=shortest_distance,
+            algorithm=TSPAlgorithm.GreedyHeuristic,
+        )
 
         ##
         ## End of function
