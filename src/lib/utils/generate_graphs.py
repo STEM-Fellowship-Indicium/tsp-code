@@ -19,19 +19,20 @@ import json
 ##
 ## Generate graphs
 ##
-def generate_graphs(n: int, num_nodes: int) -> List[Graph]:
+def generate_graphs(
+    n: int, num_nodes: int, algorithm: TSPAlgorithm = TSPAlgorithm.NoneType
+) -> List[Graph]:
     ##
     ## Generate a list of graphs
-    ##
-    ## Need atleast 1000 samples, also get best node route for each
     ##
     graphs = [Graph.rand(num_nodes=num_nodes) for _ in range(n)]
 
     ##
     ## Set the shortest tour for each graph
     ##
-    for graph in graphs:
-        TSPAlgorithms.set_shortest_tour(graph, algorithm=TSPAlgorithm.BruteForce)
+    if algorithm != TSPAlgorithm.NoneType:
+        for graph in graphs:
+            TSPAlgorithms.set_shortest_tour(graph, algorithm)
 
     ##
     ## Return the list of graphs
@@ -48,23 +49,45 @@ def generate_graphs(n: int, num_nodes: int) -> List[Graph]:
 ##
 if __name__ == "__main__":
     ##
-    ## Generate graphs
+    ## Test imports
     ##
-    graphsN3 = generate_graphs(n=100, num_nodes=3)  ## 100 graphs
+    from lib.utils.export_graphs import export_graphs
+    import os
 
     ##
     ## Generate graphs
     ##
-    graphsN5 = generate_graphs(n=100, num_nodes=5)  ## 50 graphs
+    graphsN3 = generate_graphs(
+        n=100, num_nodes=3, algorithm=TSPAlgorithm.BruteForce
+    )  ## 100 graphs
 
     ##
     ## Generate graphs
     ##
-    graphsN10 = generate_graphs(n=100, num_nodes=7)  ## 25 graphs
+    graphsN5 = generate_graphs(
+        n=100, num_nodes=5, algorithm=TSPAlgorithm.BruteForce
+    )  ## 100 graphs
+
+    ##
+    ## Generate graphs
+    ##
+    graphsN10 = generate_graphs(
+        n=100, num_nodes=7, algorithm=TSPAlgorithm.BruteForce
+    )  ## 100 graphs
 
     ##
     ## Save to a file
     ##
-    graphs_as_maps = [graph.to_map() for graph in graphsN3 + graphsN5 + graphsN10]
-    with open("data/graphs.json", "w") as file:
-        json.dump(graphs_as_maps, file, indent=4)
+    export_graphs(
+        graphsN3 + graphsN5 + graphsN10, "data/tests/unit/generate_graphs.json"
+    )
+
+    ##
+    ## Delete the file
+    ##
+    # os.remove("data/tests/unit/generate_graphs.json")
+
+
+##
+## End of file
+##
