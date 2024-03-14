@@ -239,7 +239,7 @@ if __name__ == "__main__":
 
     # Save the graph and shortest tour to file (testing)
     # graph.shortest_tour = res
-    # graph.export("data/tsp-test.json")
+    # graph.export("data/graph-tsp.json")
 
     # Solve the graph using the genetic algorithm
     start = time.time()
