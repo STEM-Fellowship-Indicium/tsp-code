@@ -1,0 +1,262 @@
+[
+    {
+        "nodes": [
+            {
+                "idx": 0,
+                "x": 73.0,
+                "y": 92.0
+            }
+        ],
+        "edges": [],
+        "adj_matrix": [
+            [
+                0
+            ]
+        ],
+        "shortest_tour": {
+            "nodes": [
+                {
+                    "idx": 0,
+                    "x": 73.0,
+                    "y": 92.0
+                }
+            ],
+            "algorithm": "BruteForce",
+            "distance": 0.0
+        }
+    },
+    {
+        "nodes": [
+            {
+                "idx": 0,
+                "x": 35.0,
+                "y": 6.0
+            }
+        ],
+        "edges": [],
+        "adj_matrix": [
+            [
+                0
+            ]
+        ],
+        "shortest_tour": {
+            "nodes": [
+                {
+                    "idx": 0,
+                    "x": 35.0,
+                    "y": 6.0
+                }
+            ],
+            "algorithm": "BruteForce",
+            "distance": 0.0
+        }
+    },
+    {
+        "nodes": [
+            {
+                "idx": 0,
+                "x": 44.0,
+                "y": 80.0
+            }
+        ],
+        "edges": [],
+        "adj_matrix": [
+            [
+                0
+            ]
+        ],
+        "shortest_tour": {
+            "nodes": [
+                {
+                    "idx": 0,
+                    "x": 44.0,
+                    "y": 80.0
+                }
+            ],
+            "algorithm": "BruteForce",
+            "distance": 0.0
+        }
+    },
+    {
+        "nodes": [
+            {
+                "idx": 0,
+                "x": 25.0,
+                "y": 39.0
+            }
+        ],
+        "edges": [],
+        "adj_matrix": [
+            [
+                0
+            ]
+        ],
+        "shortest_tour": {
+            "nodes": [
+                {
+                    "idx": 0,
+                    "x": 25.0,
+                    "y": 39.0
+                }
+            ],
+            "algorithm": "BruteForce",
+            "distance": 0.0
+        }
+    },
+    {
+        "nodes": [
+            {
+                "idx": 0,
+                "x": 42.0,
+                "y": 50.0
+            }
+        ],
+        "edges": [],
+        "adj_matrix": [
+            [
+                0
+            ]
+        ],
+        "shortest_tour": {
+            "nodes": [
+                {
+                    "idx": 0,
+                    "x": 42.0,
+                    "y": 50.0
+                }
+            ],
+            "algorithm": "BruteForce",
+            "distance": 0.0
+        }
+    },
+    {
+        "nodes": [
+            {
+                "idx": 0,
+                "x": 94.0,
+                "y": 46.0
+            }
+        ],
+        "edges": [],
+        "adj_matrix": [
+            [
+                0
+            ]
+        ],
+        "shortest_tour": {
+            "nodes": [
+                {
+                    "idx": 0,
+                    "x": 94.0,
+                    "y": 46.0
+                }
+            ],
+            "algorithm": "BruteForce",
+            "distance": 0.0
+        }
+    },
+    {
+        "nodes": [
+            {
+                "idx": 0,
+                "x": 77.0,
+                "y": 67.0
+            }
+        ],
+        "edges": [],
+        "adj_matrix": [
+            [
+                0
+            ]
+        ],
+        "shortest_tour": {
+            "nodes": [
+                {
+                    "idx": 0,
+                    "x": 77.0,
+                    "y": 67.0
+                }
+            ],
+            "algorithm": "BruteForce",
+            "distance": 0.0
+        }
+    },
+    {
+        "nodes": [
+            {
+                "idx": 0,
+                "x": 50.0,
+                "y": 6.0
+            }
+        ],
+        "edges": [],
+        "adj_matrix": [
+            [
+                0
+            ]
+        ],
+        "shortest_tour": {
+            "nodes": [
+                {
+                    "idx": 0,
+                    "x": 50.0,
+                    "y": 6.0
+                }
+            ],
+            "algorithm": "BruteForce",
+            "distance": 0.0
+        }
+    },
+    {
+        "nodes": [
+            {
+                "idx": 0,
+                "x": 59.0,
+                "y": 20.0
+            }
+        ],
+        "edges": [],
+        "adj_matrix": [
+            [
+                0
+            ]
+        ],
+        "shortest_tour": {
+            "nodes": [
+                {
+                    "idx": 0,
+                    "x": 59.0,
+                    "y": 20.0
+                }
+            ],
+            "algorithm": "BruteForce",
+            "distance": 0.0
+        }
+    },
+    {
+        "nodes": [
+            {
+                "idx": 0,
+                "x": 87.0,
+                "y": 30.0
+            }
+        ],
+        "edges": [],
+        "adj_matrix": [
+            [
+                0
+            ]
+        ],
+        "shortest_tour": {
+            "nodes": [
+                {
+                    "idx": 0,
+                    "x": 87.0,
+                    "y": 30.0
+                }
+            ],
+            "algorithm": "BruteForce",
+            "distance": 0.0
+        }
+    }
+]

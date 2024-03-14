@@ -69,7 +69,7 @@ class Graph:
         Returns:
             _type_: The string representation of the graph
         """
-        return f"{[str(node) for node in self.nodes]}, {[str(edge) for edge in self.edges]}"
+        return f"[{[str(node) for node in self.nodes]}, {[str(edge) for edge in self.edges]}]"
 
         ##
         ## End of function
@@ -320,6 +320,36 @@ class Graph:
         ##
 
     ##
+    ## Graph from map
+    ##
+    @staticmethod
+    def from_map(map: dict = None) -> "Graph":
+        """Create a graph from a map
+
+        Args:
+            map (dict): The map to create the graph from
+
+        Returns:
+            Graph: The graph created from the map
+        """
+        if map is None:
+            return None
+
+        # Create the nodes and edges
+        adj_matrix = map["adj_matrix"]
+        shortest_tour = Tour.from_map(map["shortest_tour"])
+
+        nodes = [Node.from_map(node) for node in map["nodes"]]
+        edges = [Edge.from_map(edge) for edge in map["edges"]]
+
+        # Return the graph
+        return Graph(edges, nodes, adj_matrix, shortest_tour)
+
+        ##
+        ## End of function
+        ##
+
+    ##
     ## Export the graph to a file
     ##
     def export(self, filename: str = None) -> None:
@@ -378,17 +408,16 @@ if __name__ == "__main__":
     graph1.print()
 
     # Todays date in the format of year-month-day-hour-minute-second
-    date = datetime.datetime.now().strftime("%Y-%m-%d-%H-%M-%S")
-    graph1.export(f"data/graph-test-{date}.json")
+    graph1.export(f"data/tests/unit/graph.export.json")
 
     ##
     ## Test 2
     ##
-    graph2 = Graph.import_json(f"data/graph-test-{date}.json")
+    graph2 = Graph.import_json(f"data/tests/unit/graph.export.json")
     graph2.print()
 
     # Delete the file
-    os.remove(f"data/graph-test-{date}.json")
+    # os.remove("data/tests/unit/graph.export.json")
 
     ##
     ## Test 3
