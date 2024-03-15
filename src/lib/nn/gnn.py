@@ -23,20 +23,20 @@ class GNN(nn.Module):
     ## Constructor
     ##
     def __init__(
-        self, node_features: int = 2, hidden_dim: int = 16, output_dim: int = 2
+        self, input_features: int = 2, hidden_dim: int = 16, output_features: int = 2
     ) -> None:
         """Initializer for the GNN class
 
         Args:
-            node_features (int): The number of features for each node
+            input_features (int): The number of features for each node
             hidden_dim (int): The hidden dimension for the GNN
-            output_dim (int): The output dimension for the GNN
+            output_features (int): The output dimension for the GNN
         """
         super(GNN, self).__init__()
 
-        self.node_features = node_features
+        self.input_features = input_features
         self.hidden_dim = hidden_dim
-        self.output_dim = output_dim
+        self.output_features = output_features
 
         ##
         ## Criterion and optimizer
@@ -51,7 +51,7 @@ class GNN(nn.Module):
         ##
         self.sequence = nn.Sequential(
             ## Layer 1: Input
-            nn.Linear(node_features, hidden_dim),
+            nn.Linear(input_features, hidden_dim),
             nn.ReLU(),
             ## Layer 2: Hidden
             nn.Linear(hidden_dim, hidden_dim * 2),
@@ -66,7 +66,7 @@ class GNN(nn.Module):
             nn.Linear(hidden_dim * 2, hidden_dim),
             nn.ReLU(),
             ## Layer 6: Output
-            nn.Linear(hidden_dim, output_dim),
+            nn.Linear(hidden_dim, output_features),
         )
 
         ##
@@ -98,11 +98,11 @@ class GNN(nn.Module):
         x = self.sequence(x)
 
         ##
-        ## Reshape the output. We want the output to be of shape (num_nodes, self.output_dim) [(rows, columns)]
+        ## Reshape the output. We want the output to be of shape (num_nodes + 1, self.output_features) [(rows, columns)]
         ##
         ## Note that: -1 automatically calculates the number of rows needed.
         ##
-        # x = x.view(-1, self.output_dim)
+        # x = x.view(-1, self.output_features)
 
         ##
         ## Return the output
@@ -136,12 +136,18 @@ if __name__ == "__main__":
     ##
     ## Create a dataset using the custom GraphDataset class
     ##
-    dataset = GraphDataset(num_samples=10, num_nodes=5, node_features=2)
+    dataset = GraphDataset(num_samples=100, num_nodes=7, node_features=2)
 
     ##
     ## Create the GNN model
     ##
-    model = GNN(node_features=2, hidden_dim=16, output_dim=2).to(device)
+    ## input_features = 2 # x and y coordinates
+    ##
+    ## hidden_dim = 16 # hidden dimension
+    ##
+    ## output_features = 2 # x and y coordinates
+    ##
+    model = GNN(input_features=2, hidden_dim=16, output_features=2).to(device)
 
     ##
     ## Create a loss function and an optimizer
@@ -155,9 +161,9 @@ if __name__ == "__main__":
     )  ## or optim.Adam(model.parameters(), lr=0.001)
 
     ##
-    ## Train the model with 1000 epochs
+    ## Train the model with 100 epochs
     ##
-    epochs: int = 1000
+    epochs: int = 100
     ##
     ## Training loop
     ##
@@ -212,20 +218,23 @@ if __name__ == "__main__":
     ##
     ## Let's get an actual tour using the prediction
     ##
-    predicted_real_tour = Tour.from_prediction(dataset._graphs[0].nodes, output)
-    real_shortest_tour = TSPAlgorithms.get_shortest_tour(
-        predicted_real_tour, TSPAlgorithm.BruteForce
+    graph = dataset._graphs[0]
+
+    pred_tour = Tour.from_prediction(graph.nodes, output)
+
+    actual_shortest_tour = TSPAlgorithms.get_shortest_tour(
+        graph, TSPAlgorithm.BruteForce
     )
 
     ##
     ## Print the real tour and the real shortest tour
     ##
-    print(f"Real tour: {predicted_real_tour}\nReal shortest tour: {real_shortest_tour}")
+    print(f"Real tour: {pred_tour}\nReal shortest tour: {actual_shortest_tour}")
 
     ##
     ## Draw the graph with the two tours
     ##
-    dataset._graphs[0].draw([predicted_real_tour, real_shortest_tour], ["pink", "red"])
+    graph.draw([pred_tour, actual_shortest_tour], ["pink", "red"])  ##
 
 
 ##

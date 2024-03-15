@@ -88,31 +88,42 @@ class TSPAlgorithms:
         """
         # Variables
         distance_matrix = create_dist_matrix(graph.nodes)
-        n = len(graph.nodes)
         shortest_distance = math.inf
-        shortest_tour_node_idxs = []
+        shortest_tour_nodes = []
+
+        ##
+        ## Generate the paths (node indices) use factorial since there are n! paths
+        ## and we don't want indices next to each other to be the same.
+        ##
+        paths = [
+            list(path) for path in itertools.permutations(graph.nodes, len(graph.nodes))
+        ]
 
         ##
         ## Find the shortest tour
         ##
-        ## itertools.permutations returns all possible permutations of the nodes.
-        ## For example: [0, 1, 2], [0, 2, 1], [1, 0, 2], [1, 2, 0], [2, 0, 1], [2, 1, 0]
-        ##
-        ## https://www.geeksforgeeks.org/python-itertools-permutations/
-        ##
-        for path in itertools.permutations(range(n)):
+        for path in paths:
+            ##
+            ## Calculate the distance of the path
+            ##
             distance = 0
-            for i in range(n - 1):
-                distance += distance_matrix[path[i]][path[i + 1]]
-            distance += distance_matrix[path[-1]][path[0]]
+            for i in range(len(path) - 1):
+                distance += distance_matrix[graph.nodes.index(path[i])][
+                    graph.nodes.index(path[i + 1])
+                ]
 
+            ##
+            ## If the distance is shorter than the current shortest distance,
+            ## set the shortest distance to the current distance and set the
+            ## shortest tour to the current path
+            ##
             if distance < shortest_distance:
                 shortest_distance = distance
-                shortest_tour_node_idxs = path
+                shortest_tour_nodes = path
 
         # Return the shortest tour
         return Tour(
-            nodes=[graph.nodes[idx] for idx in shortest_tour_node_idxs],
+            nodes=shortest_tour_nodes,
             distance=shortest_distance,
             algorithm=TSPAlgorithm.BruteForce,
         )
@@ -133,8 +144,6 @@ class TSPAlgorithms:
         """
         # Variables
         distance_matrix = create_dist_matrix(graph.nodes)
-        n = len(graph.nodes)
-        visited = [False] * n
         shortest_distance = 0
         shortest_tour_nodes = [graph.nodes[0]]
 
@@ -145,32 +154,36 @@ class TSPAlgorithms:
         ##
         ## Since this is a heuristic, it may not always find the shortest tour.
         ##
+        n: int = len(graph.nodes)
         for _ in range(n - 1):
+            ##
+            ## Get the current node
+            ##
             current_node = shortest_tour_nodes[-1]
-            visited[graph.nodes.index(current_node)] = True
-            min_distance = math.inf
-            next_node = None
 
-            for i in range(n):
-                if not visited[i]:
-                    if (
-                        distance_matrix[graph.nodes.index(current_node)][i]
-                        < min_distance
-                    ):
-                        min_distance = distance_matrix[graph.nodes.index(current_node)][
-                            i
-                        ]
-                        next_node = graph.nodes[i]
+            ##
+            ## Get the closest node
+            ##
+            closest_node = None
+            closest_distance = math.inf
 
-            shortest_tour_nodes.append(next_node)
-            shortest_distance += min_distance
+            for j in range(n):
+                if graph.nodes[j] not in shortest_tour_nodes:
+                    distance = distance_matrix[graph.nodes.index(current_node)][j]
 
-        # Add the distance from the last node to the first node
-        shortest_distance += distance_matrix[
-            graph.nodes.index(shortest_tour_nodes[-1])
-        ][0]
+                    if distance < closest_distance:
+                        closest_distance = distance
+                        closest_node = graph.nodes[j]
 
-        # Return the shortest tour
+            ##
+            ## Add the closest node to the shortest tour
+            ##
+            shortest_tour_nodes.append(closest_node)
+            shortest_distance += closest_distance
+
+        ##
+        ## Return the shortest tour
+        ##
         return Tour(
             nodes=shortest_tour_nodes,
             distance=shortest_distance,

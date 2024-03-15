@@ -27,7 +27,7 @@ class GraphDataset(Dataset):
     ## Constructor
     ##
     def __init__(
-        self, num_samples: int = 10, num_nodes: int = 5, node_features: int = 2
+        self, num_samples: int = 100, num_nodes: int = 7, node_features: int = 2
     ) -> None:
         """Initializes the GraphDataset class
 
@@ -106,6 +106,7 @@ class GraphDataset(Dataset):
         ## Set the shortest tours
         self.tours = [
             TSPAlgorithms.get_shortest_tour(graph, TSPAlgorithm.BruteForce).to_tensor()
+            for graph in self._graphs
         ]
 
         ##
