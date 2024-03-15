@@ -102,7 +102,7 @@ class GNN(nn.Module):
         ##
         ## Note that: -1 automatically calculates the number of rows needed.
         ##
-        x = x.view(-1, self.output_dim)
+        # x = x.view(-1, self.output_dim)
 
         ##
         ## Return the output
