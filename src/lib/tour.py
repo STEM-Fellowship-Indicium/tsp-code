@@ -64,6 +64,9 @@ class Tour:
     ##
     ## Convert a prediction to a real tour
     ##
+    ## TODO: Fix this function or the GNN. It will return nodes that are right beside eachother
+    ## or on top of eachother.
+    ##
     @staticmethod
     def from_prediction(real_node_positions: List[Node], pred: Tensor) -> "Tour":
         """Use a tour (predicted with the GNN) and it's node positions to generate a new tour with
