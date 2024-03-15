@@ -24,6 +24,7 @@ class TSPAlgorithm:
     GeneticAlgorithm: str = "GeneticAlgorithm"
     SimulatedAnnealing: str = "SimulatedAnnealing"
     GreedyHeuristic: str = "GreedyHeuristic"
+    GNN: str = "GNN"
 
     ##
     ## End of class

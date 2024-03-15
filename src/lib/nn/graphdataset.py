@@ -11,6 +11,7 @@ if __name__ == "__main__":
 ## Imports
 ##
 from torch.utils.data import Dataset
+from lib.graph import Graph
 from lib.utils.generate_graphs import generate_graphs
 from lib.tsp.tspalgorithms import TSPAlgorithms
 from lib.types.tspalgorithm import TSPAlgorithm
@@ -39,6 +40,8 @@ class GraphDataset(Dataset):
         self.num_features = node_features  # x, y coordinates
         self.graphs: List[torch.Tensor] = []
         self.tours: List[torch.Tensor] = []
+
+        self._graphs: List[Graph] = []
 
         self.set_rand()
 
@@ -86,20 +89,24 @@ class GraphDataset(Dataset):
     ##
     def set_rand(self) -> None:
         """Set the dataset to random graphs"""
-        ## Generate the graphs
-        graphs = generate_graphs(self.num_samples, self.num_nodes, self.num_features)
+        ##
+        ## We'll save both the OOP graphs and the tensor graphs. We'll use the OOP graphs
+        ## for generating a real tour using a prediction from our GNN, and the tensor graphs
+        ## for actually training the GNN.
+        ##
+
+        ## Generate the OOP graphs
+        self._graphs = generate_graphs(
+            self.num_samples, self.num_nodes, self.num_features
+        )
 
         ## Convert the graphs to tensors
-        for graph in graphs:
-            self.graphs.append(graph.to_tensor())
+        self.graphs = [graph.to_tensor() for graph in self._graphs]
 
         ## Set the shortest tours
-        for graph in graphs:
-            shortest_tour = TSPAlgorithms.get_shortest_tour(
-                graph, TSPAlgorithm.BruteForce
-            )
-
-            self.tours.append(shortest_tour.to_tensor())
+        self.tours = [
+            TSPAlgorithms.get_shortest_tour(graph, TSPAlgorithm.BruteForce).to_tensor()
+        ]
 
         ##
         ## End of function
@@ -113,7 +120,7 @@ class GraphDataset(Dataset):
 ##
 ## This tests the GraphDataset class only if we're executing THIS current file.
 ##
-if __name__ == "__main__":
+if __name__ == "__main__":  ##
     from torch.utils.data import DataLoader
 
     # Create a dataset

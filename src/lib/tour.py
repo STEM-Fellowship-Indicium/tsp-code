@@ -9,10 +9,11 @@ if __name__ == "__main__":
 ##
 ## Imports
 ##
-from typing import List
-from torch import Tensor
 from lib.node import Node
 from lib.types.tspalgorithm import TSPAlgorithm
+from lib.utils.create_dist_matrix import create_dist_matrix
+from typing import List
+from torch import Tensor
 import numpy as np
 import json
 
@@ -27,7 +28,7 @@ class Tour:
     def __init__(
         self,
         nodes: List[Node] = [],
-        distance: float = 0,
+        distance: float = -1.0,
         algorithm: str = TSPAlgorithm.NoneType,
     ) -> None:
         """Initializer for the Tour class
@@ -55,6 +56,53 @@ class Tour:
             str: The string representation of the tour
         """
         return f"{[str(node) for node in self.nodes]}"
+
+        ##
+        ## End of function
+        ##
+
+    ##
+    ## Convert a prediction to a real tour
+    ##
+    @staticmethod
+    def from_prediction(real_node_positions: List[Node], pred: Tensor) -> "Tour":
+        """Use a tour (predicted with the GNN) and it's node positions to generate a new tour with
+        real nodes with real positions. The positions in the predicted tour are not real, they are
+        just close to the real positions.
+
+        Args:
+            real_node_positions (List[List[float]]): The real node positions
+            pred (Tensor): The predicted tour
+
+        Returns:
+            Tour: The tour with real nodes and real positions
+        """
+        ##
+        ## Iterate over the nodes in the prediction. We'll get the real node with the closest
+        ## position to the predicted node.
+        ##
+        nodes = [
+            min(
+                real_node_positions,
+                key=lambda real_node: np.linalg.norm(
+                    real_node.to_numpy() - node_tensor.numpy()
+                ),
+            )
+            for node_tensor in pred.detach()
+        ]
+
+        ##
+        ## Calculate the distance of the tour
+        ##
+        distance = 0
+        distance_matrix = create_dist_matrix(nodes)
+        for i in range(len(nodes) - 1):
+            distance += distance_matrix[i, i + 1]
+
+        ##
+        ## Return the tour
+        ##
+        return Tour(nodes=nodes, distance=distance, algorithm=TSPAlgorithm.GNN)
 
         ##
         ## End of function
@@ -174,6 +222,13 @@ if __name__ == "__main__":
 
     tour_numpy = tour.to_numpy()
     print(tour_numpy)
+
+    tour_from_map = Tour.from_map(tour_map)
+    print(tour_from_map)
+
+    tour_from_prediction = Tour.from_prediction(
+        [Node(0, 0, 0), Node(1, 1, 1), Node(2, 2, 2)], tour_tensor
+    )
 
 
 ##
