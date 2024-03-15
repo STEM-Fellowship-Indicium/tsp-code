@@ -92,6 +92,7 @@ class TSPAlgorithms:
         shortest_distance = math.inf
         shortest_tour_node_idxs = []
 
+        ##
         ## Find the shortest tour
         ##
         ## itertools.permutations returns all possible permutations of the nodes.

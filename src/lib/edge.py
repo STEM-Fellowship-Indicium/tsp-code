@@ -11,6 +11,8 @@ if __name__ == "__main__":
 ## Imports
 ##
 import json
+from torch import Tensor
+import numpy as np
 from lib.node import Node
 
 
@@ -23,13 +25,14 @@ class Edge:
     ##
     ## Constructor
     ##
-    def __init__(self, idx: int, start: Node, end: Node, weight: int = 1) -> None:
+    def __init__(self, idx: int, start: Node, end: Node, weight: float = 1.0) -> None:
         """Initializer for the Edge class
 
         Args:
             idx (int): The idx of the edge
             start (Node): The start node of the edge
             end (Node): The end node of the edge
+            weight (float, optional): The weight of the edge. Defaults to 1.0.
         """
         self.idx = idx
         self.start = start
@@ -118,6 +121,42 @@ class Edge:
         ##
 
     ##
+    ## Convert the edge to a tensor
+    ##
+    def to_tensor(self) -> Tensor:
+        """Convert the edge to a tensor
+
+        Returns:
+            Tensor: The tensor representation of the edge
+        """
+        start_np = self.start.to_numpy()
+        end_np = self.end.to_numpy()
+
+        return Tensor([start_np, end_np])
+
+        ##
+        ## End of function
+        ##
+
+    ##
+    ## Convert the edge to a numpy array
+    ##
+    def to_numpy(self, dtype=np.float32) -> np.ndarray:
+        """Convert the edge to a numpy array
+
+        Returns:
+            np.ndarray: The numpy array representation of the edge
+        """
+        start_np = self.start.to_numpy()
+        end_np = self.end.to_numpy()
+
+        return np.array([start_np, end_np], dtype=dtype)
+
+        ##
+        ## End of function
+        ##
+
+    ##
     ## Normalize the edge
     ##
     def normalize(self) -> None:
@@ -161,6 +200,8 @@ if __name__ == "__main__":
     print(e.end)
 
     e.print()
+
+    print(e.to_tensor())
 
 ##
 ## End of file

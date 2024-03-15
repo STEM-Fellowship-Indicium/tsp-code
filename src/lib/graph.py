@@ -12,7 +12,9 @@ if __name__ == "__main__":
 ##
 import json
 from typing import List
-
+from torch import Tensor
+import numpy as np
+from datetime import datetime
 from matplotlib import pyplot as plt
 from lib.node import Node
 from lib.edge import Edge
@@ -33,7 +35,7 @@ class Graph:
         self,
         edges: List[Edge],
         nodes: List[Node] = [],
-        adj_matrix: List[List[int]] = [],
+        adj_matrix: List[List[float]] = [],
         shortest_tour: Tour = None,
     ) -> None:
         """Initializer for the Graph class
@@ -41,7 +43,7 @@ class Graph:
         Args:
             nodes (List[Node]): The nodes of the graph
             edges (List[Edge]): The edges of the graph
-            adj_matrix (List[List[int]]): The adjacency matrix of the graph
+            adj_matrix (List[List[float]]): The adjacency matrix of the graph
             shortest_tour (Tour): The shortest path of the graph
         """
 
@@ -141,6 +143,36 @@ class Graph:
             )
             for edge in graph["edges"]
         ]
+
+        # Return the graph
+        return Graph(edges, nodes, adj_matrix, shortest_tour)
+
+        ##
+        ## End of function
+        ##
+
+    ##
+    ## Graph from map
+    ##
+    @staticmethod
+    def from_map(map: dict = None) -> "Graph":
+        """Create a graph from a map
+
+        Args:
+            map (dict): The map to create the graph from
+
+        Returns:
+            Graph: The graph created from the map
+        """
+        if map is None:
+            return None
+
+        # Create the nodes and edges
+        adj_matrix = map["adj_matrix"]
+        shortest_tour = Tour.from_map(map["shortest_tour"])
+
+        nodes = [Node.from_map(node) for node in map["nodes"]]
+        edges = [Edge.from_map(edge) for edge in map["edges"]]
 
         # Return the graph
         return Graph(edges, nodes, adj_matrix, shortest_tour)
@@ -320,36 +352,6 @@ class Graph:
         ##
 
     ##
-    ## Graph from map
-    ##
-    @staticmethod
-    def from_map(map: dict = None) -> "Graph":
-        """Create a graph from a map
-
-        Args:
-            map (dict): The map to create the graph from
-
-        Returns:
-            Graph: The graph created from the map
-        """
-        if map is None:
-            return None
-
-        # Create the nodes and edges
-        adj_matrix = map["adj_matrix"]
-        shortest_tour = Tour.from_map(map["shortest_tour"])
-
-        nodes = [Node.from_map(node) for node in map["nodes"]]
-        edges = [Edge.from_map(edge) for edge in map["edges"]]
-
-        # Return the graph
-        return Graph(edges, nodes, adj_matrix, shortest_tour)
-
-        ##
-        ## End of function
-        ##
-
-    ##
     ## Export the graph to a file
     ##
     def export(self, filename: str = None) -> None:
@@ -359,7 +361,7 @@ class Graph:
             filename (str): The name of the file to export the graph to
         """
         if filename is None:
-            date = datetime.datetime.now().strftime("%Y-%m-%d-%H-%M-%S")
+            date = datetime.now().strftime("%Y-%m-%d-%H-%M-%S")
             file = f"data/graph-{date}.json"
 
         # Open the file (create it if it doesn't exist)
@@ -369,6 +371,66 @@ class Graph:
         ##
         ## End of function
         ##
+
+    ##
+    ## Get the adjacency matrix as a tensor
+    ##
+    def get_adj_matrix_tensor(self) -> Tensor:
+        """Get the adjacency matrix as a tensor
+
+        Returns:
+            Tensor: The adjacency matrix as a tensor
+        """
+        return Tensor(self.adj_matrix)
+
+        ##
+        ## End of function
+        ##
+
+    ##
+    ## Get the distance between two nodes
+    ##
+    def get_distance(self, start: Node, end: Node) -> float:
+        """Get the distance between two nodes
+
+        Args:
+            start (Node): The start node
+            end (Node): The end node
+
+        Returns:
+            float: The distance between the two nodes
+        """
+        return self.adj_matrix[start.idx][end.idx]
+
+        ##
+        ## End of function
+        ##
+
+    ##
+    ## Convert the graph to a tensor
+    ##
+    def to_tensor(self) -> Tensor:
+        """Convert the graph to a tensor
+
+        Returns:
+            Tensor: The tensor representation of the graph
+        """
+        return Tensor([node.to_numpy() for node in self.nodes])
+
+        ##
+        ## End of function
+        ##
+
+    ##
+    ## Convert the graph to a numpy array
+    ##
+    def to_numpy(self, dtype=np.float32) -> np.ndarray:
+        """Convert the graph to a numpy array
+
+        Returns:
+            np.ndarray: The numpy representation of the graph
+        """
+        return np.array([node.to_numpy(dtype) for node in self.nodes])
 
     ##
     ## Print the graph
@@ -424,6 +486,17 @@ if __name__ == "__main__":
     ##
     graph3 = Graph.rand(10)
     graph3.draw()
+
+    ##
+    ## Test 4
+    ##
+    graph4 = Graph.rand(10)
+
+    # Get the graph as a tensor
+    tensor = graph4.to_tensor()
+    print(tensor)
+
+    print(graph4.get_adj_matrix_tensor())
 
 
 ##
