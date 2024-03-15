@@ -125,6 +125,8 @@ if __name__ == "__main__":
     ## Test Imports
     ##
     from graphdataset import GraphDataset
+    from lib.tour import Tour
+    from lib.tsp.tspalgorithms import TSPAlgorithms, TSPAlgorithm
 
     ##
     ## If our device has a GPU, use it (for speed).
@@ -206,6 +208,24 @@ if __name__ == "__main__":
             [0.0300, 0.7400],
             [0.3800, 0.0400]])
     """
+
+    ##
+    ## Let's get an actual tour using the prediction
+    ##
+    predicted_real_tour = Tour.from_prediction(dataset._graphs[0].nodes, output)
+    real_shortest_tour = TSPAlgorithms.get_shortest_tour(
+        predicted_real_tour, TSPAlgorithm.BruteForce
+    )
+
+    ##
+    ## Print the real tour and the real shortest tour
+    ##
+    print(f"Real tour: {predicted_real_tour}\nReal shortest tour: {real_shortest_tour}")
+
+    ##
+    ## Draw the graph with the two tours
+    ##
+    dataset._graphs[0].draw([predicted_real_tour, real_shortest_tour], ["pink", "red"])
 
 
 ##
