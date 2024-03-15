@@ -22,7 +22,9 @@ class GNN(nn.Module):
     ##
     ## Constructor
     ##
-    def __init__(self, node_features: int, hidden_dim: int, output_dim: int) -> None:
+    def __init__(
+        self, node_features: int = 2, hidden_dim: int = 16, output_dim: int = 2
+    ) -> None:
         """Initializer for the GNN class
 
         Args:
@@ -47,30 +49,42 @@ class GNN(nn.Module):
     ##
     ## Forward pass
     ##
-    def forward(self, graph: torch.Tensor) -> torch.Tensor:
+    def forward(self, x: torch.Tensor) -> torch.Tensor:
         """Forward pass for the GNN
 
         Args:
-            graph (torch.Tensor): The graph input
+            x (torch.Tensor): The input
 
         Returns:
             torch.Tensor: The output of the GNN
+
+
+        Example Output:
+            tensor([[15., 43.], [20., 17.], [47., 13.], [94., 49.], [49., 81.]])
         """
-
-        # Apply the first linear layer
-        out = self.fc1(graph)
-
-        # Apply the ReLU activation function
-        out = self.relu(out)
-
-        # Apply the second linear layer
-        out = self.fc2(out)
-
-        return out
+        ##
+        ## We want the output to be positions of the nodes. We'll then use these
+        ## distances to locate the nearest node to each node.
+        ##
+        ## The output shape should be as shown in the example above: (num_nodes, 2)
+        ##
 
         ##
-        ## End of function
+        ## Perform the forward pass.
         ##
+        x = self.fc1(x)
+        x = self.relu(x)
+        x = self.fc2(x)
+
+        ##
+        ## Reshape the output. We want the output to be of shape (num_nodes, 2).
+        ##
+        x = x.view(-1, self.output_dim)
+
+        ##
+        ## Return the output
+        ##
+        return x
 
     ##
     ## End of class
@@ -89,11 +103,10 @@ if __name__ == "__main__":
     # Create the graph neural network dataset
     from graphdataset import GraphDataset
 
-    num_nodes = 10
-    dataset = GraphDataset(num_samples=10, num_nodes=num_nodes, node_features=2)
+    dataset = GraphDataset(num_samples=10, num_nodes=5, node_features=2)
 
     # Create the graph neural network model
-    model = GNN(node_features=2, hidden_dim=16, output_dim=num_nodes).to(device)
+    model = GNN(node_features=2, hidden_dim=16, output_dim=2).to(device)
 
     # Create a loss function and an optimizer
     criterion = nn.CrossEntropyLoss()
@@ -123,7 +136,6 @@ if __name__ == "__main__":
     graph, tour = dataset[0]
     graph = graph.to(device)
     output = model(graph)
-    output = torch.argmax(output, dim=1)
     print(f"Prediction: {output}\nActual: {tour}")
 
 

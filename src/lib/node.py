@@ -10,6 +10,9 @@ if __name__ == "__main__":
 ##
 ## Imports
 ##
+from torch import Tensor
+from typing import List
+import numpy as np
 import json
 
 
@@ -110,17 +113,60 @@ class Node:
         ##
 
     ##
+    ## Convert the node to a tensor
+    ##
+    def to_tensor(self) -> Tensor:
+        """Convert the node to a tensor
+
+        Returns:
+            Tensor: The tensor representation of the node
+        """
+        return Tensor([self.x, self.y])
+
+        ##
+        ## End of function
+        ##
+
+    ##
+    ## Convert the node to a numpy array
+    ##
+    def to_numpy(self, dtype=np.float32) -> np.ndarray:
+        """Convert the node to a numpy array
+
+        Returns:
+            np.ndarray: The numpy array representation of the node
+        """
+        prev_x, prev_y = self.normalize(min=[0, 0], max=[100, 100])
+
+        np_array = np.array([self.x, self.y], dtype=dtype)
+
+        self.x, self.y = prev_x, prev_y
+
+        return np_array
+
+        ##
+        ## End of function
+        ##
+
+    ##
     ## Normalize the node
     ##
     ## This takes a node and normalizes its x and y values to be between 0 and 1
     ##
-    def normalize(self) -> None:
+    def normalize(
+        self, min: List[float] = [0, 0], max: List[float] = [1, 1]
+    ) -> List[float]:
         """Normalize the node"""
-        min_x = min_y = 0
-        max_x = max_y = 100
+        min_x, min_y = min
+        max_x, max_y = max
+
+        prev_x = self.x
+        prev_y = self.y
 
         self.x = (self.x - min_x) / (max_x - min_x)
         self.y = (self.y - min_y) / (max_y - min_y)
+
+        return (prev_x, prev_y)
 
         ##
         ## End of function
@@ -153,6 +199,15 @@ if __name__ == "__main__":
     print(node)
     print(node.to_json())
     node.print()
+
+    nump = node.to_numpy()
+    print(nump)
+
+    tens = node.to_tensor()
+    print(tens)
+
+    norm_prev = node.normalize()
+    print(norm_prev, node)
 
 
 ##

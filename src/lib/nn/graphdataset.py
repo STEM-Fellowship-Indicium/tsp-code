@@ -10,8 +10,12 @@ if __name__ == "__main__":
 ##
 ## Imports
 ##
-import torch
 from torch.utils.data import Dataset
+from lib.utils.generate_graphs import generate_graphs
+from lib.tsp.tspalgorithms import TSPAlgorithms
+from lib.types.tspalgorithm import TSPAlgorithm
+from typing import List
+import torch
 
 
 ##
@@ -22,7 +26,7 @@ class GraphDataset(Dataset):
     ## Constructor
     ##
     def __init__(
-        self, num_samples: int = 10, num_nodes: int = 10, node_features: int = 2
+        self, num_samples: int = 10, num_nodes: int = 5, node_features: int = 2
     ) -> None:
         """Initializes the GraphDataset class
 
@@ -33,8 +37,8 @@ class GraphDataset(Dataset):
         self.num_samples = num_samples
         self.num_nodes = num_nodes
         self.num_features = node_features  # x, y coordinates
-        self.graphs = []
-        self.tours = []
+        self.graphs: List[torch.Tensor] = []
+        self.tours: List[torch.Tensor] = []
 
         self.set_rand()
 
@@ -70,7 +74,7 @@ class GraphDataset(Dataset):
             tuple: A tuple containing the graph and the shortest tour
         """
         return torch.tensor(self.graphs[idx], dtype=torch.float32), torch.tensor(
-            self.tours[idx], dtype=torch.int64
+            self.tours[idx], dtype=torch.float32
         )
 
         ##
@@ -82,66 +86,20 @@ class GraphDataset(Dataset):
     ##
     def set_rand(self) -> None:
         """Set the dataset to random graphs"""
-        for _ in range(self.num_samples):
-            nodes = torch.rand((self.num_nodes, self.num_features), dtype=torch.float32)
-            dist = self.dist(nodes)
-            tour = self.nearest_neighbor(dist)
+        ## Generate the graphs
+        graphs = generate_graphs(self.num_samples, self.num_nodes, self.num_features)
 
-            self.graphs.append(nodes)
-            self.tours.append(tour)
+        ## Convert the graphs to tensors
+        for graph in graphs:
+            self.graphs.append(graph.to_tensor())
 
-        ##
-        ## End of function
-        ##
+        ## Set the shortest tours
+        for graph in graphs:
+            shortest_tour = TSPAlgorithms.get_shortest_tour(
+                graph, TSPAlgorithm.BruteForce
+            )
 
-    ##
-    ## Calculate the distance matrix
-    ##
-    def dist(self, nodes: torch.Tensor) -> torch.Tensor:
-        """Calculate the distance matrix
-
-        Args:
-            nodes (torch.Tensor): The nodes
-
-        Returns:
-            torch.Tensor: The distance matrix
-        """
-        # Get the x and y coordinates of the nodes
-        x, y = nodes[:, 0], nodes[:, 1]
-        # Calculate the distance matrix
-        return torch.sqrt((x.unsqueeze(1) - x) ** 2 + (y.unsqueeze(1) - y) ** 2)
-
-        ##
-        ## End of function
-
-    ##
-    ## Nearest neighbor algorithm
-    ##
-    def nearest_neighbor(self, dist: torch.Tensor) -> torch.Tensor:
-        """Nearest neighbor algorithm
-
-        Args:
-            dist (torch.Tensor): The distance matrix
-
-        Returns:
-            torch.Tensor: The shortest tour
-        """
-        # Initialize the tour
-        tour = [0]
-        # Create a list of unvisited nodes
-        unvisited = list(range(1, self.num_nodes))
-        # Iterate over the unvisited nodes
-        while unvisited:
-            # Get the current node
-            current = tour[-1]
-            # Get the distances from the current node to the unvisited nodes
-            distances = dist[current, unvisited]
-            # Get the index of the nearest unvisited node
-            nearest_idx = distances.argmin().item()
-            # Add the nearest unvisited node to the tour
-            tour.append(unvisited.pop(nearest_idx))
-
-        return torch.tensor(tour, dtype=torch.int64)
+            self.tours.append(shortest_tour.to_tensor())
 
         ##
         ## End of function
@@ -159,7 +117,7 @@ if __name__ == "__main__":
     from torch.utils.data import DataLoader
 
     # Create a dataset
-    dataset = GraphDataset(num_samples=10, num_nodes=20)
+    dataset = GraphDataset(num_samples=10, num_nodes=5)
     # Create a dataloader
     dataloader = DataLoader(dataset, batch_size=2, shuffle=True)
     # Iterate over the dataloader

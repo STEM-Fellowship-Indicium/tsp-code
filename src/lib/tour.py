@@ -10,8 +10,10 @@ if __name__ == "__main__":
 ## Imports
 ##
 from typing import List
+from torch import Tensor
 from lib.node import Node
 from lib.types.tspalgorithm import TSPAlgorithm
+import numpy as np
 import json
 
 
@@ -25,13 +27,14 @@ class Tour:
     def __init__(
         self,
         nodes: List[Node] = [],
-        distance: int = 0,
+        distance: float = 0,
         algorithm: str = TSPAlgorithm.NoneType,
     ) -> None:
         """Initializer for the Tour class
 
         Args:
             nodes (List[Node], optional): The nodes of the tour. Defaults to [].
+            distance (float, optional): The distance of the tour. Defaults to 0.
             algorithm (TSPAlgorithm, optional): The algorithm used to solve the tour. Defaults to TSPAlgorithm.NoneType.
         """
         self.nodes = nodes
@@ -118,6 +121,36 @@ class Tour:
         ##
 
     ##
+    ## Convert the tour to a tensor
+    ##
+    def to_tensor(self) -> Tensor:
+        """Convert the tour to a tensor
+
+        Returns:
+            Tensor: The tensor representation of the tour
+        """
+        return Tensor([node.to_numpy() for node in self.nodes])
+
+        ##
+        ## End of function
+        ##
+
+    ##
+    ## Convert the tour to a numpy array
+    ##
+    def to_numpy(self, dtype=np.float32) -> np.ndarray:
+        """Convert the tour to a numpy array
+
+        Returns:
+            np.ndarray: The numpy representation of the tour
+        """
+        return np.array([node.to_numpy(dtype) for node in self.nodes])
+
+        ##
+        ## End of function
+        ##
+
+    ##
     ## End of class
     ##
 
@@ -129,6 +162,19 @@ if __name__ == "__main__":
     nodes = [Node(0, 0, 0), Node(1, 1, 1), Node(2, 2, 2)]
     tour = Tour(nodes, 10, TSPAlgorithm.BruteForce)
     print(tour)
+
+    tour_json = tour.to_json()
+    print(tour_json)
+
+    tour_map = tour.to_map()
+    print(tour_map)
+
+    tour_tensor = tour.to_tensor()
+    print(tour_tensor)
+
+    tour_numpy = tour.to_numpy()
+    print(tour_numpy)
+
 
 ##
 ## End of file
