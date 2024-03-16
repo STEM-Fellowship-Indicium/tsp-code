@@ -11,8 +11,9 @@ if __name__ == "__main__":
 ## Imports
 ##
 from lib.graph import Graph
-import itertools
 import matplotlib.pyplot as plt
+from lib.utils.create_dist_matrix import create_dist_matrix
+import itertools, math
 
 
 ##
@@ -80,8 +81,90 @@ class TSPVisual:
         Returns:
             None
         """
+        ##
+        ## Plot all the nodes and edges
+        ##
+        plt.figure()
 
-        return
+        ##
+        ## Draw the nodes
+        ##
+        for node in graph.nodes:
+            plt.plot(node.x, node.y, "o", color="blue")
+
+        ##
+        ## Apply the greedy heuristic algorithm
+        ##
+        n: int = len(graph.nodes)
+        shortest_tour_nodes = [graph.nodes[0]]
+        distance_matrix = create_dist_matrix(graph.nodes)
+
+        for _ in range(n - 1):
+            ##
+            ## Get the current node
+            ##
+            current_node = shortest_tour_nodes[-1]
+
+            ##
+            ## Get the closest node
+            ##
+            closest_node = None
+            closest_distance = math.inf
+
+            for j in range(n):
+                ##
+                ## Draw a line from the current node to the node being checked
+                ##
+                plt.plot(
+                    [current_node.x, graph.nodes[j].x],
+                    [current_node.y, graph.nodes[j].y],
+                    color="green",
+                )
+
+                plt.pause(0.1)
+
+                ##
+                ## Remove the line from the current node to the node being checked
+                ##
+                plt.plot(
+                    [current_node.x, graph.nodes[j].x],
+                    [current_node.y, graph.nodes[j].y],
+                    color="white",
+                )
+
+                ##
+                ## Get the closest node
+                ##
+                if graph.nodes[j] not in shortest_tour_nodes:
+                    distance = distance_matrix[graph.nodes.index(current_node)][j]
+
+                    if distance < closest_distance:
+                        closest_distance = distance
+                        closest_node = graph.nodes[j]
+
+            ##
+            ## Add the closest node to the shortest tour and plot it
+            ##
+            shortest_tour_nodes.append(closest_node)
+
+            ##
+            ## Draw the shortest tour
+            ##
+            for i in range(len(shortest_tour_nodes) - 1):
+                plt.plot(
+                    [shortest_tour_nodes[i].x, shortest_tour_nodes[i + 1].x],
+                    [shortest_tour_nodes[i].y, shortest_tour_nodes[i + 1].y],
+                    color="red",
+                )
+
+        ##
+        ## Draw the last edge
+        ##
+        plt.plot(
+            [shortest_tour_nodes[-1].x, shortest_tour_nodes[0].x],
+            [shortest_tour_nodes[-1].y, shortest_tour_nodes[0].y],
+            color="red",
+        )
 
         ##
         ## End of function
@@ -146,10 +229,14 @@ if __name__ == "__main__":
     graph = Graph.rand(7)
 
     # Greedy heuristic visual
+    print("Greedy heuristic visual")
     TSPVisual.greedy_heuristic(graph)
+    plt.pause(5)
 
     # Brute force visual
+    print("Brute force visual")
     TSPVisual.brute_force(graph)
+    plt.pause(5)
 
 
 ##
