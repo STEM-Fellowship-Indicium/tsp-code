@@ -68,13 +68,13 @@ class Tour:
     ## or on top of eachother.
     ##
     @staticmethod
-    def from_prediction(real_node_positions: List[Node], pred: Tensor) -> "Tour":
+    def from_prediction(real_nodes: List[Node], pred: Tensor) -> "Tour":
         """Use a tour (predicted with the GNN) and it's node positions to generate a new tour with
         real nodes with real positions. The positions in the predicted tour are not real, they are
         just close to the real positions.
 
         Args:
-            real_node_positions (List[List[float]]): The real node positions
+            real_nodes (List[Node]): The real nodes
             pred (Tensor): The predicted tour
 
         Returns:
@@ -86,7 +86,7 @@ class Tour:
         ##
         nodes = [
             min(
-                real_node_positions,
+                real_nodes,
                 key=lambda real_node: np.linalg.norm(
                     real_node.to_numpy() - node_tensor.numpy()
                 ),
@@ -157,6 +157,52 @@ class Tour:
         ##
 
     ##
+    ## Normalize the tour
+    ##
+    def normalize(
+        self, min: List[float] = [0, 0], max: List[float] = [100, 100]
+    ) -> "Tour":
+        """Normalize the tour
+
+        Args:
+            min (List[float], optional): The minimum values for the tour. Defaults to [0, 0].
+            max (List[float], optional): The maximum values for the tour. Defaults to [100, 100].
+
+        Returns:
+            Tour: The normalized tour
+        """
+        nodes = [node.normalize(min, max) for node in self.nodes]
+
+        return Tour(nodes, self.distance, self.algorithm)
+
+        ##
+        ## End of function
+        ##
+
+    ##
+    ## Denormalize the tour
+    ##
+    def denormalize(
+        self, min: List[float] = [0, 0], max: List[float] = [100, 100]
+    ) -> "Tour":
+        """Denormalize the tour
+
+        Args:
+            min (List[float], optional): The minimum values for the tour. Defaults to [0, 0].
+            max (List[float], optional): The maximum values for the tour. Defaults to [100, 100].
+
+        Returns:
+            Tour: The denormalized tour
+        """
+        nodes = [node.denormalize(min, max) for node in self.nodes]
+
+        return Tour(nodes, self.distance, self.algorithm)
+
+        ##
+        ## End of function
+        ##
+
+    ##
     ## Convert the tour to json
     ##
     def to_json(self) -> str:
@@ -196,6 +242,32 @@ class Tour:
             np.ndarray: The numpy representation of the tour
         """
         return np.array([node.to_numpy(dtype) for node in self.nodes])
+
+        ##
+        ## End of function
+        ##
+
+    ##
+    ## Create a copy of the tour
+    ##
+    def copy(self) -> "Tour":
+        """Create a copy of the tour
+
+        Returns:
+            Tour: The copy of the tour
+        """
+        return Tour([node.copy() for node in self.nodes], self.distance, self.algorithm)
+
+        ##
+        ## End of function
+        ##
+
+    ##
+    ## Print the tour
+    ##
+    def print(self) -> None:
+        """Print the tour"""
+        print(self)
 
         ##
         ## End of function

@@ -136,11 +136,12 @@ class Node:
         Returns:
             np.ndarray: The numpy array representation of the node
         """
-        prev_x, prev_y = self.normalize(min=[0, 0], max=[100, 100])
+
+        self.normalize()
 
         np_array = np.array([self.x, self.y], dtype=dtype)
 
-        self.x, self.y = prev_x, prev_y
+        self.denormalize()
 
         return np_array
 
@@ -149,24 +150,55 @@ class Node:
         ##
 
     ##
-    ## Normalize the node
+    ## Return a normalized version of the node
     ##
     ## This takes a node and normalizes its x and y values to be between 0 and 1
     ##
     def normalize(
-        self, min: List[float] = [0, 0], max: List[float] = [1, 1]
-    ) -> List[float]:
+        self, min: List[float] = [0, 0], max: List[float] = [100, 100]
+    ) -> "Node":
         """Normalize the node"""
         min_x, min_y = min
         max_x, max_y = max
 
-        prev_x = self.x
-        prev_y = self.y
-
         self.x = (self.x - min_x) / (max_x - min_x)
         self.y = (self.y - min_y) / (max_y - min_y)
 
-        return (prev_x, prev_y)
+        return self
+
+        ##
+        ## End of function
+        ##
+
+    ##
+    ## Denormalize the node
+    ##
+    def denormalize(
+        self, min: List[float] = [0, 0], max: List[float] = [100, 100]
+    ) -> "Node":
+        """Denormalize the node"""
+        min_x, min_y = min
+        max_x, max_y = max
+
+        self.x = self.x * (max_x - min_x) + min_x
+        self.y = self.y * (max_y - min_y) + min_y
+
+        return self
+
+        ##
+        ## End of function
+        ##
+
+    ##
+    ## Create a copy of the node
+    ##
+    def copy(self) -> "Node":
+        """Create a copy of the node
+
+        Returns:
+            Node: The copy of the node
+        """
+        return Node(self.idx, self.x, self.y)
 
         ##
         ## End of function
