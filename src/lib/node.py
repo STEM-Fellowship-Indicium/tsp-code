@@ -130,18 +130,20 @@ class Node:
     ##
     ## Convert the node to a numpy array
     ##
-    def to_numpy(self, dtype=np.float32) -> np.ndarray:
+    def to_numpy(self, dtype=np.float32, normalize=True) -> np.ndarray:
         """Convert the node to a numpy array
 
         Returns:
             np.ndarray: The numpy array representation of the node
         """
 
-        self.normalize()
+        if normalize:
+            self.normalize()
 
         np_array = np.array([self.x, self.y], dtype=dtype)
 
-        self.denormalize()
+        if normalize:
+            self.denormalize()
 
         return np_array
 
