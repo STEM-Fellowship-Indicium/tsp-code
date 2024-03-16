@@ -113,29 +113,29 @@ class TSPVisual:
 
             for j in range(n):
                 ##
-                ## Draw a line from the current node to the node being checked
-                ##
-                plt.plot(
-                    [current_node.x, graph.nodes[j].x],
-                    [current_node.y, graph.nodes[j].y],
-                    color="green",
-                )
-
-                plt.pause(0.1)
-
-                ##
-                ## Remove the line from the current node to the node being checked
-                ##
-                plt.plot(
-                    [current_node.x, graph.nodes[j].x],
-                    [current_node.y, graph.nodes[j].y],
-                    color="white",
-                )
-
-                ##
                 ## Get the closest node
                 ##
                 if graph.nodes[j] not in shortest_tour_nodes:
+                    ##
+                    ## Draw a line from the current node to the node being checked
+                    ##
+                    plt.plot(
+                        [current_node.x, graph.nodes[j].x],
+                        [current_node.y, graph.nodes[j].y],
+                        color="green",
+                    )
+
+                    plt.pause(0.1)
+
+                    ##
+                    ## Remove the line from the current node to the node being checked
+                    ##
+                    plt.plot(
+                        [current_node.x, graph.nodes[j].x],
+                        [current_node.y, graph.nodes[j].y],
+                        color="white",
+                    )
+
                     distance = distance_matrix[graph.nodes.index(current_node)][j]
 
                     if distance < closest_distance:
