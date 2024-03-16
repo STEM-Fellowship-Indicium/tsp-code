@@ -136,54 +136,62 @@ if __name__ == "__main__":
     ##
     ## Create a dataset using the custom GraphDataset class
     ##
-    dataset = GraphDataset(num_samples=100, num_nodes=7, node_features=2)
+    dataset = GraphDataset(num_samples=1000, num_nodes=7, node_features=2)
 
     ##
-    ## Create the GNN model
+    ## Train the model
     ##
-    ## input_features = 2 # x and y coordinates
-    ##
-    ## hidden_dim = 16 # hidden dimension
-    ##
-    ## output_features = 2 # x and y coordinates
-    ##
-    model = GNN(input_features=2, hidden_dim=16, output_features=2).to(device)
+    def train() -> None:
+        ##
+        ## Create the model
+        ##
+        model = GNN(input_features=2, hidden_dim=16, output_features=2).to(device)
+
+        ##
+        ## Create a loss function and an optimizer
+        ##
+        ## The MSELoss function is most accurate for the TSP
+        ## The optimizer most accurate for the TSP is the Adam optimizer
+        ##
+        criterion = model.criterion()  ## or nn.MSELoss()
+        optimizer = model.optimizer(
+            model.parameters(), lr=0.001
+        )  ## or optim.Adam(model.parameters(), lr=0.001)
+
+        ##
+        ## Train the model with 100 epochs
+        ##
+        epochs: int = 100
+        ##
+        ## Training loop
+        ##
+        for epoch in range(epochs):
+            for i in range(dataset.num_samples):
+                graph, tour = dataset.graphs[i].to(device), dataset.tours[i].to(device)
+
+                ## Forward pass and compute the loss
+                output = model(graph)
+                loss = criterion(output, tour)
+
+                ## Backward pass
+                optimizer.zero_grad()
+                loss.backward()
+
+                ## Update the weights
+                optimizer.step()
+
+                ## Print the epoch, sample, and loss
+                print(f"Epoch {epoch + 1}, sample {i + 1}, loss: {loss.item()}")
+
+        ##
+        ## Save the model
+        ##
+        torch.save(model.state_dict(), "data/nn/gnn.pth")
 
     ##
-    ## Create a loss function and an optimizer
+    ## Train the model
     ##
-    ## The MSELoss function is most accurate for the TSP
-    ## The optimizer most accurate for the TSP is the Adam optimizer
-    ##
-    criterion = model.criterion()  ## or nn.MSELoss()
-    optimizer = model.optimizer(
-        model.parameters(), lr=0.001
-    )  ## or optim.Adam(model.parameters(), lr=0.001)
-
-    ##
-    ## Train the model with 100 epochs
-    ##
-    epochs: int = 100
-    ##
-    ## Training loop
-    ##
-    for epoch in range(epochs):
-        for i in range(dataset.num_samples):
-            graph, tour = dataset.graphs[i].to(device), dataset.tours[i].to(device)
-
-            ## Forward pass and compute the loss
-            output = model(graph)
-            loss = criterion(output, tour)
-
-            ## Backward pass
-            optimizer.zero_grad()
-            loss.backward()
-
-            ## Update the weights
-            optimizer.step()
-
-            ## Print the epoch, sample, and loss
-            print(f"Epoch {epoch + 1}, sample {i + 1}, loss: {loss.item()}")
+    # train()
 
     ##
     ## Now it's time to actually test the model with a sample from the dataset
@@ -191,48 +199,40 @@ if __name__ == "__main__":
     ## Typically, we'd use a separate test dataset, but for simplicity, we'll
     ## just use the training dataset.
     ##
+    model = GNN(input_features=2, hidden_dim=16, output_features=2).to(device)
+    model.load_state_dict(torch.load("data/nn/gnn.pth"))
+    model.eval()
+
+    ##
+    ## Get a sample from the dataset
+    ##
     graph, tour = dataset[0]
     graph = graph.to(device)
+    tour = tour.to(device)
+
+    ##
+    ## Make a prediction
+    ##
     output = model(graph)
-    print(f"Prediction: {output}\nActual: {tour}")
-
-    ##
-    ## An example of the output is below.
-    ##
-    ## It's actually pretty accurate for the first 4 nodes, but the last 3 are off by a bit.
-    ##
-    """
-    Prediction: tensor([[0.9117, 0.4532],
-        [0.5157, 0.7958],
-        [0.8428, 0.8693],
-        [0.4312, 0.8319],
-        [0.5210, 0.2764]], grad_fn=<ViewBackward0>)
-
-    Actual: tensor([[0.9200, 0.4600],
-            [0.8900, 0.8800],
-            [0.8400, 0.8600],
-            [0.0300, 0.7400],
-            [0.3800, 0.0400]])
-    """
 
     ##
     ## Let's get an actual tour using the prediction
     ##
     graph = dataset._graphs[0]
+
     pred_tour = Tour.from_prediction(graph.nodes, output)
-    actual_shortest_tour = TSPAlgorithms.get_shortest_tour(
-        graph, TSPAlgorithm.BruteForce
-    )
+
+    actual_tour = TSPAlgorithms.get_shortest_tour(graph, TSPAlgorithm.BruteForce)
 
     ##
-    ## Print the real tour and the real shortest tour
+    ## Print the predicted tour and the actual shortest tour
     ##
-    print(f"Real tour: {pred_tour}\nReal shortest tour: {actual_shortest_tour}")
+    print(f"Predicted tour: {pred_tour}\nActual tour: {actual_tour}")
 
     ##
     ## Draw the graph with the two tours
     ##
-    graph.draw([pred_tour, actual_shortest_tour], ["pink", "red"])  ##
+    graph.draw([pred_tour, actual_tour], ["pink", "red"])  ##
 
 
 ##

@@ -15,7 +15,7 @@ from lib.utils.create_dist_matrix import create_dist_matrix
 from typing import List
 from torch import Tensor
 import numpy as np
-import json
+import json, math
 
 
 ##
@@ -81,18 +81,30 @@ class Tour:
             Tour: The tour with real nodes and real positions
         """
         ##
-        ## Iterate over the nodes in the prediction. We'll get the real node with the closest
-        ## position to the predicted node.
+        ## Detach the prediction
         ##
-        nodes = [
-            min(
-                real_nodes,
-                key=lambda real_node: np.linalg.norm(
-                    real_node.to_numpy() - node_tensor.numpy()
-                ),
-            )
-            for node_tensor in pred.detach()
-        ]
+        pred = pred.detach()
+
+        ##
+        ## Iterate over the nodes in the prediction.
+        ##
+        ## We'll get the real node with the closest position to the predicted node.
+        ##
+        nodes = []
+        for node in pred:
+            closest_node = None
+            closest_distance = float("inf")
+
+            for real_node in real_nodes:
+                distance = math.sqrt(
+                    (real_node.x - node[0]) ** 2 + (real_node.y - node[1]) ** 2
+                )
+
+                if distance < closest_distance and real_node not in nodes:
+                    closest_distance = distance
+                    closest_node = real_node
+
+            nodes.append(closest_node)
 
         ##
         ## Calculate the distance of the tour

@@ -113,6 +113,13 @@ class TSPAlgorithms:
                 ]
 
             ##
+            ## Add the distance from the last node to the first node
+            ##
+            distance += distance_matrix[graph.nodes.index(path[-1])][
+                graph.nodes.index(path[0])
+            ]
+
+            ##
             ## If the distance is shorter than the current shortest distance,
             ## set the shortest distance to the current distance and set the
             ## shortest tour to the current path
