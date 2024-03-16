@@ -219,9 +219,7 @@ if __name__ == "__main__":
     ## Let's get an actual tour using the prediction
     ##
     graph = dataset._graphs[0]
-
     pred_tour = Tour.from_prediction(graph.nodes, output)
-
     actual_shortest_tour = TSPAlgorithms.get_shortest_tour(
         graph, TSPAlgorithm.BruteForce
     )

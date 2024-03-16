@@ -11,6 +11,7 @@ if __name__ == "__main__":
 ## Imports
 ##
 import json
+from typing import List
 from torch import Tensor
 import numpy as np
 from lib.node import Node
@@ -159,10 +160,41 @@ class Edge:
     ##
     ## Normalize the edge
     ##
-    def normalize(self) -> None:
+    def normalize(
+        self, min: List[float] = [0, 0], max: List[float] = [100, 100]
+    ) -> None:
         """Normalize the edge"""
-        self.start.normalize()
-        self.end.normalize()
+        self.start.normalize(min, max)
+        self.end.normalize(min, max)
+
+        ##
+        ## End of function
+        ##
+
+    ##
+    ## Denormalize the edge
+    ##
+    def denormalize(
+        self, min: List[float] = [0, 0], max: List[float] = [100, 100]
+    ) -> None:
+        """Denormalize the edge"""
+        self.start.denormalize(min, max)
+        self.end.denormalize(min, max)
+
+        ##
+        ## End of function
+        ##
+
+    ##
+    ## Create a copy of the edge
+    ##
+    def copy(self) -> "Edge":
+        """Create a copy of the edge
+
+        Returns:
+            Edge: The copy of the edge
+        """
+        return Edge(self.idx, self.start.copy(), self.end.copy(), self.weight)
 
         ##
         ## End of function

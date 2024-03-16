@@ -432,6 +432,30 @@ class Graph:
         """
         return np.array([node.to_numpy(dtype) for node in self.nodes])
 
+        ##
+        ## End of function
+        ##
+
+    ##
+    ## Create a copy of the graph
+    ##
+    def copy(self) -> "Graph":
+        """Create a copy of the graph
+
+        Returns:
+            Graph: The copy of the graph
+        """
+        return Graph(
+            [edge.copy() for edge in self.edges],
+            [node.copy() for node in self.nodes],
+            self.adj_matrix,
+            self.shortest_tour.copy() if self.shortest_tour else None,
+        )
+
+        ##
+        ## End of function
+        ##
+
     ##
     ## Print the graph
     ##
