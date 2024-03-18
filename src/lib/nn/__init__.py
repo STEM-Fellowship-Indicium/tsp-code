@@ -1,5 +1,5 @@
 ##
 ## Exports
 ##
-from .gnn import *
-from .graphdataset import *
+from .gnn.linear import *
+from .gnn.geometric import *
