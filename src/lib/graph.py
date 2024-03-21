@@ -202,6 +202,9 @@ class Graph:
 
         ## Draw the tours red
         for i, tour in enumerate(tours):
+            if tour is None:
+                continue
+
             color = colors[i] if len(colors) - 1 >= i else "red"
 
             for j in range(len(tour.nodes) - 1):

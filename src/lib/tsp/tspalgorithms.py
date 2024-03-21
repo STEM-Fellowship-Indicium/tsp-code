@@ -17,6 +17,8 @@ from lib.utils.create_dist_matrix import create_dist_matrix
 from lib.utils.calculate_tour_distance import calculate_tour_distance
 import itertools, math, random
 
+from lib.utils.duration import duration
+
 
 ##
 ## TSP Algorithms
@@ -304,40 +306,57 @@ if __name__ == "__main__":
     import time
 
     ## Create a new graph
-    graph = Graph.rand(10)
+    graph = Graph.rand(num_nodes=10)
 
-    ## Solve the graph using the brute force algorithm
-    start = time.time()
-    brute_res = TSPAlgorithms.brute_force(graph)
-    speed = time.time() - start
-    print(f"Brute force algorithm\nResult:{brute_res}\nSpeed: {speed}s")
+    ##
+    ## Track the duration of each algorithm
+    ##
+    @duration
+    def test_brute_force(graph: Graph) -> Tour:
+        return TSPAlgorithms.brute_force(graph)
 
-    ## Save the graph and shortest tour to file (testing)
-    ## graph.shortest_tour = res
-    ## graph.export("data/graph-tsp.json")
+    @duration
+    def test_genetic(graph: Graph) -> Tour:
+        return TSPAlgorithms.genetic(graph)
 
-    ## Solve the graph using the genetic algorithm
-    start = time.time()
-    gen_res = TSPAlgorithms.genetic(graph)
-    speed = time.time() - start
-    print(f"\n\nGenetic algorithm\nResult:{gen_res}\nSpeed: {speed}s")
+    @duration
+    def test_simulated_annealing(graph: Graph) -> Tour:
+        return TSPAlgorithms.simulated_annealing(graph)
 
-    ## Solve the graph using the simulated annealing algorithm
-    start = time.time()
-    sim_anneal_res = TSPAlgorithms.simulated_annealing(graph)
-    speed = time.time() - start
-    print(
-        f"\n\nSimulated annealing algorithm\nResult:{sim_anneal_res}\nSpeed: {speed}s"
+    @duration
+    def test_greedy_heuristic(graph: Graph) -> Tour:
+        return TSPAlgorithms.greedy_heuristic(graph)
+
+    @duration
+    def test_two_opt(graph: Graph) -> Tour:
+        return TSPAlgorithms.two_opt(graph)
+
+    brute_force_res = test_brute_force(graph)
+    genetic_res = test_genetic(graph)
+    simulated_annealing_res = test_simulated_annealing(graph)
+    greedy_heuristic_res = test_greedy_heuristic(graph)
+    two_opt_res = test_two_opt(graph)
+
+    graph.draw(
+        [
+            brute_force_res,
+            genetic_res,
+            simulated_annealing_res,
+            greedy_heuristic_res,
+            two_opt_res,
+        ],
+        ["red", "green", "blue", "yellow", "purple"],
     )
 
-    ## Solve the graph using the greedy heuristic algorithm
-    start = time.time()
-    greedy_res = TSPAlgorithms.greedy_heuristic(graph)
-    speed = time.time() - start
-    print(f"\n\nGreedy heuristic algorithm\nResult:{greedy_res}\nSpeed: {speed}s")
-
-    ## Plot the graph and tours
-    graph.draw(tours=[brute_res, greedy_res], colors=["yellow", "red"])
+    """
+    Output:
+    
+    `test_brute_force` took 10.295390844345093s
+    `test_genetic` took 5.9604644775390625e-06s
+    `test_simulated_annealing` took 1.6689300537109375e-06s
+    `test_greedy_heuristic` took 0.00022912025451660156s
+    `test_two_opt` took 0.0005450248718261719s
+    """
 
 
 ##
