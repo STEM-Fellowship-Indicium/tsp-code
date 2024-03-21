@@ -4,6 +4,7 @@
 from lib.graph import Graph
 from lib.tsp.tspvisual import TSPVisual
 from lib.utils.generate_graphs import generate_graphs
+from lib.utils.import_graphs import import_graphs
 from lib.types.tspalgorithm import TSPAlgorithm
 from lib.tsp.tspalgorithms import TSPAlgorithms
 from lib.utils.export_graphs import export_graphs
@@ -31,6 +32,7 @@ if __name__ == "__main__":
         print("1. Generate and save random graphs")
         print("2. Generate a random graph")
         print("3. Visualize the graph and the shortest tour")
+        print("4. Load graphs from a file")
         print("-1. Exit")
         choice = input("\nEnter the number of the option you would like to choose: ")
 
@@ -113,6 +115,18 @@ if __name__ == "__main__":
                     results.append(TSPAlgorithms.two_opt(graph))
 
             graph.draw(results, ["red", "blue", "green"])
+
+        ##
+        ## 4. Load graphs from a file
+        ##
+        elif choice == "4":
+            filename = input(
+                "\nEnter the filename of the file with the cached graphs: "
+            )
+
+            graphs = import_graphs(filename)
+
+            print(f"Graphs have been loaded from `{filename}`")
 
         ##
         ## Exit the program
