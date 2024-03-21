@@ -25,14 +25,19 @@ def import_graphs(filename: str) -> List[Graph]:
         graphs = json.load(file)
 
     ##
-    ## Create the graphs
+    ## Check if it's a list of graphs or a map of graphs (with their ids as keys)
     ##
-    graphs = [Graph.from_map(graph) for graph in graphs]
+    if isinstance(graphs, list):
+        ##
+        ## Convert to a list of graphs (from the map) and return
+        ##
+        return [Graph.from_map(graph) for graph in graphs]
 
-    ##
-    ## Return the graphs
-    ##
-    return graphs
+    elif isinstance(graphs, dict):
+        ##
+        ## Convert to a list of graphs (from the map) and return
+        ##
+        return [Graph.from_map(graph) for graph in graphs.values()]
 
     ##
     ## End of function
@@ -47,7 +52,7 @@ if __name__ == "__main__":
     ## Test imports
     ##
     from lib.utils.generate_graphs import generate_graphs
-    from lib.utils.export_graphs import export_graphs
+    from lib.utils.export_graphs import export_graphs_list, export_graphs_map
     import os
 
     ##
@@ -56,25 +61,29 @@ if __name__ == "__main__":
     graphsN1 = generate_graphs(n=10, num_nodes=1)  ## 10 graphs
 
     ##
-    ## Save to a file
+    ## Test A
     ##
-    export_graphs(graphsN1, "data/tests/unit/import_graphs.json")
+    export_graphs_list(graphsN1, "data/tests/unit/import_graphs_list.json")
+    graphs = import_graphs("data/tests/unit/import_graphs_list.json")
+
+    for graph in graphs:
+        print(graph)
 
     ##
-    ## Import the graphs
+    ## Test B
     ##
-    graphs = import_graphs("data/tests/unit/import_graphs.json")
+    export_graphs_map(graphs, "data/tests/unit/import_graphs_map.json")
+    graphs = import_graphs("data/tests/unit/import_graphs_map.json")
+
+    for graph in graphs:
+        print(graph)
 
     ##
     ## Delete the file
     ##
-    # os.remove("data/tests/unit/import_graphs.json")
+    # os.remove("data/tests/unit/import_graphs_list.json")
+    # os.remove("data/tests/unit/import_graphs_map.json")
 
-    ##
-    ## Print the graphs
-    ##
-    for graph in graphs:
-        print(graph)
 
 ##
 ## End of file

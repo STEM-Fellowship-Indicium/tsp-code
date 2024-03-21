@@ -20,6 +20,7 @@ from lib.node import Node
 from lib.edge import Edge
 from lib.tour import Tour
 from lib.utils.generate_nodes import generate_nodes
+from hashlib import sha512
 
 
 ##
@@ -57,6 +58,17 @@ class Graph:
 
         self.node_idxs = [node.idx for node in nodes]
         self.set_adj_matrix()
+
+        ##
+        ## Generate a unique id for the graph. Parse everything to JSON then hash it with SHA-512.
+        ##
+        ## We won't use the to_json function since it indent the JSON string (this would slow down the hashing process).
+        ##
+        ## Also disable the id parameter in the to_map function so that we don't hash the id itself.
+        ##
+        self.id = sha512(
+            json.dumps(self.to_map(id=False), sort_keys=True).encode()
+        ).hexdigest()
 
         ##
         ## End of function
@@ -176,6 +188,38 @@ class Graph:
 
         ## Return the graph
         return Graph(edges, nodes, adj_matrix, shortest_tour)
+
+        ##
+        ## End of function
+        ##
+
+    ##
+    ## Import a graph from a file with a bunch of maps
+    ##
+    @staticmethod
+    def from_cache(filename: str, id: str) -> "Graph":
+        """Import a graph from a file with a bunch of maps
+
+        Args:
+            filename (str): The name of the file to import the graph from
+
+        Returns:
+            List[Graph]: The list of graphs that were imported
+        """
+        ## Open the file
+        with open(filename, "r") as file:
+            ## Load the graphs from the file
+            graphs = json.load(file)
+
+        ##
+        ## Iterate over the keys if the graphs type is a dict, otherwise iterate through
+        ## the array to find the graph with the id
+        ##
+        if isinstance(graphs, dict):
+            return Graph.from_map(graphs[id])
+
+        elif isinstance(graphs, list):
+            return next(graph for graph in graphs if graph["id"] == id)
 
         ##
         ## End of function
@@ -320,13 +364,14 @@ class Graph:
     ##
     ## Convert the graph to a map
     ##
-    def to_map(self) -> dict:
+    def to_map(self, id: bool = True) -> dict:
         """Convert the graph to a map
 
         Returns:
             dict: The map of the graph
         """
         return {
+            "id": self.id if id else None,
             "nodes": [node.to_map() for node in self.nodes],
             "edges": [edge.to_map() for edge in self.edges],
             "adj_matrix": self.adj_matrix,
@@ -464,6 +509,7 @@ class Graph:
     ##
     def print(self) -> None:
         """Print the graph"""
+        print(f"Graph: {self.id}")
         print(f"Nodes: {[str(node) for node in self.nodes]}")
         print(f"Edges: {[str(edge) for edge in self.edges]}")
         print(f"Shortest tour: {self.shortest_tour}")

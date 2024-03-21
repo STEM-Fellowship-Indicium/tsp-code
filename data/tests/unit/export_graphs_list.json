@@ -1,0 +1,172 @@
+[
+    {
+        "id": "a9fc39f18c4f7f857bcce5b496812991b798778dca30c83d4124a2945972296dc149e13d3962d549e9aab135de68121200d83dcc3800e5eaec26438cb57e9bc9",
+        "nodes": [
+            {
+                "idx": 0,
+                "x": 100.0,
+                "y": 4.0
+            }
+        ],
+        "edges": [],
+        "adj_matrix": [
+            [
+                0
+            ]
+        ],
+        "shortest_tour": null
+    },
+    {
+        "id": "f1238b4f6b80c2307380242efd185664b4c4471200edc9b3dc9c807a3305180e7de9cef2d5b5a80b3ba2d0901d04afa994fc8aba6f2cd0b8c408cb8379a38234",
+        "nodes": [
+            {
+                "idx": 0,
+                "x": 44.0,
+                "y": 40.0
+            }
+        ],
+        "edges": [],
+        "adj_matrix": [
+            [
+                0
+            ]
+        ],
+        "shortest_tour": null
+    },
+    {
+        "id": "6bdaae9bead84398ae862b1da40c12f79d217c81318391088850d34a2b2145c25dd551293071745b42c89d7cb9a091b323a44b6a32e08eb71eb0572b829dc82a",
+        "nodes": [
+            {
+                "idx": 0,
+                "x": 90.0,
+                "y": 75.0
+            }
+        ],
+        "edges": [],
+        "adj_matrix": [
+            [
+                0
+            ]
+        ],
+        "shortest_tour": null
+    },
+    {
+        "id": "33ee62f94b4191d97862996b05c1a79153cdd745ad5803b97bf4c5d15ffd84715ad2a2a982a11fe7c4b7ccdf0e19e31043f69c5dca2d86c523b4e85a8bf6d3d3",
+        "nodes": [
+            {
+                "idx": 0,
+                "x": 6.0,
+                "y": 43.0
+            }
+        ],
+        "edges": [],
+        "adj_matrix": [
+            [
+                0
+            ]
+        ],
+        "shortest_tour": null
+    },
+    {
+        "id": "15068a2d68708aa486d0251b73a14a340f512ed6770e2879fbd5464ca2ef4e4f2e1ab282d4de8df21d8bd440691c74f94be5e7a09710178d3f2a4476c4d5e241",
+        "nodes": [
+            {
+                "idx": 0,
+                "x": 97.0,
+                "y": 80.0
+            }
+        ],
+        "edges": [],
+        "adj_matrix": [
+            [
+                0
+            ]
+        ],
+        "shortest_tour": null
+    },
+    {
+        "id": "8f29f73c02c78750ef947ef4d41ff2628f73e8206d6b303c2c7475831f32928e3fd87a90f38a48045035caac7bf5335ade93f39d0d7ae73093caa90a92efedae",
+        "nodes": [
+            {
+                "idx": 0,
+                "x": 19.0,
+                "y": 11.0
+            }
+        ],
+        "edges": [],
+        "adj_matrix": [
+            [
+                0
+            ]
+        ],
+        "shortest_tour": null
+    },
+    {
+        "id": "dd7dfa42f7e7c2ef81d42a658a1745053c38e86d6c90ec6fee899ed11bf674923a1210e05d674eb1011adbbd4478e8e271638f4b5a16cd6aa097445914cc2d69",
+        "nodes": [
+            {
+                "idx": 0,
+                "x": 35.0,
+                "y": 62.0
+            }
+        ],
+        "edges": [],
+        "adj_matrix": [
+            [
+                0
+            ]
+        ],
+        "shortest_tour": null
+    },
+    {
+        "id": "9738bd21a2b01241bc1c5510290d781764093467b9058a911a1582e777c05d6bb2600a9cbce52ffe54dd1d9288fe5f69ab9a038e649b020b42c913804831002c",
+        "nodes": [
+            {
+                "idx": 0,
+                "x": 9.0,
+                "y": 80.0
+            }
+        ],
+        "edges": [],
+        "adj_matrix": [
+            [
+                0
+            ]
+        ],
+        "shortest_tour": null
+    },
+    {
+        "id": "694fe2e69705749d8064786f49d670bf5fdf16e3fe4fbcebb9d18c3d5b84d5b5a873054e07c4f1701a7b1a01c50a1b7dc32dc63c59772361438a4fb0915c1a71",
+        "nodes": [
+            {
+                "idx": 0,
+                "x": 44.0,
+                "y": 93.0
+            }
+        ],
+        "edges": [],
+        "adj_matrix": [
+            [
+                0
+            ]
+        ],
+        "shortest_tour": null
+    },
+    {
+        "id": "a3e02f0ae700c06c15590f27b688b5769c5983e33c43c65f5af6a58c72e27ee6a2d7f5cd633198d8c0ee9c5af44c663c9de71e120aebf037f0a4913486018279",
+        "nodes": [
+            {
+                "idx": 0,
+                "x": 27.0,
+                "y": 49.0
+            }
+        ],
+        "edges": [],
+        "adj_matrix": [
+            [
+                0
+            ]
+        ],
+        "shortest_tour": null
+    }
+]
