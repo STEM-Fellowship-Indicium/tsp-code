@@ -14,6 +14,7 @@ from lib.graph import Graph
 from lib.tour import Tour
 from lib.types.tspalgorithm import TSPAlgorithm
 from lib.utils.create_dist_matrix import create_dist_matrix
+from lib.utils.calculate_tour_distance import calculate_tour_distance
 import itertools, math, random
 
 
@@ -135,6 +136,38 @@ class TSPAlgorithms:
             algorithm=TSPAlgorithm.BruteForce,
         )
 
+        ##
+        ## End of function
+        ##
+        
+    @staticmethod
+    def two_opt(graph: Graph) -> Tour:
+        """Applies the 2-opt algorithm to improve an initial tour and returns the improved tour as a Tour object.
+
+        Args:
+            graph (Graph): The initial graph with nodes representing the tour.
+
+        Returns:
+            Tour: An improved tour found using the 2-opt algorithm.
+        """
+        # Initial setup
+        nodes = graph.nodes
+        best_distance = calculate_tour_distance(nodes)
+        improved = True
+
+        while improved:
+            improved = False
+            for i in range(1, len(nodes) - 1):
+                for j in range(i + 1, len(nodes)):
+                    new_nodes = nodes[:i] + nodes[i:j][::-1] + nodes[j:]
+                    new_distance = calculate_tour_distance(new_nodes)
+                    if new_distance < best_distance:
+                        nodes = new_nodes  # This becomes the new best tour
+                        best_distance = new_distance
+                        improved = True
+
+        # Assuming Tour class takes a list of Node objects, distance, and algorithm name
+        return Tour(nodes=nodes, distance=best_distance, algorithm="2-Opt")
         ##
         ## End of function
         ##

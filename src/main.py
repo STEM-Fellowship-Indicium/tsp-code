@@ -19,8 +19,8 @@ if __name__ == "__main__":
     graph = Graph.rand(num_nodes=20)
 
     # Visualize the graph
-    TSPVisual.brute_force(graph)
-
+    #TSPVisual.brute_force(graph)
+    TSPVisual.two_opt(graph)
 ##
 ## End of file
 ##
