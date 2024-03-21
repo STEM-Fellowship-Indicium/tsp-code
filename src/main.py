@@ -65,9 +65,11 @@ if __name__ == "__main__":
             for graph in graphs:
                 print(f"Graph Shortest Tour: {graph.shortest_tour}")
 
-            export_graphs(graphs, "data/graphs.json")
+            filename = input("\nEnter the filename to save the graphs to: ")
 
-            print("Graphs have been generated and saved to `data/graphs.json`")
+            export_graphs(graphs, filename)
+
+            print(f"Graphs have been saved to `{filename}`")
 
         ##
         ## 2. Create a new graph
