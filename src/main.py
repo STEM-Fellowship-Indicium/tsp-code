@@ -16,7 +16,12 @@ if __name__ == "__main__":
     for graph in graphs:
         print(f"Graph Shortest Tour: {graph.shortest_tour}")
 
+    ##
     ## Create a new graph
+    ##
+    ## If the graph already exists in a cache, we can also use:
+    ##  Graph.from_cache(filename, id_of_graph_to_get)
+    ##
     graph = Graph.rand(num_nodes=7)
 
     ##

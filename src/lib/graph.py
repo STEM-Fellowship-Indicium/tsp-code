@@ -194,6 +194,38 @@ class Graph:
         ##
 
     ##
+    ## Import a graph from a file with a bunch of maps
+    ##
+    @staticmethod
+    def from_cache(filename: str, id: str) -> "Graph":
+        """Import a graph from a file with a bunch of maps
+
+        Args:
+            filename (str): The name of the file to import the graph from
+
+        Returns:
+            List[Graph]: The list of graphs that were imported
+        """
+        ## Open the file
+        with open(filename, "r") as file:
+            ## Load the graphs from the file
+            graphs = json.load(file)
+
+        ##
+        ## Iterate over the keys if the graphs type is a dict, otherwise iterate through
+        ## the array to find the graph with the id
+        ##
+        if isinstance(graphs, dict):
+            return Graph.from_map(graphs[id])
+
+        elif isinstance(graphs, list):
+            return next(graph for graph in graphs if graph["id"] == id)
+
+        ##
+        ## End of function
+        ##
+
+    ##
     ## Draw the graph
     ##
     def draw(self, tours: List[Tour] = [], colors: List[str] = []) -> None:
