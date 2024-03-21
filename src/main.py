@@ -6,51 +6,125 @@ from lib.tsp.tspvisual import TSPVisual
 from lib.utils.generate_graphs import generate_graphs
 from lib.types.tspalgorithm import TSPAlgorithm
 from lib.tsp.tspalgorithms import TSPAlgorithms
+from lib.utils.export_graphs import export_graphs
 
 ##
 ## Execute the main function
 ##
 if __name__ == "__main__":
+    ##
+    ## Global variables to be manipulated by the user (from menu)
+    ##
+    graphs = None
+    graph = None
+    shortest_tour = None
+    choice = None
+
+    ##
     ## Generate graphs
-    graphs = generate_graphs(n=10, num_nodes=5, algorithm=TSPAlgorithm.BruteForce)
-    for graph in graphs:
-        print(f"Graph Shortest Tour: {graph.shortest_tour}")
+    ##
+    while choice != "-1":
+        ##
+        ## Menu for the user
+        ##
+        print("\nWhat would you like to do?")
+        print("1. Generate and save random graphs")
+        print("2. Generate a random graph")
+        print("3. Visualize the graph and the shortest tour")
+        print("-1. Exit")
+        choice = input("\nEnter the number of the option you would like to choose: ")
 
-    ##
-    ## Create a new graph
-    ##
-    ## If the graph already exists in a cache, we can also use:
-    ##  Graph.from_cache(filename, id_of_graph_to_get)
-    ##
-    graph = Graph.rand(num_nodes=7)
+        ##
+        ## 1. Generate and save random graphs
+        ##
+        if choice == "1":
+            num_graphs = int(input("\nHow many graphs would you like to generate? "))
+            num_nodes = int(
+                input("How many nodes would you like to have in the graph? ")
+            )
 
-    ##
-    ## Visualize the graph and the shortest tour (from the greedy heuristic)
-    ##
-    print("Greedy heuristic visual")
-    shortest_tour = TSPAlgorithms.greedy_heuristic(graph)
-    graph.draw([shortest_tour], ["red"])
+            algorithm_choice = input(
+                "Which algorithm would you like to use?\n1. Brute Force\n2. Greedy Heuristic\n3. Two-Opt\n4. None\n\nYour choice: "
+            )
 
-    ##
-    ## Visualize the graph and the shortest tour (from the 2-opt algorithm)
-    ##
-    print("Two-opt visual")
-    shortest_tour = TSPAlgorithms.two_opt(graph, shortest_tour)
-    graph.draw([shortest_tour], ["green"])
+            if algorithm_choice == "1":
+                algorithm = TSPAlgorithm.BruteForce
+            elif algorithm_choice == "2":
+                algorithm = TSPAlgorithm.GreedyHeuristic
+            elif algorithm_choice == "3":
+                algorithm = TSPAlgorithm.TwoOpt
+            else:
+                algorithm = TSPAlgorithm.NoneType
 
-    ##
-    ## Visualize the graph and the shortest tour (from the brute force algorithm)
-    ##
-    print("Brute force visual")
-    shortest_tour = TSPAlgorithms.brute_force(graph)
-    graph.draw([shortest_tour], ["blue"])
+            graphs = generate_graphs(
+                n=num_graphs, num_nodes=num_nodes, algorithm=algorithm
+            )
 
-    ##
-    ## Visualizations
-    ##
-    ## TSPVisual.greedy_heuristic(graph)
-    TSPVisual.two_opt(graph)
-    ## TSPVisual.brute_force(graph)
+            for graph in graphs:
+                print(f"Graph Shortest Tour: {graph.shortest_tour}")
+
+            export_graphs(graphs, "data/graphs.json")
+
+            print("Graphs have been generated and saved to `data/graphs.json`")
+
+        ##
+        ## 2. Create a new graph
+        ##
+        elif choice == "2":
+            num_nodes = int(
+                input("\nHow many nodes would you like to have in the graph? ")
+            )
+
+            graph = Graph.rand(num_nodes=num_nodes)
+
+            print(f"Graph generated! Shortest tour: {graph.shortest_tour}")
+
+        ##
+        ## 3. Visualize the graph and the shortest tour
+        ##
+        elif choice == "3":
+            if not graph:
+                print("Please create a graph first.\n")
+                continue
+
+            print("Which algorithms would you like to use?")
+            print("1. Brute Force")
+            print("2. Greedy Heuristic")
+            print("3. Two-Opt")
+
+            algorithms = [
+                algorithm
+                for algorithm in input(
+                    "Enter the numbers of the algorithms you would like to use (ex: 1,2,3): "
+                )
+                .strip()
+                .split(",")
+                if algorithm
+            ]
+
+            results = []
+
+            for algorithm in algorithms:
+                if algorithm == "1":
+                    results.append(TSPAlgorithms.brute_force(graph))
+                elif algorithm == "2":
+                    results.append(TSPAlgorithms.greedy_heuristic(graph))
+                elif algorithm == "3":
+                    results.append(TSPAlgorithms.two_opt(graph))
+
+            graph.draw(results, ["red", "blue", "green"])
+
+        ##
+        ## Exit the program
+        ##
+        elif choice == "-1":
+            break
+
+        ##
+        ## Invalid choice
+        ##
+        else:
+            print("Invalid choice. Please try again.\n")
 
 ##
 ## End of file
