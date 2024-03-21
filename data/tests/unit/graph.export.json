@@ -1,4 +1,5 @@
 {
+    "id": "6f3059ecd34adba7e68bfad7822391f694c618296f8b9be91a142d2d4af5c0db2d5bafde09715d444361bf587e4428c2917d6b3d5687603a15bb90dda0861752",
     "nodes": [
         {
             "idx": 0,
@@ -14,7 +15,7 @@
     "edges": [
         {
             "idx": 0,
-            "weight": 1,
+            "weight": 1.0,
             "start": {
                 "idx": 0,
                 "x": 0.0,
@@ -30,10 +31,10 @@
     "adj_matrix": [
         [
             0,
-            1
+            1.0
         ],
         [
-            1,
+            1.0,
             0
         ]
     ],

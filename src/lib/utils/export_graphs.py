@@ -10,21 +10,28 @@ if __name__ == "__main__":
 ## Imports
 ##
 from lib.graph import Graph
-from typing import List
+from typing import List, Dict, Union
 import json
 
 
 ##
-## Export graphs
+## Export graphs as either a list or map
 ##
-def export_graphs(graphs: List[Graph], filename: str) -> None:
+def export_graphs(
+    graphs: List[Graph], filename: str, type: Union[List, Dict] = List
+) -> None:
     ##
     ## Save to a file
     ##
-    graphs = [graph.to_map() for graph in graphs]
-
     with open(filename, "w") as file:
-        json.dump(graphs, file, indent=4)
+        ##
+        ## Check the type
+        ##
+        if type == List:
+            json.dump([graph.to_map() for graph in graphs], file, indent=4)
+
+        elif type == Dict:
+            json.dump({graph.id: graph.to_map() for graph in graphs}, file, indent=4)
 
     ##
     ## End of function
@@ -49,7 +56,8 @@ if __name__ == "__main__":
     ##
     ## Save to a file
     ##
-    export_graphs(graphsN1, "data/tests/unit/export_graphs.json")
+    export_graphs(graphsN1, "data/tests/unit/export_graphs_list.json", type=List)
+    export_graphs(graphsN1, "data/tests/unit/export_graphs_map.json", type=Dict)
 
     ##
     ## Delete the file
