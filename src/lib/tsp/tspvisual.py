@@ -74,14 +74,18 @@ class TSPVisual:
     ## Two-opt algorithm with visualization
     ##
     @staticmethod
-    def two_opt(graph: Graph, tour: Tour) -> None:
+    def two_opt(graph: Graph, tour: Tour = None) -> None:
         """Visualizes the 2-opt algorithm in real-time as it improves the tour.
 
         Args:
             graph (Graph): The graph to solve
             tour (Tour): The tour to improve
         """
-        nodes = tour.nodes if tour else graph.nodes
+        ##
+        ## We'll assume that the edges are connected in the order that the
+        ## nodes are given.
+        ##
+        nodes = tour.nodes if tour is not None else graph.nodes
 
         ##
         ## Enable interactive plotting and create a new figure and axis
@@ -98,8 +102,12 @@ class TSPVisual:
         best_distance = calculate_tour_distance(nodes)
         improved = True
 
+        ##
+        ## Our main loop
+        ##
         while improved:
             improved = False
+
             for i in range(1, len(nodes) - 1):
                 for j in range(i + 1, len(nodes)):
                     if j - i == 1:
@@ -116,7 +124,7 @@ class TSPVisual:
                         ## Clear the plot for the next drawing
                         ax.clear()
 
-                        ## Redraw the graph nodes
+                        ## Redraw the graph nodes and edges
                         ax.scatter(
                             [node.x for node in nodes],
                             [node.y for node in nodes],

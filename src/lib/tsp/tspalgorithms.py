@@ -157,15 +157,27 @@ class TSPAlgorithms:
         Returns:
             Tour: An improved tour found using the 2-opt algorithm.
         """
+        ##
         ## Initial setup
-        nodes = tour.nodes if tour else graph.nodes
+        ##
+        ## We'll assume that the edges are connected in the order that the
+        ## nodes are given.
+        ##
+        nodes = tour.nodes if tour is not None else graph.nodes
         best_distance = calculate_tour_distance(nodes)
         improved = True
 
+        ##
+        ## Our main loop
+        ##
         while improved:
             improved = False
+
             for i in range(1, len(nodes) - 1):
                 for j in range(i + 1, len(nodes)):
+                    if j - i == 1:
+                        continue  ## Skip adjacent nodes to avoid trivial swaps
+
                     new_nodes = nodes[:i] + nodes[i:j][::-1] + nodes[j:]
                     new_distance = calculate_tour_distance(new_nodes)
 
