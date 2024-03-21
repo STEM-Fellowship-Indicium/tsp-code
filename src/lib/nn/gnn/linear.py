@@ -102,7 +102,7 @@ class LinearGNN(nn.Module):
         ##
         ## Note that: -1 automatically calculates the number of rows needed.
         ##
-        # x = x.view(-1, self.output_features)
+        ## x = x.view(-1, self.output_features)
 
         ##
         ## Return the output
@@ -186,12 +186,12 @@ if __name__ == "__main__":
         ##
         ## Save the model
         ##
-        # torch.save(model.state_dict(), "data/nn/gnn/linear.pth")
+        ## torch.save(model.state_dict(), "data/nn/gnn/linear.pth")
 
     ##
     ## Train the model
     ##
-    # train()
+    ## train()
 
     ##
     ## Now it's time to actually test the model with a sample from the dataset

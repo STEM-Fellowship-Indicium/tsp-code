@@ -25,6 +25,7 @@ class TSPAlgorithm:
     SimulatedAnnealing: str = "SimulatedAnnealing"
     GreedyHeuristic: str = "GreedyHeuristic"
     GNN: str = "GNN"
+    Opt2: str = "2-Opt"
 
     ##
     ## End of class

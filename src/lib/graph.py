@@ -94,17 +94,17 @@ class Graph:
             Graph: The random graph
         """
 
-        # Generate the nodes
+        ## Generate the nodes
         nodes = generate_nodes(num_nodes)
 
-        # Create the edges
+        ## Create the edges
         edges = [
             Edge(idx, nodes[i], nodes[j])
             for idx, i in enumerate(range(num_nodes))
             for j in range(i + 1, num_nodes)
         ]
 
-        # Return the graph
+        ## Return the graph
         return Graph(edges, nodes)
 
         ##
@@ -124,12 +124,12 @@ class Graph:
         Returns:
             Graph: The graph that was imported
         """
-        # Open the file
+        ## Open the file
         with open(filename, "r") as file:
-            # Load the graph from the file
+            ## Load the graph from the file
             graph = json.load(file)
 
-        # Create the nodes and edges
+        ## Create the nodes and edges
         adj_matrix = graph["adj_matrix"]
         shortest_tour = Tour.from_map(graph["shortest_tour"])
 
@@ -144,7 +144,7 @@ class Graph:
             for edge in graph["edges"]
         ]
 
-        # Return the graph
+        ## Return the graph
         return Graph(edges, nodes, adj_matrix, shortest_tour)
 
         ##
@@ -167,14 +167,14 @@ class Graph:
         if map is None:
             return None
 
-        # Create the nodes and edges
+        ## Create the nodes and edges
         adj_matrix = map["adj_matrix"]
         shortest_tour = Tour.from_map(map["shortest_tour"])
 
         nodes = [Node.from_map(node) for node in map["nodes"]]
         edges = [Edge.from_map(edge) for edge in map["edges"]]
 
-        # Return the graph
+        ## Return the graph
         return Graph(edges, nodes, adj_matrix, shortest_tour)
 
         ##
@@ -185,14 +185,14 @@ class Graph:
     ## Draw the graph
     ##
     def draw(self, tours: List[Tour] = [], colors: List[str] = []) -> None:
-        # Create a new figure
+        ## Create a new figure
         plt.figure()
 
-        # Draw the nodes
+        ## Draw the nodes
         for node in self.nodes:
             plt.plot(node.x, node.y, "o", color="blue")
 
-        # Draw the edges
+        ## Draw the edges
         for edge in self.edges:
             plt.plot(
                 [edge.start.x, edge.end.x],
@@ -200,7 +200,7 @@ class Graph:
                 color=(0.1, 0.1, 0.1, 0.8),
             )
 
-        # Draw the tours red
+        ## Draw the tours red
         for i, tour in enumerate(tours):
             color = colors[i] if len(colors) - 1 >= i else "red"
 
@@ -217,7 +217,7 @@ class Graph:
                 color=color,
             )
 
-        # Show the graph
+        ## Show the graph
         plt.show()
 
     ##
@@ -233,22 +233,22 @@ class Graph:
             List[Node]: The previous nodes
         """
 
-        # Save the previous nodes
+        ## Save the previous nodes
         self.prev_nodes = self.nodes
         self.nodes = []
 
-        # Use the given edges if they exist
+        ## Use the given edges if they exist
         if len(edges) > 0:
             self.edges = edges
 
-        # Add the start and end nodes of the edges to the nodes list
+        ## Add the start and end nodes of the edges to the nodes list
         for edge in self.edges:
             if edge.start not in self.nodes:
                 self.nodes.append(edge.start)
             if edge.end not in self.nodes:
                 self.nodes.append(edge.end)
 
-        # Return the previous nodes
+        ## Return the previous nodes
         return self.prev_nodes
 
         ##
@@ -262,15 +262,15 @@ class Graph:
         """Create adjacency matrix"""
         num_nodes = len(self.nodes)
 
-        # Fill the adj matrix with a bunch of arrays of 0s
+        ## Fill the adj matrix with a bunch of arrays of 0s
         self.adj_matrix = [[0] * num_nodes for _ in range(num_nodes)]
 
-        # Fill the adj matrix with the weights of the edges
+        ## Fill the adj matrix with the weights of the edges
         for edge in self.edges:
             start = edge.start.idx
             end = edge.end.idx
 
-            # Set the weight of the edge in the adj matrix
+            ## Set the weight of the edge in the adj matrix
             self.adj_matrix[start][end] = edge.weight
             self.adj_matrix[end][start] = edge.weight
 
@@ -364,7 +364,7 @@ class Graph:
             date = datetime.now().strftime("%Y-%m-%d-%H-%M-%S")
             file = f"data/graph-{date}.json"
 
-        # Open the file (create it if it doesn't exist)
+        ## Open the file (create it if it doesn't exist)
         with open(filename, "w") as file:
             json.dump(self.to_map(), file, indent=4)
 
@@ -493,7 +493,7 @@ if __name__ == "__main__":
     graph1 = Graph([edge1], [node1, node2])
     graph1.print()
 
-    # Todays date in the format of year-month-day-hour-minute-second
+    ## Todays date in the format of year-month-day-hour-minute-second
     graph1.export(f"data/tests/unit/graph.export.json")
 
     ##
@@ -502,8 +502,8 @@ if __name__ == "__main__":
     graph2 = Graph.import_json(f"data/tests/unit/graph.export.json")
     graph2.print()
 
-    # Delete the file
-    # os.remove("data/tests/unit/graph.export.json")
+    ## Delete the file
+    ## os.remove("data/tests/unit/graph.export.json")
 
     ##
     ## Test 3
@@ -516,7 +516,7 @@ if __name__ == "__main__":
     ##
     graph4 = Graph.rand(10)
 
-    # Get the graph as a tensor
+    ## Get the graph as a tensor
     tensor = graph4.to_tensor()
     print(tensor)
 

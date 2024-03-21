@@ -12,9 +12,11 @@ if __name__ == "__main__":
 ##
 from lib.graph import Graph
 import matplotlib.pyplot as plt
+from lib.tour import Tour
 from lib.utils.create_dist_matrix import create_dist_matrix
 import itertools, math
 from lib.utils.calculate_tour_distance import calculate_tour_distance
+
 
 ##
 ## TSP Visualizations
@@ -27,10 +29,10 @@ class TSPVisual:
     ##
     @staticmethod
     def brute_force(graph: Graph) -> None:
-        # Variables
+        ## Variables
         n = len(graph.nodes)
 
-        # Draw the graph nodes
+        ## Draw the graph nodes
         plt.figure()
         for node in graph.nodes:
             plt.plot(node.x, node.y, "o", color="blue")
@@ -41,13 +43,13 @@ class TSPVisual:
         ## so that we can see the edges being checked in real time.
         ##
         for path in itertools.permutations(range(n)):
-            plt.clf()  # Clear the plot
+            plt.clf()  ## Clear the plot
 
-            # Draw the graph nodes
+            ## Draw the graph nodes
             for node in graph.nodes:
                 plt.plot(node.x, node.y, "o", color="blue")
 
-            # Draw the edges
+            ## Draw the edges
             for i in range(n - 1):
                 plt.plot(
                     [graph.nodes[path[i]].x, graph.nodes[path[i + 1]].x],
@@ -55,31 +57,41 @@ class TSPVisual:
                     color="black",
                 )
 
-            # Draw the last edge
+            ## Draw the last edge
             plt.plot(
                 [graph.nodes[path[-1]].x, graph.nodes[path[0]].x],
                 [graph.nodes[path[-1]].y, graph.nodes[path[0]].y],
                 color="black",
             )
 
-            # Pause for a moment so that we can actually see the edges being checked
+            ## Pause for a moment so that we can actually see the edges being checked
             plt.pause(0.001)
 
-        # Show the graph
+        ## Show the graph
         plt.show()
 
+    ##
+    ## Two-opt algorithm with visualization
+    ##
     @staticmethod
-    def two_opt(graph: Graph) -> None:
+    def two_opt(graph: Graph, tour: Tour) -> None:
         """Visualizes the 2-opt algorithm in real-time as it improves the tour.
 
         Args:
             graph (Graph): The graph to solve
+            tour (Tour): The tour to improve
         """
-        nodes = graph.nodes
-        plt.ion()  # Enable interactive plotting
-        fig, ax = plt.subplots()
+        nodes = tour.nodes if tour else graph.nodes
 
-        # Initial drawing of the graph nodes
+        ##
+        ## Enable interactive plotting and create a new figure and axis
+        ##
+        plt.ion()
+        _, ax = plt.subplots()
+
+        ##
+        ## Initial drawing of the graph nodes
+        ##
         ax.scatter([node.x for node in nodes], [node.y for node in nodes], color="blue")
         plt.draw()
 
@@ -90,32 +102,44 @@ class TSPVisual:
             improved = False
             for i in range(1, len(nodes) - 1):
                 for j in range(i + 1, len(nodes)):
-                    if j - i == 1: continue  # Skip adjacent nodes to avoid trivial swaps
-                    
+                    if j - i == 1:
+                        continue  ## Skip adjacent nodes to avoid trivial swaps
+
                     new_nodes = nodes[:i] + nodes[i:j][::-1] + nodes[j:]
                     new_distance = calculate_tour_distance(new_nodes)
-                    
+
                     if new_distance < best_distance:
-                        nodes[:] = new_nodes  # Update the nodes list in-place
+                        nodes[:] = new_nodes  ## Update the nodes list in-place
                         best_distance = new_distance
                         improved = True
 
-                        # Clear the plot for the next drawing
+                        ## Clear the plot for the next drawing
                         ax.clear()
-                        
-                        # Redraw the graph nodes
-                        ax.scatter([node.x for node in nodes], [node.y for node in nodes], color="blue")
 
-                        # Redraw the tour edges
+                        ## Redraw the graph nodes
+                        ax.scatter(
+                            [node.x for node in nodes],
+                            [node.y for node in nodes],
+                            color="blue",
+                        )
+
+                        ##
+                        ## Redraw the tour edges
+                        ##
                         for k in range(len(nodes)):
                             next_k = (k + 1) % len(nodes)
-                            ax.plot([nodes[k].x, nodes[next_k].x], [nodes[k].y, nodes[next_k].y], color="black")
-                        
+                            ax.plot(
+                                [nodes[k].x, nodes[next_k].x],
+                                [nodes[k].y, nodes[next_k].y],
+                                color="black",
+                            )
+
                         plt.draw()
                         plt.pause(0.01)
 
-        plt.ioff()  # Turn off interactive mode
+        plt.ioff()  ## Turn off interactive mode
         plt.show()
+
     ##
     ## Greedy heuristic algorithm with visualization
     ##
@@ -273,17 +297,22 @@ class TSPVisual:
 ## code (in the 'if' statement) won't run.
 ##
 if __name__ == "__main__":
-    # Create a new graph
+    ## Create a new graph
     graph = Graph.rand(7)
 
-    # Greedy heuristic visual
+    ## Greedy heuristic visual
     print("Greedy heuristic visual")
     TSPVisual.greedy_heuristic(graph)
     plt.pause(5)
 
-    # Brute force visual
+    ## Brute force visual
     print("Brute force visual")
     TSPVisual.brute_force(graph)
+    plt.pause(5)
+
+    ## Two-opt visual
+    print("Two-opt visual")
+    TSPVisual.two_opt(graph)
     plt.pause(5)
 
 
