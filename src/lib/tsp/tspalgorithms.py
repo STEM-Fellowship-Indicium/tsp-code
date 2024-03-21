@@ -128,7 +128,8 @@ class TSPAlgorithms:
             if distance < shortest_distance:
                 shortest_distance = distance
                 shortest_tour_nodes = path
-
+                
+        print(f"Best distance for Brute Force: {shortest_distance}")
         # Return the shortest tour
         return Tour(
             nodes=shortest_tour_nodes,
@@ -165,7 +166,8 @@ class TSPAlgorithms:
                         nodes = new_nodes  # This becomes the new best tour
                         best_distance = new_distance
                         improved = True
-
+                        
+        print(f"Best distance for 2-opt: {best_distance}")
         # Assuming Tour class takes a list of Node objects, distance, and algorithm name
         return Tour(nodes=nodes, distance=best_distance, algorithm="2-Opt")
         ##
