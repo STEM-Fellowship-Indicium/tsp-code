@@ -31,7 +31,7 @@ class GeometricGNN(MessagePassing):
             node_dim (int): The number of features for each node
             hidden_dim (int): The hidden dimension for the GeometricGNN
         """
-        super(GeometricGNN, self).__init__(aggr="mean")  # Mean aggregation
+        super(GeometricGNN, self).__init__(aggr="mean")  ## Mean aggregation
 
         ##
         ## Variables
@@ -74,7 +74,7 @@ class GeometricGNN(MessagePassing):
         x, edge_index = batch_data.x, batch_data.edge_index
 
         ## Message passing
-        # x = self.propagate(edge_index, x=x)
+        ## x = self.propagate(edge_index, x=x)
 
         ## Forward pass
         x = self.sequence(x)
@@ -96,7 +96,7 @@ class GeometricGNN(MessagePassing):
 ## This prevents the test from running if we were ti import the file.
 ##
 if __name__ == "__main__":
-    # Create the model and optimizer
+    ## Create the model and optimizer
     model = GeometricGNN(node_dim=2, hidden_dim=16, num_nodes=3)
     optimizer = torch.optim.Adam(model.parameters(), lr=0.01)
     loss_fn = torch.nn.MSELoss()
@@ -132,7 +132,7 @@ if __name__ == "__main__":
     )  ## Tour of the nodes (output)
     graph_2 = Data(x=nodes_2, y=tour_2, edge_index=edge_index_2)
 
-    # Batch the graphs
+    ## Batch the graphs
     batch = Batch.from_data_list([graph_1, graph_2])
     epochs = 100
 

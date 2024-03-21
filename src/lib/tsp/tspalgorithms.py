@@ -14,6 +14,7 @@ from lib.graph import Graph
 from lib.tour import Tour
 from lib.types.tspalgorithm import TSPAlgorithm
 from lib.utils.create_dist_matrix import create_dist_matrix
+from lib.utils.calculate_tour_distance import calculate_tour_distance
 import itertools, math, random
 
 
@@ -32,10 +33,10 @@ class TSPAlgorithms:
             graph (Graph): The graph to solve
             algorithm (TSPAlgorithm): The algorithm to use
         """
-        # Get the shortest tour based on the algorithm
+        ## Get the shortest tour based on the algorithm
         shortest_tour = TSPAlgorithms.get_shortest_tour(graph, algorithm)
 
-        # Set the shortest tour
+        ## Set the shortest tour
         graph.shortest_tour = shortest_tour
 
         ##
@@ -56,7 +57,7 @@ class TSPAlgorithms:
         Returns:
             Tour: The shortest tour
         """
-        # Get the shortest tour based on the algorithm
+        ## Get the shortest tour based on the algorithm
         if algorithm == TSPAlgorithm.BruteForce:
             return TSPAlgorithms.brute_force(graph)
 
@@ -69,7 +70,10 @@ class TSPAlgorithms:
         elif algorithm == TSPAlgorithm.GreedyHeuristic:
             return TSPAlgorithms.greedy_heuristic(graph)
 
-        # Return the shortest tour
+        elif algorithm == TSPAlgorithm.Opt2:
+            return TSPAlgorithms.two_opt(graph)
+
+        ## Return the shortest tour
         return Tour(algorithm=TSPAlgorithm.NoneType)
 
         ##
@@ -86,7 +90,7 @@ class TSPAlgorithms:
         Args:
             graph (Graph): The graph to solve
         """
-        # Variables
+        ## Variables
         distance_matrix = create_dist_matrix(graph.nodes)
         shortest_distance = math.inf
         shortest_tour_nodes = []
@@ -128,12 +132,62 @@ class TSPAlgorithms:
                 shortest_distance = distance
                 shortest_tour_nodes = path
 
-        # Return the shortest tour
+        ## Return the shortest tour
         return Tour(
             nodes=shortest_tour_nodes,
             distance=shortest_distance,
             algorithm=TSPAlgorithm.BruteForce,
         )
+
+        ##
+        ## End of function
+        ##
+
+    ##
+    ## 2-Opt algorithm
+    ##
+    @staticmethod
+    def two_opt(graph: Graph, tour: Tour = None) -> Tour:
+        """Applies the 2-opt algorithm to improve an initial tour and returns the improved tour as a Tour object.
+
+        Args:
+            graph (Graph): The initial graph with nodes representing the tour.
+            tour (Tour): The initial tour to improve.
+
+        Returns:
+            Tour: An improved tour found using the 2-opt algorithm.
+        """
+        ##
+        ## Initial setup
+        ##
+        ## We'll assume that the edges are connected in the order that the
+        ## nodes are given.
+        ##
+        nodes = tour.nodes if tour is not None else graph.nodes
+        best_distance = calculate_tour_distance(nodes)
+        improved = True
+
+        ##
+        ## Our main loop
+        ##
+        while improved:
+            improved = False
+
+            for i in range(1, len(nodes) - 1):
+                for j in range(i + 1, len(nodes)):
+                    if j - i == 1:
+                        continue  ## Skip adjacent nodes to avoid trivial swaps
+
+                    new_nodes = nodes[:i] + nodes[i:j][::-1] + nodes[j:]
+                    new_distance = calculate_tour_distance(new_nodes)
+
+                    if new_distance < best_distance:
+                        nodes = new_nodes  ## This becomes the new best tour
+                        best_distance = new_distance
+                        improved = True
+
+        ## Assuming Tour class takes a list of Node objects, distance, and algorithm name
+        return Tour(nodes=nodes, distance=best_distance, algorithm=TSPAlgorithm.Opt2)
 
         ##
         ## End of function
@@ -149,7 +203,7 @@ class TSPAlgorithms:
         Args:
             graph (Graph): The graph to solve
         """
-        # Variables
+        ## Variables
         distance_matrix = create_dist_matrix(graph.nodes)
         shortest_distance = 0
         shortest_tour_nodes = [graph.nodes[0]]
@@ -249,26 +303,26 @@ class TSPAlgorithms:
 if __name__ == "__main__":
     import time
 
-    # Create a new graph
+    ## Create a new graph
     graph = Graph.rand(10)
 
-    # Solve the graph using the brute force algorithm
+    ## Solve the graph using the brute force algorithm
     start = time.time()
     brute_res = TSPAlgorithms.brute_force(graph)
     speed = time.time() - start
     print(f"Brute force algorithm\nResult:{brute_res}\nSpeed: {speed}s")
 
-    # Save the graph and shortest tour to file (testing)
-    # graph.shortest_tour = res
-    # graph.export("data/graph-tsp.json")
+    ## Save the graph and shortest tour to file (testing)
+    ## graph.shortest_tour = res
+    ## graph.export("data/graph-tsp.json")
 
-    # Solve the graph using the genetic algorithm
+    ## Solve the graph using the genetic algorithm
     start = time.time()
     gen_res = TSPAlgorithms.genetic(graph)
     speed = time.time() - start
     print(f"\n\nGenetic algorithm\nResult:{gen_res}\nSpeed: {speed}s")
 
-    # Solve the graph using the simulated annealing algorithm
+    ## Solve the graph using the simulated annealing algorithm
     start = time.time()
     sim_anneal_res = TSPAlgorithms.simulated_annealing(graph)
     speed = time.time() - start
@@ -276,13 +330,13 @@ if __name__ == "__main__":
         f"\n\nSimulated annealing algorithm\nResult:{sim_anneal_res}\nSpeed: {speed}s"
     )
 
-    # Solve the graph using the greedy heuristic algorithm
+    ## Solve the graph using the greedy heuristic algorithm
     start = time.time()
     greedy_res = TSPAlgorithms.greedy_heuristic(graph)
     speed = time.time() - start
     print(f"\n\nGreedy heuristic algorithm\nResult:{greedy_res}\nSpeed: {speed}s")
 
-    # Plot the graph and tours
+    ## Plot the graph and tours
     graph.draw(tours=[brute_res, greedy_res], colors=["yellow", "red"])
 
 

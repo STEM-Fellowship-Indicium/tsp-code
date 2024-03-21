@@ -37,7 +37,7 @@ class GraphDataset(Dataset):
         """
         self.num_samples = num_samples
         self.num_nodes = num_nodes
-        self.num_features = node_features  # x, y coordinates
+        self.num_features = node_features  ## x, y coordinates
         self.graphs: List[torch.Tensor] = []
         self.tours: List[torch.Tensor] = []
 
@@ -124,11 +124,11 @@ class GraphDataset(Dataset):
 if __name__ == "__main__":  ##
     from torch.utils.data import DataLoader
 
-    # Create a dataset
+    ## Create a dataset
     dataset = GraphDataset(num_samples=10, num_nodes=5)
-    # Create a dataloader
+    ## Create a dataloader
     dataloader = DataLoader(dataset, batch_size=2, shuffle=True)
-    # Iterate over the dataloader
+    ## Iterate over the dataloader
     for i, (graph, tour) in enumerate(dataloader):
         print(f"Batch {i + 1}:")
         print(f"Graph shape: {graph.shape}")
