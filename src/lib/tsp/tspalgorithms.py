@@ -190,7 +190,6 @@ class TSPAlgorithms:
                         improved = True
 
         ## Assuming Tour class takes a list of Node objects, distance, and algorithm name
-        print(best_distance)
         return Tour(nodes=nodes, distance=best_distance, algorithm=TSPAlgorithm.Opt2)
 
         ##
@@ -231,7 +230,6 @@ class TSPAlgorithms:
 
 
         # Construct and return the improved tour
-        print(best_distance)
         return Tour(nodes=nodes, distance=best_distance, algorithm=TSPAlgorithm.Opt3)
         ##
         ## End of function
