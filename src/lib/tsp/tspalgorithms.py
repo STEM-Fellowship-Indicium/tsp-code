@@ -15,6 +15,7 @@ from lib.tour import Tour
 from lib.types.tspalgorithm import TSPAlgorithm
 from lib.utils.create_dist_matrix import create_dist_matrix
 from lib.utils.calculate_tour_distance import calculate_tour_distance
+from lib.utils.three_opt_swap import three_opt_swap
 import itertools, math, random
 
 from lib.utils.duration import duration
@@ -189,6 +190,7 @@ class TSPAlgorithms:
                         improved = True
 
         ## Assuming Tour class takes a list of Node objects, distance, and algorithm name
+        print(best_distance)
         return Tour(nodes=nodes, distance=best_distance, algorithm=TSPAlgorithm.Opt2)
 
         ##
@@ -198,6 +200,44 @@ class TSPAlgorithms:
     ##
     ## Greedy Heuristic
     ##
+    
+    @staticmethod
+    def three_opt(graph: Graph, tour: Tour = None) -> Tour:
+        """Applies the 3-opt algorithm to improve an initial tour and returns the improved tour as a Tour object.
+
+        Args:
+            Graph: The initial graph with nodes representing the tour.
+            Tour: The initial tour to improve.
+
+        Returns:
+            Tour: An improved tour found using the 3-opt algorithm.
+        """
+        nodes = tour.nodes if tour is not None else graph.nodes
+        best_distance = calculate_tour_distance(nodes)
+        improved = True
+        
+        while improved:
+            improved = False
+            n = len(nodes)
+
+            for i in range(n - 2):
+                for j in range(i + 2, n - 1):
+                    for k in range(j + 2, n + (0 if i == 0 else 1)):
+                        new_nodes, new_distance = three_opt_swap(nodes, i, j, k)
+
+                        if new_distance < best_distance:
+                            nodes, best_distance = new_nodes, new_distance
+                            improved = True
+
+
+        # Construct and return the improved tour
+        print(best_distance)
+        return Tour(nodes=nodes, distance=best_distance, algorithm=TSPAlgorithm.Opt3)
+        ##
+        ## End of function
+        ##
+
+    
     @staticmethod
     def greedy_heuristic(graph: Graph) -> Tour:
         """Greedy heuristic algorithm for the TSP

@@ -26,6 +26,7 @@ class TSPAlgorithm:
     GreedyHeuristic: str = "GreedyHeuristic"
     GNN: str = "GNN"
     Opt2: str = "2-Opt"
+    Opt3: str = "3-Opt"
 
     ##
     ## End of class
