@@ -16,7 +16,7 @@ from lib.tour import Tour
 from lib.utils.create_dist_matrix import create_dist_matrix
 import itertools, math
 from lib.utils.calculate_tour_distance import calculate_tour_distance
-
+from lib.utils.three_opt_swap import three_opt_swap
 
 ##
 ## TSP Visualizations
@@ -147,6 +147,51 @@ class TSPVisual:
 
         plt.ioff()  ## Turn off interactive mode
         plt.show()
+        
+    ##
+    ## Three-opt algorithm with visualization
+    ##
+    @staticmethod
+    def three_opt(graph: Graph, tour: Tour = None) -> None:
+        nodes = tour.nodes if tour is not None else graph.nodes
+
+        plt.ion()
+        fig, ax = plt.subplots()
+
+        # Initial tour drawing
+        ax.scatter([node.x for node in nodes], [node.y for node in nodes], color="blue")
+        for i in range(len(nodes)):
+            next_i = (i + 1) % len(nodes)
+            ax.plot([nodes[i].x, nodes[next_i].x], [nodes[i].y, nodes[next_i].y], color="black")
+        plt.draw()
+        plt.pause(2)  # Pause to show initial configuration
+
+        best_distance = calculate_tour_distance(nodes)
+        improved = True
+
+        while improved:
+            improved = False
+            for i in range(1, len(nodes) - 2):
+                for j in range(i + 2, len(nodes) - 1):
+                    for k in range(j + 2, len(nodes) + (0 if i > 0 else 1)):
+                        new_nodes, new_distance = three_opt_swap(nodes, i, j, k)
+                        if new_distance < best_distance:
+                            nodes[:] = new_nodes
+                            best_distance = new_distance
+                            improved = True
+
+                            # Visualization update
+                            ax.clear()
+                            ax.scatter([node.x for node in nodes], [node.y for node in nodes], color="blue")
+                            for l in range(len(nodes)):
+                                next_l = (l + 1) % len(nodes)
+                                ax.plot([nodes[l].x, nodes[next_l].x], [nodes[l].y, nodes[next_l].y], color="black")
+                            plt.draw()
+                            plt.pause(0.5)
+
+        plt.ioff()
+        plt.show()
+
 
     ##
     ## Greedy heuristic algorithm with visualization
