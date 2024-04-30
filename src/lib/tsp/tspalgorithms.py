@@ -235,7 +235,63 @@ class TSPAlgorithms:
         ## End of function
         ##
 
+      
+    ##
+    ## Simulated annealing algorithm
+    ##
+
+    @staticmethod
+    def simulated_annealing(graph: Graph, initial_tour: Tour = None) -> Tour:
+        """Applies the Simulated Annealing algorithm to find an optimal tour for the TSP.
+
+        Args:
+            graph (Graph): The graph representing all the cities and distances between them.
+            initial_tour (Tour): An optional initial tour from which to start the optimization.
+
+        Returns:
+            Tour: An optimized tour found using Simulated Annealing.
+        """
+        ##
+        ## Initial setup
+        ##
+        current_nodes = initial_tour.nodes if initial_tour is not None else graph.nodes
+        current_distance = calculate_tour_distance(current_nodes)
+        best_nodes = current_nodes[:]
+        best_distance = current_distance
+        temperature = 10000
+        cooling_rate = 0.995
+
+        ##
+        ## Our main loop
+        ##
+        while temperature > 1:
+            i, j = sorted(random.sample(range(len(current_nodes)), 2))
+            new_nodes = (
+                current_nodes[:i] +
+                current_nodes[i:j][::-1] +
+                current_nodes[j:]
+            )
+            new_distance = calculate_tour_distance(new_nodes)
+
+            if (new_distance < current_distance or
+                math.exp((current_distance - new_distance) / temperature) > random.random()):
+                current_nodes = new_nodes
+                current_distance = new_distance
+
+                if new_distance < best_distance:
+                    best_nodes = new_nodes[:]
+                    best_distance = new_distance
+
+            temperature *= cooling_rate
+
+        ## Assuming Tour class takes a list of Node objects, distance, and algorithm name
+        return Tour(nodes=best_nodes, distance=best_distance, algorithm=TSPAlgorithm.SimulatedAnnealing)
+
+        ##
+        ## End of function
+        ##
     
+
     @staticmethod
     def greedy_heuristic(graph: Graph) -> Tour:
         """Greedy heuristic algorithm for the TSP
@@ -312,26 +368,6 @@ class TSPAlgorithms:
         ## End of function
         ##
 
-    ##
-    ## Simulated annealing algorithm
-    ##
-    @staticmethod
-    def simulated_annealing(graph: Graph) -> Tour:
-        """Simulated annealing algorithm for the TSP
-
-        Args:
-            graph (Graph): The graph to solve
-        """
-
-        return
-
-        ##
-        ## End of function
-        ##
-
-    ##
-    ## End of class
-    ##
 
 
 ##

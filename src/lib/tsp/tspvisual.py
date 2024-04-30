@@ -14,7 +14,7 @@ from lib.graph import Graph
 import matplotlib.pyplot as plt
 from lib.tour import Tour
 from lib.utils.create_dist_matrix import create_dist_matrix
-import itertools, math
+import itertools, math, random
 from lib.utils.calculate_tour_distance import calculate_tour_distance
 from lib.utils.three_opt_swap import three_opt_swap
 
@@ -316,27 +316,90 @@ class TSPVisual:
         ##
 
     ##
-    ## Simulated annealing algorithm visualization
+    ## Simulated Annealing algorithm with visualization
     ##
     @staticmethod
-    def simulated_annealing(graph: Graph) -> None:
-        """Visualize the simulated annealing algorithm for the TSP
+    def simulated_annealing_visual(graph: Graph, initial_tour: Tour = None) -> None:
+        """Applies the Simulated Annealing algorithm with real-time visualization to find an optimal tour for the TSP.
 
         Args:
-            graph (Graph): The graph to solve
-
-        Returns:
-            None
+            graph (Graph): The graph representing all the cities and distances between them.
+            initial_tour (Tour): An optional initial tour from which to start the optimization.
         """
         ##
-        ## TODO: Implement the simulated annealing algorithm visualization
+        ## Initial setup
         ##
+        current_nodes = initial_tour.nodes if initial_tour is not None else graph.nodes
+        current_distance = calculate_tour_distance(current_nodes)
+        best_nodes = current_nodes[:]
+        best_distance = current_distance
+        temperature = 10000
+        cooling_rate = 0.995
 
-        return
+        ##
+        ## Enable interactive plotting and create a new figure and axis
+        ##
+        plt.ion()
+        _, ax = plt.subplots()
 
         ##
-        ## End of function
+        ## Initial drawing of the graph nodes
         ##
+        ax.scatter([node.x for node in current_nodes], [node.y for node in current_nodes], color="blue")
+        # Draw initial tour
+        for i in range(len(current_nodes)):
+            next_i = (i + 1) % len(current_nodes)
+            ax.plot(
+                [current_nodes[i].x, current_nodes[next_i].x],
+                [current_nodes[i].y, current_nodes[next_i].y],
+                color="black"
+            )
+        plt.draw()
+
+        ##
+        ## Our main loop
+        ##
+        while temperature > 1:
+            i, j = sorted(random.sample(range(len(current_nodes)), 2))
+            new_nodes = (
+                current_nodes[:i] +
+                current_nodes[i:j][::-1] +
+                current_nodes[j:]
+            )
+            new_distance = calculate_tour_distance(new_nodes)
+
+            if (new_distance < current_distance or
+                math.exp((current_distance - new_distance) / temperature) > random.random()):
+                current_nodes = new_nodes
+                current_distance = new_distance
+
+                if new_distance < best_distance:
+                    best_nodes = new_nodes[:]
+                    best_distance = new_distance
+
+                ## Clear the plot for the next drawing
+                ax.clear()
+
+                ## Redraw the graph nodes
+                ax.scatter([node.x for node in current_nodes], [node.y for node in current_nodes], color="blue")
+
+                ## Redraw the tour edges
+                for k in range(len(current_nodes)):
+                    next_k = (k + 1) % len(current_nodes)
+                    ax.plot(
+                        [current_nodes[k].x, current_nodes[next_k].x],
+                        [current_nodes[k].y, current_nodes[next_k].y],
+                        color="black"
+                    )
+
+                plt.draw()
+                plt.pause(0.05)  # Slight pause to visualize updates
+
+            temperature *= cooling_rate
+
+        plt.ioff()  ## Turn off interactive mode
+        plt.show()
+
 
     ##
     ## End of class

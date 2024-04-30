@@ -46,7 +46,7 @@ if __name__ == "__main__":
             )
 
             algorithm_choice = input(
-                "Which algorithm would you like to use?\n1. Brute Force\n2. Greedy Heuristic\n3. Two-Opt\n 4. Three-opt\n5. None\n\nYour choice: "
+                "Which algorithm would you like to use?\n1. Brute Force\n2. Greedy Heuristic\n3. Two-Opt\n 4. Three-opt\n 5. Simulated Annealing\n 6. None\n\nYour choice: "
             )
 
             if algorithm_choice == "1":
@@ -57,6 +57,8 @@ if __name__ == "__main__":
                 algorithm = TSPAlgorithm.Opt2
             elif algorithm_choice == "4":
                 algorithm = TSPAlgorithm.Opt3
+            elif algorithm_choice == "5":
+                algorithm = TSPAlgorithm.SimulatedAnnealing
             else:
                 algorithm = TSPAlgorithm.NoneType
 
@@ -98,11 +100,12 @@ if __name__ == "__main__":
             print("2. Greedy Heuristic")
             print("3. Two-Opt")
             print("4. Three-Opt")
+            print("5. Simulated Annealing")
 
             algorithms = [
                 algorithm
                 for algorithm in input(
-                    "Enter the numbers of the algorithms you would like to use (ex: 1,2,3,4): "
+                    "Enter the numbers of the algorithms you would like to use (ex: 1,2,3,4,5): "
                 )
                 .strip()
                 .split(",")
@@ -120,6 +123,8 @@ if __name__ == "__main__":
                     results.append(TSPAlgorithms.two_opt(graph))
                 elif algorithm == "4":
                     results.append(TSPAlgorithms.three_opt(graph))
+                elif algorithm == "5":
+                    results.append(TSPAlgorithms.simulated_annealing(graph))
 
             graph.draw(results, ["red", "blue", "green"])
 
