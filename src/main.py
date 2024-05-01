@@ -150,6 +150,11 @@ class MyWidget(QtWidgets.QWidget):
         ## 7. Export single graph to file
         ##
         def _export_single_graph(file_name: str):
+            if self.graph is None:
+                return set_response_message(
+                    "No graph to export. Please generate a single graph (4) before this."
+                )
+
             self.graph.export(file_name)
 
             set_response_message(f"Exported graph to {file_name}")
@@ -174,7 +179,7 @@ class MyWidget(QtWidgets.QWidget):
         ## 1. Generate Graphs
         ##
         self.generate_graphs_layout = QtWidgets.QHBoxLayout()
-        self.generate_graphs_label = QtWidgets.QLabel("1. Generate Graphs")
+        self.generate_graphs_label = QtWidgets.QLabel("1. Generate multiple graphs")
         self.generate_graphs_layout.addWidget(self.generate_graphs_label)
 
         ## Number of graphs to generate
@@ -214,7 +219,7 @@ class MyWidget(QtWidgets.QWidget):
         ## 2. Import Graphs
         ##
         self.import_graphs_layout = QtWidgets.QHBoxLayout()
-        self.import_graphs_label = QtWidgets.QLabel("2. Import Graphs")
+        self.import_graphs_label = QtWidgets.QLabel("2. Import multiple graphs")
         self.import_graphs_layout.addWidget(self.import_graphs_label)
 
         self.import_file_dialog = QtWidgets.QFileDialog()
@@ -243,7 +248,7 @@ class MyWidget(QtWidgets.QWidget):
         ## 3. Export Graphs
         ##
         self.export_graphs_layout = QtWidgets.QHBoxLayout()
-        self.export_graphs_label = QtWidgets.QLabel("3. Export Graphs")
+        self.export_graphs_label = QtWidgets.QLabel("3. Export multiple graphs")
         self.export_graphs_layout.addWidget(self.export_graphs_label)
 
         ## Input for the file name
