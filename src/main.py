@@ -1,156 +1,323 @@
 ##
 ## Imports
 ##
+import PySide6.QtCore
+import PySide6.QtGui
+from PySide6 import QtWidgets
+
 from lib.graph import Graph
-from lib.tsp.tspvisual import TSPVisual
+from lib.tsp.tspalgorithms import TSPAlgorithms
 from lib.utils.generate_graphs import generate_graphs
 from lib.utils.import_graphs import import_graphs
-from lib.types.tspalgorithm import TSPAlgorithm
-from lib.tsp.tspalgorithms import TSPAlgorithms
 from lib.utils.export_graphs import export_graphs
+from lib.tsp.tspvisual import TSPVisual
+from lib.types.tspalgorithm import TSPAlgorithm
+
+
+class MyWidget(QtWidgets.QWidget):
+    def __init__(self):
+        super().__init__()
+
+        ## Global variables
+        self.graphs = []
+        self.graph = None
+
+        ## ## ## ## ## ## ##
+        ##                ##
+        ## Misc functions ##
+        ##                ##
+        ## ## ## ## ## ## ##
+
+        ##
+        ## 1. Function to set the response message
+        ##
+        def set_response_message(message: str):
+            self.response_message.setText(message)
+
+        ##
+        ## 2. Function to update the number of graphs label
+        ##
+        def update_num_graphs_label(graphs):
+            self.num_graphs_label.setText(f"Number of graphs: {len(graphs)}")
+
+        ## ## ## ## ## ## ##
+        ##                ##
+        ## Main functions ##
+        ##                ##
+        ## ## ## ## ## ## ##
+
+        ##
+        ## 1. Function to generate the graphs
+        ##
+        def _generate_graphs(num_graphs: int, num_nodes: int, algorithm: str):
+            self.graphs = generate_graphs(
+                num_graphs,
+                num_nodes,
+                algorithm,
+            )
+
+            update_num_graphs_label(self.graphs)
+
+            set_response_message(
+                f"Generated {num_graphs} graphs with {num_nodes} nodes each."
+            )
+
+        ##
+        ## 2. Function to import the graphs
+        ##
+        def _import_graphs(file_name: str):
+            self.graphs = import_graphs(file_name)
+
+            update_num_graphs_label(self.graphs)
+
+            set_response_message(f"Imported graphs from {file_name}")
+
+        ##
+        ## 3. Function to export the graphs
+        ##
+        def _export_graphs(file_name: str):
+            export_graphs(self.graphs, f"data/{file_name}")
+
+            set_response_message(f"Exported graphs to /data/{file_name}")
+
+        ##
+        ## 4. Function to generate a single graph
+        ##
+        def _generate_single_graph(num_nodes: int):
+            self.graph = Graph.rand(num_nodes)
+
+            update_num_graphs_label([self.graph])
+
+            set_response_message(f"Generated a single graph with {num_nodes} nodes.")
+
+        ##
+        ## 5. Function to visualize the graph
+        ##
+        def _visualize_graph(graph: Graph, algorithm: str):
+            if graph is None:
+                return set_response_message(
+                    "No graph to visualize. Please generate a single graph (4) before this."
+                )
+
+            if algorithm == TSPAlgorithm.BruteForce:
+                TSPVisual.brute_force(graph)
+
+            elif algorithm == TSPAlgorithm.GeneticAlgorithm:
+                pass
+
+            elif algorithm == TSPAlgorithm.GreedyHeuristic:
+                TSPVisual.greedy_heuristic(graph)
+
+            elif algorithm == TSPAlgorithm.Opt2:
+                TSPVisual.two_opt(graph)
+
+            elif algorithm == TSPAlgorithm.Opt3:
+                TSPVisual.three_opt(graph)
+
+            elif algorithm == TSPAlgorithm.SimulatedAnnealing:
+                TSPVisual.simulated_annealing_visual(graph)
+
+            else:
+                set_response_message("Invalid algorithm selected.")
+
+        ## ## ## ## ## ## ##
+        ##                ##
+        ## The GUI layout ##
+        ##                ##
+        ## ## ## ## ## ## ##
+
+        ## Layout
+        self.layout = QtWidgets.QVBoxLayout()
+        self.setLayout(self.layout)
+
+        ## Text showing the number of graphs
+        self.num_graphs_label = QtWidgets.QLabel("Number of graphs: 0")
+        self.num_graphs_label.setFont(PySide6.QtGui.QFont("Arial", 14))
+        self.layout.addWidget(self.num_graphs_label)
+        self.layout.addWidget(self.num_graphs_label)
+
+        ##
+        ## 1. Generate Graphs
+        ##
+        self.generate_graphs_layout = QtWidgets.QHBoxLayout()
+        self.generate_graphs_label = QtWidgets.QLabel("1. Generate Graphs")
+        self.generate_graphs_layout.addWidget(self.generate_graphs_label)
+
+        ## Number of graphs to generate
+        self.generate_graphs_num_graphs_input = QtWidgets.QLineEdit()
+        self.generate_graphs_num_graphs_input.setPlaceholderText("Number of graphs")
+        self.generate_graphs_layout.addWidget(self.generate_graphs_num_graphs_input)
+
+        self.generate_graphs_input_num_nodes = QtWidgets.QLineEdit()
+        self.generate_graphs_input_num_nodes.setPlaceholderText("Number of nodes")
+        self.generate_graphs_layout.addWidget(self.generate_graphs_input_num_nodes)
+
+        ## Dropdown to select the algorithm to find the graph shortest tour
+        self.generate_graphs_algorithm = QtWidgets.QComboBox()
+        self.generate_graphs_algorithm.addItem(TSPAlgorithm.NoneType)
+        self.generate_graphs_algorithm.addItem(TSPAlgorithm.BruteForce)
+        self.generate_graphs_algorithm.addItem(TSPAlgorithm.GeneticAlgorithm)
+        self.generate_graphs_algorithm.addItem(TSPAlgorithm.GreedyHeuristic)
+        self.generate_graphs_algorithm.addItem(TSPAlgorithm.Opt2)
+        self.generate_graphs_algorithm.addItem(TSPAlgorithm.Opt3)
+        self.generate_graphs_algorithm.addItem(TSPAlgorithm.SimulatedAnnealing)
+        self.generate_graphs_layout.addWidget(self.generate_graphs_algorithm)
+
+        ## Button to generate the graphs
+        self.generate_graphs_button = QtWidgets.QPushButton("Generate")
+        self.generate_graphs_button.clicked.connect(
+            lambda: _generate_graphs(
+                int(self.generate_graphs_num_graphs_input.text() or "0"),
+                int(self.generate_graphs_input_num_nodes.text() or "0"),
+                self.generate_graphs_algorithm.currentText(),
+            )
+        )
+
+        self.generate_graphs_layout.addWidget(self.generate_graphs_button)
+        self.layout.addLayout(self.generate_graphs_layout)
+
+        ##
+        ## 2. Import Graphs
+        ##
+        self.import_graphs_layout = QtWidgets.QHBoxLayout()
+        self.import_graphs_label = QtWidgets.QLabel("2. Import Graphs")
+        self.import_graphs_layout.addWidget(self.import_graphs_label)
+
+        self.import_file_dialog = QtWidgets.QFileDialog()
+        self.import_file_dialog.setFileMode(QtWidgets.QFileDialog.ExistingFiles)
+        self.import_file_dialog.setNameFilter("JSON files (*.json)")
+
+        ## File dialog open button
+        self.import_graphs_open_button = QtWidgets.QPushButton(
+            "Select graphs file to import"
+        )
+
+        ## Function to open the file dialog
+        def _open_file_dialog():
+            if self.import_file_dialog.exec():
+                file_names = self.import_file_dialog.selectedFiles()
+
+                _import_graphs(file_names.pop())
+
+        self.import_graphs_open_button.clicked.connect(_open_file_dialog)
+
+        ## Add to the layout
+        self.import_graphs_layout.addWidget(self.import_graphs_open_button)
+        self.layout.addLayout(self.import_graphs_layout)
+
+        ##
+        ## 3. Export Graphs
+        ##
+        self.export_graphs_layout = QtWidgets.QHBoxLayout()
+        self.export_graphs_label = QtWidgets.QLabel("3. Export Graphs")
+        self.export_graphs_layout.addWidget(self.export_graphs_label)
+
+        ## Input for the file name
+        self.export_graphs_file_name_input = QtWidgets.QLineEdit()
+        self.export_graphs_file_name_input.setPlaceholderText("File name")
+        self.export_graphs_layout.addWidget(self.export_graphs_file_name_input)
+
+        ## Button to export the graphs
+        self.export_graphs_button = QtWidgets.QPushButton("Export")
+        self.export_graphs_button.clicked.connect(
+            lambda: _export_graphs(self.export_graphs_file_name_input.text())
+        )
+
+        ## Add to the layout
+        self.export_graphs_layout.addWidget(self.export_graphs_button)
+        self.layout.addLayout(self.export_graphs_layout)
+
+        ##
+        ## 4. Generate a single graph
+        ##
+        self.generate_single_graph_layout = QtWidgets.QHBoxLayout()
+        self.generate_single_graph_label = QtWidgets.QLabel(
+            "4. Generate a Single Graph"
+        )
+        self.generate_single_graph_layout.addWidget(self.generate_single_graph_label)
+
+        ## Number of nodes for the single graph
+        self.generate_single_graph_num_nodes_input = QtWidgets.QLineEdit()
+        self.generate_single_graph_num_nodes_input.setPlaceholderText("Number of nodes")
+        self.generate_single_graph_layout.addWidget(
+            self.generate_single_graph_num_nodes_input
+        )
+
+        ## Dropdown to select the algorithm to find the graph shortest tour
+        self.generate_single_graph_algorithm = QtWidgets.QComboBox()
+        self.generate_single_graph_algorithm.addItem(TSPAlgorithm.NoneType)
+        self.generate_single_graph_algorithm.addItem(TSPAlgorithm.BruteForce)
+        self.generate_single_graph_algorithm.addItem(TSPAlgorithm.GeneticAlgorithm)
+        self.generate_single_graph_algorithm.addItem(TSPAlgorithm.GreedyHeuristic)
+        self.generate_single_graph_algorithm.addItem(TSPAlgorithm.Opt2)
+        self.generate_single_graph_algorithm.addItem(TSPAlgorithm.Opt3)
+        self.generate_single_graph_algorithm.addItem(TSPAlgorithm.SimulatedAnnealing)
+        self.generate_single_graph_layout.addWidget(
+            self.generate_single_graph_algorithm
+        )
+
+        ## Button to generate the single graph
+        self.generate_single_graph_button = QtWidgets.QPushButton("Generate")
+        self.generate_single_graph_button.clicked.connect(
+            lambda: _generate_single_graph(
+                int(self.generate_single_graph_num_nodes_input.text() or "0")
+            )
+        )
+
+        ## Add to the layout
+        self.generate_single_graph_layout.addWidget(self.generate_single_graph_button)
+        self.layout.addLayout(self.generate_single_graph_layout)
+
+        ##
+        ## 5. Visualize the current graph
+        ##
+        self.visualize_graph_layout = QtWidgets.QHBoxLayout()
+        self.visualize_graph_label = QtWidgets.QLabel("5. Visualize Current Graph")
+        self.visualize_graph_layout.addWidget(self.visualize_graph_label)
+
+        ## Dropdown to select the algorithm to find the graph shortest tour
+        self.visualize_graph_dropdown = QtWidgets.QComboBox()
+        self.visualize_graph_dropdown.addItem(TSPAlgorithm.BruteForce)
+        self.visualize_graph_dropdown.addItem(TSPAlgorithm.GeneticAlgorithm)
+        self.visualize_graph_dropdown.addItem(TSPAlgorithm.GreedyHeuristic)
+        self.visualize_graph_dropdown.addItem(TSPAlgorithm.Opt2)
+        self.visualize_graph_dropdown.addItem(TSPAlgorithm.Opt3)
+        self.visualize_graph_dropdown.addItem(TSPAlgorithm.SimulatedAnnealing)
+        self.visualize_graph_layout.addWidget(self.visualize_graph_dropdown)
+
+        ## Button to visualize the graph
+        self.visualize_graph_button = QtWidgets.QPushButton("Visualize")
+        self.visualize_graph_layout.addWidget(self.visualize_graph_button)
+        self.visualize_graph_button.clicked.connect(
+            lambda: _visualize_graph(
+                self.graph, self.visualize_graph_dropdown.currentText()
+            )
+        )
+
+        ## Add to the layout
+        self.visualize_graph_layout.addWidget(self.visualize_graph_button)
+        self.layout.addLayout(self.visualize_graph_layout)
+
+        ## Response message text
+        self.response_message = QtWidgets.QLabel("")
+        self.response_message.setFont(PySide6.QtGui.QFont("Arial", 14))
+        self.layout.addWidget(self.response_message)
+
 
 ##
-## Execute the main function
+## Run the main application
 ##
 if __name__ == "__main__":
-    ##
-    ## Global variables to be manipulated by the user (from menu)
-    ##
-    graphs = None
-    graph = None
-    shortest_tour = None
-    choice = None
+    import sys
 
-    ##
-    ## Generate graphs
-    ##
-    while choice != "-1":
-        ##
-        ## Menu for the user
-        ##
-        print("\nWhat would you like to do?")
-        print("1. Generate and save random graphs")
-        print("2. Generate a random graph")
-        print("3. Visualize the graph and the shortest tour")
-        print("4. Load graphs from a file")
-        print("-1. Exit")
-        choice = input("\nEnter the number of the option you would like to choose: ")
+    app = QtWidgets.QApplication([])
 
-        ##
-        ## 1. Generate and save random graphs
-        ##
-        if choice == "1":
-            num_graphs = int(input("\nHow many graphs would you like to generate? "))
-            num_nodes = int(
-                input("How many nodes would you like to have in the graph? ")
-            )
+    widget = MyWidget()
+    widget.resize(800, 600)
+    widget.show()
 
-            algorithm_choice = input(
-                "Which algorithm would you like to use?\n1. Brute Force\n2. Greedy Heuristic\n3. Two-Opt\n 4. Three-opt\n 5. Simulated Annealing\n 6. None\n\nYour choice: "
-            )
+    sys.exit(app.exec())
 
-            if algorithm_choice == "1":
-                algorithm = TSPAlgorithm.BruteForce
-            elif algorithm_choice == "2":
-                algorithm = TSPAlgorithm.GreedyHeuristic
-            elif algorithm_choice == "3":
-                algorithm = TSPAlgorithm.Opt2
-            elif algorithm_choice == "4":
-                algorithm = TSPAlgorithm.Opt3
-            elif algorithm_choice == "5":
-                algorithm = TSPAlgorithm.SimulatedAnnealing
-            else:
-                algorithm = TSPAlgorithm.NoneType
-
-            graphs = generate_graphs(
-                n=num_graphs, num_nodes=num_nodes, algorithm=algorithm
-            )
-
-            for graph in graphs:
-                print(f"Graph Shortest Tour: {graph.shortest_tour}")
-
-            filename = input("\nEnter the filename to save the graphs to: ")
-
-            export_graphs(graphs, filename)
-
-            print(f"Graphs have been saved to `{filename}`")
-
-        ##
-        ## 2. Create a new graph
-        ##
-        elif choice == "2":
-            num_nodes = int(
-                input("\nHow many nodes would you like to have in the graph? ")
-            )
-
-            graph = Graph.rand(num_nodes=num_nodes)
-
-            print(f"Graph generated! Shortest tour: {graph.shortest_tour}")
-
-        ##
-        ## 3. Visualize the graph and the shortest tour
-        ##
-        elif choice == "3":
-            if not graph:
-                print("Please create a graph first.\n")
-                continue
-
-            print("Which algorithms would you like to use?")
-            print("1. Brute Force")
-            print("2. Greedy Heuristic")
-            print("3. Two-Opt")
-            print("4. Three-Opt")
-            print("5. Simulated Annealing")
-
-            algorithms = [
-                algorithm
-                for algorithm in input(
-                    "Enter the numbers of the algorithms you would like to use (ex: 1,2,3,4,5): "
-                )
-                .strip()
-                .split(",")
-                if algorithm
-            ]
-
-            results = []
-
-            for algorithm in algorithms:
-                if algorithm == "1":
-                    results.append(TSPAlgorithms.brute_force(graph))
-                elif algorithm == "2":
-                    results.append(TSPAlgorithms.greedy_heuristic(graph))
-                elif algorithm == "3":
-                    results.append(TSPAlgorithms.two_opt(graph))
-                elif algorithm == "4":
-                    results.append(TSPAlgorithms.three_opt(graph))
-                elif algorithm == "5":
-                    results.append(TSPAlgorithms.simulated_annealing(graph))
-
-            graph.draw(results, ["red", "blue", "green"])
-
-        ##
-        ## 4. Load graphs from a file
-        ##
-        elif choice == "4":
-            filename = input(
-                "\nEnter the filename of the file with the cached graphs: "
-            )
-
-            graphs = import_graphs(filename)
-
-            print(f"Graphs have been loaded from `{filename}`")
-
-        ##
-        ## Exit the program
-        ##
-        elif choice == "-1":
-            break
-
-        ##
-        ## Invalid choice
-        ##
-        else:
-            print("Invalid choice. Please try again.\n")
 
 ##
 ## End of file
