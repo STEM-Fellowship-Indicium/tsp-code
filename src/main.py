@@ -120,6 +120,32 @@ class MyWidget(QtWidgets.QWidget):
             else:
                 set_response_message("Invalid algorithm selected.")
 
+        ##
+        ## 6. Import single graph from file
+        ##
+        def _import_single_graph(file_name: str, graphId: str):
+            try:
+                _graph = Graph.from_cache(file_name, graphId)
+
+                if _graph is None:
+                    set_response_message(
+                        f"Graph {graphId[0:50]}... not found in {file_name}"
+                    )
+                    return
+
+                self.graph = _graph
+
+                update_num_graphs_label([self.graph])
+
+                set_response_message(
+                    f"Imported graph {graphId[0:50]}... from {file_name}"
+                )
+
+            except Exception as e:
+                set_response_message(
+                    f"Graph {graphId[0:50]}... not found in {file_name}"
+                )
+
         ## ## ## ## ## ## ##
         ##                ##
         ## The GUI layout ##
@@ -297,6 +323,49 @@ class MyWidget(QtWidgets.QWidget):
         ## Add to the layout
         self.visualize_graph_layout.addWidget(self.visualize_graph_button)
         self.layout.addLayout(self.visualize_graph_layout)
+
+        ##
+        ## 6. Import a single graph
+        ##
+        self.import_single_graph_layout = QtWidgets.QHBoxLayout()
+        self.import_single_graph_label = QtWidgets.QLabel("6. Import Single Graph")
+        self.import_single_graph_layout.addWidget(self.import_single_graph_label)
+
+        ## Dialog to select the file
+        self.import_single_graph_file_dialog = QtWidgets.QFileDialog()
+        self.import_single_graph_file_dialog.setFileMode(
+            QtWidgets.QFileDialog.ExistingFiles
+        )
+        self.import_single_graph_file_dialog.setNameFilter("JSON files (*.json)")
+
+        ## Input for the graph ID
+        self.import_single_graph_graph_id_input = QtWidgets.QLineEdit()
+        self.import_single_graph_graph_id_input.setPlaceholderText("Graph ID")
+        self.import_single_graph_layout.addWidget(
+            self.import_single_graph_graph_id_input
+        )
+
+        ## Button to open the file dialog
+        self.import_single_graph_open_button = QtWidgets.QPushButton(
+            "Select file to import from"
+        )
+
+        ## Function to open the file dialog
+        def _open_single_graph_file_dialog():
+            if self.import_single_graph_file_dialog.exec():
+                file_names = self.import_single_graph_file_dialog.selectedFiles()
+
+                _import_single_graph(
+                    file_names.pop(), self.import_single_graph_graph_id_input.text()
+                )
+
+        self.import_single_graph_open_button.clicked.connect(
+            _open_single_graph_file_dialog
+        )
+
+        ## Add to the layout
+        self.import_single_graph_layout.addWidget(self.import_single_graph_open_button)
+        self.layout.addLayout(self.import_single_graph_layout)
 
         ## Response message text
         self.response_message = QtWidgets.QLabel("")

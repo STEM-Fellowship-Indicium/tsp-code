@@ -219,7 +219,7 @@ class Graph:
             return Graph.from_map(graphs[id])
 
         elif isinstance(graphs, list):
-            return next(graph for graph in graphs if graph["id"] == id)
+            return Graph.from_map(next(graph for graph in graphs if graph["id"] == id))
 
         ##
         ## End of function
