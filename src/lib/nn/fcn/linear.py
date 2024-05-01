@@ -16,23 +16,23 @@ import torch.optim as optim
 
 
 ##
-## Linear GNN class
+## Linear FCN class
 ##
-class LinearGNN(nn.Module):
+class LinearFCN(nn.Module):
     ##
     ## Constructor
     ##
     def __init__(
         self, input_features: int = 2, hidden_dim: int = 16, output_features: int = 2
     ) -> None:
-        """Initializer for the LinearGNN class
+        """Initializer for the LinearFCN class
 
         Args:
             input_features (int): The number of features for each node
-            hidden_dim (int): The hidden dimension for the LinearGNN
-            output_features (int): The output dimension for the LinearGNN
+            hidden_dim (int): The hidden dimension for the LinearFCN
+            output_features (int): The output dimension for the LinearFCN
         """
-        super(LinearGNN, self).__init__()
+        super(LinearFCN, self).__init__()
 
         self.input_features = input_features
         self.hidden_dim = hidden_dim
@@ -77,21 +77,18 @@ class LinearGNN(nn.Module):
     ## Forward pass
     ##
     def forward(self, x: torch.Tensor) -> torch.Tensor:
-        """Forward pass for the LinearGNN
+        """Forward pass for the LinearFCN
 
         Args:
             x (torch.Tensor): The input
 
         Returns:
-            torch.Tensor: The output of the LinearGNN
+            torch.Tensor: The output of the LinearFCN
 
         """
         ##
         ## We want the output to be positions of the nodes. We'll then use these
-        ## distances to locate the nearest node to each node.
-        ##
-        ## We'll take the output of the LinearGNN and each row will be the x and y
-        ## coordinates of a node.
+        ## distances to locate the nearest real node to each predictaed node.
         ##
         ## Perform the forward pass.
         ##
@@ -115,16 +112,16 @@ class LinearGNN(nn.Module):
 
 
 ##
-## This tests the LinearGNN class only if we're executing THIS current file.
+## This tests the LinearFCN class only if we're executing THIS current file.
 ##
-## This is so that if we import the LinearGNN class from another file, this
+## This is so that if we import the LinearFCN class from another file, this
 ## code (in the 'if' statement) won't run.
 ##
 if __name__ == "__main__":
     ##
     ## Test Imports
     ##
-    from lib.nn.gnn.linear.dataset import GraphDataset
+    from lib.nn.fcn.dataset import GraphDataset
     from lib.tour import Tour
     from lib.tsp.tspalgorithms import TSPAlgorithms, TSPAlgorithm
 
@@ -145,7 +142,9 @@ if __name__ == "__main__":
         ##
         ## Create the model
         ##
-        model = LinearGNN(input_features=2, hidden_dim=16, output_features=2).to(device)
+        model = LinearFCN(input_features=2, hidden_dim=16, output_features=2).to(
+            device
+        )  ## input_features = 2 -> (x, y)
 
         ##
         ## Create a loss function and an optimizer
@@ -162,6 +161,7 @@ if __name__ == "__main__":
         ## Train the model with 100 epochs
         ##
         epochs: int = 100
+
         ##
         ## Training loop
         ##
@@ -199,7 +199,7 @@ if __name__ == "__main__":
     ## Typically, we'd use a separate test dataset, but for simplicity, we'll
     ## just use the training dataset.
     ##
-    model = LinearGNN(input_features=2, hidden_dim=16, output_features=2).to(device)
+    model = LinearFCN(input_features=2, hidden_dim=16, output_features=2).to(device)
     model.load_state_dict(torch.load("data/nn/gnn/linear.pth"))
     model.eval()
 
