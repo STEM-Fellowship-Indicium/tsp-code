@@ -171,7 +171,7 @@ class MyWidget(QtWidgets.QWidget):
 
         ## Text showing the number of graphs
         self.num_graphs_label = QtWidgets.QLabel("Number of graphs: 0")
-        self.num_graphs_label.setFont(PySide6.QtGui.QFont("Arial", 14))
+        self.num_graphs_label.setFont(PySide6.QtGui.QFont("Arial", 20))
         self.layout.addWidget(self.num_graphs_label)
         self.layout.addWidget(self.num_graphs_label)
 
@@ -265,6 +265,12 @@ class MyWidget(QtWidgets.QWidget):
         ## Add to the layout
         self.export_graphs_layout.addWidget(self.export_graphs_button)
         self.layout.addLayout(self.export_graphs_layout)
+
+        ##
+        ## Space between the sections
+        ##
+        self.layout.addWidget(QtWidgets.QLabel(""))
+        self.layout.addWidget(QtWidgets.QLabel(""))
 
         ##
         ## 4. Generate a single graph
