@@ -115,7 +115,7 @@ class MyWidget(QtWidgets.QWidget):
                 TSPVisual.three_opt(graph)
 
             elif algorithm == TSPAlgorithm.SimulatedAnnealing:
-                TSPVisual.simulated_annealing_visual(graph)
+                TSPVisual.simulated_annealing(graph)
 
             else:
                 set_response_message("Invalid algorithm selected.")

@@ -124,7 +124,7 @@ if __name__ == "__main__":
     ##
     ## Test Imports
     ##
-    from lib.nn.graphdataset import GraphDataset
+    from lib.nn.gnn.linear.dataset import GraphDataset
     from lib.tour import Tour
     from lib.tsp.tspalgorithms import TSPAlgorithms, TSPAlgorithm
 
