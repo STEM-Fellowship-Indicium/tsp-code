@@ -215,7 +215,7 @@ class MyWidget(QtWidgets.QWidget):
 
         ## File dialog open button
         self.import_graphs_open_button = QtWidgets.QPushButton(
-            "Select graphs file to import"
+            "Select file to import graphs from"
         )
 
         ## Function to open the file dialog
@@ -347,7 +347,7 @@ class MyWidget(QtWidgets.QWidget):
 
         ## Button to open the file dialog
         self.import_single_graph_open_button = QtWidgets.QPushButton(
-            "Select file to import from"
+            "Select file to import graph from"
         )
 
         ## Function to open the file dialog
