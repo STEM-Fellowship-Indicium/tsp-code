@@ -76,9 +76,9 @@ class MyWidget(QtWidgets.QWidget):
         ## 3. Function to export the graphs
         ##
         def _export_graphs(file_name: str):
-            export_graphs(self.graphs, f"data/{file_name}")
+            export_graphs(self.graphs, f"{file_name}")
 
-            set_response_message(f"Exported graphs to /data/{file_name}")
+            set_response_message(f"Exported graphs to {file_name}")
 
         ##
         ## 4. Function to generate a single graph
@@ -145,6 +145,14 @@ class MyWidget(QtWidgets.QWidget):
                 set_response_message(
                     f"Graph {graphId[0:50]}... not found in {file_name}"
                 )
+
+        ##
+        ## 7. Export single graph to file
+        ##
+        def _export_single_graph(file_name: str):
+            self.graph.export(file_name)
+
+            set_response_message(f"Exported graph to {file_name}")
 
         ## ## ## ## ## ## ##
         ##                ##
@@ -258,7 +266,7 @@ class MyWidget(QtWidgets.QWidget):
         ##
         self.generate_single_graph_layout = QtWidgets.QHBoxLayout()
         self.generate_single_graph_label = QtWidgets.QLabel(
-            "4. Generate a Single Graph"
+            "4. Generate a single graph (sets to current)"
         )
         self.generate_single_graph_layout.addWidget(self.generate_single_graph_label)
 
@@ -298,7 +306,9 @@ class MyWidget(QtWidgets.QWidget):
         ## 5. Visualize the current graph
         ##
         self.visualize_graph_layout = QtWidgets.QHBoxLayout()
-        self.visualize_graph_label = QtWidgets.QLabel("5. Visualize Current Graph")
+        self.visualize_graph_label = QtWidgets.QLabel(
+            "5. Visualize a single graph (current)"
+        )
         self.visualize_graph_layout.addWidget(self.visualize_graph_label)
 
         ## Dropdown to select the algorithm to find the graph shortest tour
@@ -328,7 +338,9 @@ class MyWidget(QtWidgets.QWidget):
         ## 6. Import a single graph
         ##
         self.import_single_graph_layout = QtWidgets.QHBoxLayout()
-        self.import_single_graph_label = QtWidgets.QLabel("6. Import Single Graph")
+        self.import_single_graph_label = QtWidgets.QLabel(
+            "6. Import a single graph (sets to current)"
+        )
         self.import_single_graph_layout.addWidget(self.import_single_graph_label)
 
         ## Dialog to select the file
@@ -366,6 +378,34 @@ class MyWidget(QtWidgets.QWidget):
         ## Add to the layout
         self.import_single_graph_layout.addWidget(self.import_single_graph_open_button)
         self.layout.addLayout(self.import_single_graph_layout)
+
+        ##
+        ## 7. Export a single graph
+        ##
+        self.export_single_graph_layout = QtWidgets.QHBoxLayout()
+        self.export_single_graph_label = QtWidgets.QLabel(
+            "7. Export a single graph (current)"
+        )
+        self.export_single_graph_layout.addWidget(self.export_single_graph_label)
+
+        ## Input for the file name
+        self.export_single_graph_file_name_input = QtWidgets.QLineEdit()
+        self.export_single_graph_file_name_input.setPlaceholderText("File name")
+        self.export_single_graph_layout.addWidget(
+            self.export_single_graph_file_name_input
+        )
+
+        ## Button to export the graph
+        self.export_single_graph_button = QtWidgets.QPushButton("Export")
+        self.export_single_graph_button.clicked.connect(
+            lambda: _export_single_graph(
+                self.export_single_graph_file_name_input.text()
+            )
+        )
+
+        ## Add to the layout
+        self.export_single_graph_layout.addWidget(self.export_single_graph_button)
+        self.layout.addLayout(self.export_single_graph_layout)
 
         ## Response message text
         self.response_message = QtWidgets.QLabel("")
