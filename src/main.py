@@ -12,6 +12,8 @@ from lib.utils.import_graphs import import_graphs
 from lib.utils.export_graphs import export_graphs
 from lib.tsp.tspvisual import TSPVisual
 from lib.types.tspalgorithm import TSPAlgorithm
+
+from typing import List
 import time
 
 
@@ -38,8 +40,8 @@ class MainWidget(QtWidgets.QWidget):
         ##
         ## 2. Function to update the number of graphs label
         ##
-        def update_num_graphs_label(graphs):
-            self.num_graphs_label.setText(f"Number of graphs: {len(graphs)}")
+        def update_num_graphs_label(num_of_graphs: int):
+            self.num_graphs_label.setText(f"Number of graphs: {num_of_graphs}")
 
         ## ## ## ## ## ## ##
         ##                ##
@@ -51,25 +53,42 @@ class MainWidget(QtWidgets.QWidget):
         ## 1. Function to generate the graphs
         ##
         def _generate_graphs(num_graphs: int, num_nodes: int, algorithm: str):
+            if num_graphs == 0:
+                return set_response_message("Number of graphs cannot be 0.")
+
+            if num_nodes == 0:
+                return set_response_message("Number of nodes cannot be 0.")
+
             self.graphs = generate_graphs(
                 num_graphs,
                 num_nodes,
                 algorithm,
             )
 
-            update_num_graphs_label(self.graphs)
+            update_num_graphs_label(len(self.graphs))
 
-            set_response_message(
-                f"Generated {num_graphs} graphs with {num_nodes} nodes each."
-            )
+            if algorithm != TSPAlgorithm.NoneType:
+                set_response_message(
+                    f"Generated {num_graphs} graphs with {num_nodes} nodes each and calculated shortest path for each using {algorithm}."
+                )
+
+            else:
+                set_response_message(
+                    f"Generated {num_graphs} graphs with {num_nodes} nodes each."
+                )
 
         ##
         ## 2. Function to import the graphs
         ##
         def _import_graphs(file_name: str):
+            if file_name == "":
+                return set_response_message(
+                    "Please enter a valid file name to import the graphs from."
+                )
+
             self.graphs = import_graphs(file_name)
 
-            update_num_graphs_label(self.graphs)
+            update_num_graphs_label(len(self.graphs))
 
             set_response_message(f"Imported graphs from {file_name}")
 
@@ -77,6 +96,11 @@ class MainWidget(QtWidgets.QWidget):
         ## 3. Function to export the graphs
         ##
         def _export_graphs(file_name: str):
+            if file_name == "":
+                return set_response_message(
+                    "Please enter a valid file name to export the graphs to."
+                )
+
             export_graphs(self.graphs, f"{file_name}")
 
             set_response_message(f"Exported graphs to {file_name}")
@@ -85,9 +109,12 @@ class MainWidget(QtWidgets.QWidget):
         ## 4. Function to generate a single graph
         ##
         def _generate_single_graph(num_nodes: int):
+            if num_nodes == 0:
+                return set_response_message("Number of nodes cannot be 0.")
+
             self.graph = Graph.rand(num_nodes)
 
-            update_num_graphs_label([self.graph])
+            update_num_graphs_label(1)
 
             set_response_message(f"Generated a single graph with {num_nodes} nodes.")
 
@@ -125,6 +152,17 @@ class MainWidget(QtWidgets.QWidget):
         ## 6. Import single graph from file
         ##
         def _import_single_graph(file_name: str, graphId: str):
+            if graphId == "":
+                return set_response_message("Please enter a graph ID.")
+
+            if file_name == "":
+                return set_response_message(
+                    "Please enter a valid file name to import the graph from."
+                )
+
+            if self.graph is not None and self.graph.id == graphId:
+                return set_response_message("Graph already set to current.")
+
             try:
                 _graph = Graph.from_cache(file_name, graphId)
 
@@ -136,7 +174,7 @@ class MainWidget(QtWidgets.QWidget):
 
                 self.graph = _graph
 
-                update_num_graphs_label([self.graph])
+                update_num_graphs_label(1)
 
                 set_response_message(
                     f"Imported graph {graphId[0:50]}... from {file_name}"
@@ -151,6 +189,11 @@ class MainWidget(QtWidgets.QWidget):
         ## 7. Export single graph to file
         ##
         def _export_single_graph(file_name: str):
+            if file_name == "":
+                return set_response_message(
+                    "Please enter a valid file name to export the graph to."
+                )
+
             if self.graph is None:
                 return set_response_message(
                     "No graph to export. Please generate a single graph (4) before this."
