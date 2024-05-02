@@ -12,6 +12,7 @@ from lib.utils.import_graphs import import_graphs
 from lib.utils.export_graphs import export_graphs
 from lib.tsp.tspvisual import TSPVisual
 from lib.types.tspalgorithm import TSPAlgorithm
+import time
 
 
 class MainWidget(QtWidgets.QWidget):
@@ -159,6 +160,54 @@ class MainWidget(QtWidgets.QWidget):
 
             set_response_message(f"Exported graph to {file_name}")
 
+        ##
+        ## 8. Get the average speed of the algorithms
+        ##
+        def _get_average_speed(algorithm: str, num_graphs: int, num_nodes: int):
+            if num_graphs == 0:
+                return set_response_message("Number of graphs cannot be 0.")
+
+            if num_nodes == 0:
+                return set_response_message("Number of nodes cannot be 0.")
+
+            graphs = generate_graphs(num_graphs, num_nodes)
+
+            start = time.time()
+
+            if algorithm == TSPAlgorithm.BruteForce:
+                for graph in graphs:
+                    TSPAlgorithms.brute_force(graph)
+
+            elif algorithm == TSPAlgorithm.GeneticAlgorithm:
+                for graph in graphs:
+                    TSPAlgorithms.genetic_algorithm(graph)
+
+            elif algorithm == TSPAlgorithm.GreedyHeuristic:
+                for graph in graphs:
+                    TSPAlgorithms.greedy_heuristic(graph)
+
+            elif algorithm == TSPAlgorithm.Opt2:
+                for graph in graphs:
+                    TSPAlgorithms.two_opt(graph)
+
+            elif algorithm == TSPAlgorithm.Opt3:
+                for graph in graphs:
+                    TSPAlgorithms.three_opt(graph)
+
+            elif algorithm == TSPAlgorithm.SimulatedAnnealing:
+                for graph in graphs:
+                    TSPAlgorithms.simulated_annealing(graph)
+
+            else:
+                set_response_message("Invalid algorithm selected.")
+                return
+
+            end = time.time()
+
+            set_response_message(
+                f"Average speed of {algorithm} for {num_graphs} graphs with {num_nodes} nodes each: {(end - start) / num_graphs} seconds."
+            )
+
         ## ## ## ## ## ## ##
         ##                ##
         ## The GUI layout ##
@@ -267,17 +316,59 @@ class MainWidget(QtWidgets.QWidget):
         self.layout.addLayout(self.export_graphs_layout)
 
         ##
+        ## 4. Get the average speed of the algorithms
+        ##
+        self.average_speed_layout = QtWidgets.QHBoxLayout()
+        self.average_speed_label = QtWidgets.QLabel(
+            "4. Get the average speed of algorithms"
+        )
+        self.average_speed_layout.addWidget(self.average_speed_label)
+
+        ## Input to select the number of graphs and number of nodes
+        self.average_speed_num_graphs_input = QtWidgets.QLineEdit()
+        self.average_speed_num_graphs_input.setPlaceholderText("Number of graphs")
+        self.average_speed_layout.addWidget(self.average_speed_num_graphs_input)
+
+        self.average_speed_num_nodes_input = QtWidgets.QLineEdit()
+        self.average_speed_num_nodes_input.setPlaceholderText("Number of nodes")
+        self.average_speed_layout.addWidget(self.average_speed_num_nodes_input)
+
+        ## Dropdown to select the algorithm to find the graph shortest tour
+        self.average_speed_dropdown = QtWidgets.QComboBox()
+        self.average_speed_dropdown.addItem(TSPAlgorithm.BruteForce)
+        self.average_speed_dropdown.addItem(TSPAlgorithm.GeneticAlgorithm)
+        self.average_speed_dropdown.addItem(TSPAlgorithm.GreedyHeuristic)
+        self.average_speed_dropdown.addItem(TSPAlgorithm.Opt2)
+        self.average_speed_dropdown.addItem(TSPAlgorithm.Opt3)
+        self.average_speed_dropdown.addItem(TSPAlgorithm.SimulatedAnnealing)
+        self.average_speed_layout.addWidget(self.average_speed_dropdown)
+
+        ## Button to get the average speed
+        self.average_speed_button = QtWidgets.QPushButton("Get average speed")
+        self.average_speed_button.clicked.connect(
+            lambda: _get_average_speed(
+                self.average_speed_dropdown.currentText(),
+                int(self.average_speed_num_graphs_input.text() or "0"),
+                int(self.average_speed_num_nodes_input.text() or "0"),
+            )
+        )
+
+        ## Add to the layout
+        self.average_speed_layout.addWidget(self.average_speed_button)
+        self.layout.addLayout(self.average_speed_layout)
+
+        ##
         ## Space between the sections
         ##
         self.layout.addWidget(QtWidgets.QLabel(""))
         self.layout.addWidget(QtWidgets.QLabel(""))
 
         ##
-        ## 4. Generate a single graph
+        ## 5. Generate a single graph
         ##
         self.generate_single_graph_layout = QtWidgets.QHBoxLayout()
         self.generate_single_graph_label = QtWidgets.QLabel(
-            "4. Generate a single graph (sets to current)"
+            "5. Generate a single graph (sets to current)"
         )
         self.generate_single_graph_layout.addWidget(self.generate_single_graph_label)
 
@@ -314,11 +405,11 @@ class MainWidget(QtWidgets.QWidget):
         self.layout.addLayout(self.generate_single_graph_layout)
 
         ##
-        ## 5. Visualize the current graph
+        ## 6. Visualize the current graph
         ##
         self.visualize_graph_layout = QtWidgets.QHBoxLayout()
         self.visualize_graph_label = QtWidgets.QLabel(
-            "5. Visualize a single graph (current)"
+            "6. Visualize a single graph (current)"
         )
         self.visualize_graph_layout.addWidget(self.visualize_graph_label)
 
@@ -346,11 +437,11 @@ class MainWidget(QtWidgets.QWidget):
         self.layout.addLayout(self.visualize_graph_layout)
 
         ##
-        ## 6. Import a single graph
+        ## 7. Import a single graph
         ##
         self.import_single_graph_layout = QtWidgets.QHBoxLayout()
         self.import_single_graph_label = QtWidgets.QLabel(
-            "6. Import a single graph (sets to current)"
+            "7. Import a single graph (sets to current)"
         )
         self.import_single_graph_layout.addWidget(self.import_single_graph_label)
 
@@ -391,11 +482,11 @@ class MainWidget(QtWidgets.QWidget):
         self.layout.addLayout(self.import_single_graph_layout)
 
         ##
-        ## 7. Export a single graph
+        ## 8. Export a single graph
         ##
         self.export_single_graph_layout = QtWidgets.QHBoxLayout()
         self.export_single_graph_label = QtWidgets.QLabel(
-            "7. Export a single graph (current)"
+            "8. Export a single graph (current)"
         )
         self.export_single_graph_layout.addWidget(self.export_single_graph_label)
 
