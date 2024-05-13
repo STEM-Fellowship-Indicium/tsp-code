@@ -141,6 +141,8 @@ class Graph:
             ## Load the graph from the file
             graph = json.load(file)
 
+        graph = graph[next(iter(graph))]
+
         ## Create the nodes and edges
         adj_matrix = graph["adj_matrix"]
         shortest_tour = Tour.from_map(graph["shortest_tour"])

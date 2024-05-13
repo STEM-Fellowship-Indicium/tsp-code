@@ -233,13 +233,19 @@ class Tour:
     ##
     ## Convert the tour to a tensor
     ##
-    def to_tensor(self) -> Tensor:
+    def to_tensor(self, dtype=np.float32) -> Tensor:
         """Convert the tour to a tensor
 
         Returns:
             Tensor: The tensor representation of the tour
         """
-        return Tensor([node.to_numpy() for node in self.nodes])
+        nodes = [node for node in self.nodes]
+
+        ## Convert nodes to np array
+        nodes = np.array([node.to_numpy(dtype) for node in nodes])
+
+        ## Return the tensor
+        return Tensor(nodes)
 
         ##
         ## End of function
