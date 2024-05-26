@@ -6,7 +6,6 @@ if __name__ == "__main__":
 
     sys.path.append("src")
 
-
 ##
 ## Imports
 ##
@@ -15,7 +14,8 @@ if __name__ == "__main__":
 import torch
 from torch_geometric.nn import MessagePassing
 from torch_geometric.data import Data, Batch
-
+import torch.nn.functional as F
+import torch_scatter
 
 ##
 ## GNN class
@@ -43,20 +43,26 @@ class GeometricGNN(MessagePassing):
         ##
         ## Create the sequence of layers
         ##
-        self.sequence = torch.nn.Sequential(
-            ## Input layer
-            torch.nn.Linear(node_dim, hidden_dim),
-            torch.nn.ReLU(),
-            ## Hidden layer
-            torch.nn.Linear(hidden_dim, hidden_dim),
-            torch.nn.ReLU(),
-            ## Return a tour of the nodes (ouput)
-            torch.nn.Linear(hidden_dim, node_dim),
-        )
+        self.input_layer = torch.nn.Linear(node_dim, hidden_dim)
+        self.hidden_layer = torch.nn.Linear(hidden_dim, hidden_dim)
+        self.output_layer = torch.nn.Linear(hidden_dim, node_dim)
 
         ##
         ## End of function
         ##
+
+    ##
+    ## Message Passing
+    ##
+    def message(self, x_j):
+        """Function to compute messages"""
+        return x_j
+
+    ##
+    ## Aggregate Messages
+    ##
+    def aggregate(self, inputs, index, dim_size=None):
+        return torch_scatter.scatter_mean(inputs, index, dim=0)
 
     ##
     ## Forward pass
@@ -73,11 +79,17 @@ class GeometricGNN(MessagePassing):
         ## Get data
         x, edge_index = batch_data.x, batch_data.edge_index
 
-        ## Message passing
-        ## x = self.propagate(edge_index, x=x)
+        ## Apply input layer
+        x = F.relu(self.input_layer(x))
 
-        ## Forward pass
-        x = self.sequence(x)
+        ## Message passing
+        x = self.propagate(edge_index, x=x)
+
+        ## Apply hidden layer
+        x = F.relu(self.hidden_layer(x))
+
+        ## Apply output layer
+        x = self.output_layer(x)
 
         ## Return the output
         return x
@@ -92,8 +104,8 @@ class GeometricGNN(MessagePassing):
 
 
 ##
-## Testing. This tests only the LinearGNN class if we were to run the file.
-## This prevents the test from running if we were ti import the file.
+## Testing. This tests only the GeometricGNN class if we were to run the file.
+## This prevents the test from running if we were to import the file.
 ##
 if __name__ == "__main__":
     ## Create the model and optimizer
@@ -106,7 +118,7 @@ if __name__ == "__main__":
     ##
     edge_index_1 = torch.tensor(
         [[0, 1], [1, 2]], dtype=torch.long
-    )  ## Edges (node indexes)
+    ).t().contiguous()  ## Edges (node indexes)
 
     nodes_1 = torch.tensor(
         [[0, 0], [1, 0], [2, 0]], dtype=torch.float
@@ -123,7 +135,7 @@ if __name__ == "__main__":
     ##
     edge_index_2 = torch.tensor(
         [[0, 1], [1, 2]], dtype=torch.long
-    )  ## Edges (node indexes)
+    ).t().contiguous()  ## Edges (node indexes)
     nodes_2 = torch.tensor(
         [[0, 0], [1, 0], [2, 0]], dtype=torch.float
     )  ## Node positions (x, y)
@@ -157,7 +169,7 @@ if __name__ == "__main__":
     ##
     edge_index_3 = torch.tensor(
         [[0, 1], [1, 2]], dtype=torch.long
-    )  ## Edges (node indexes)
+    ).t().contiguous()  ## Edges (node indexes)
 
     nodes_3 = torch.tensor(
         [[0, 0], [1, 0], [2, 0]], dtype=torch.float
