@@ -102,14 +102,11 @@ class TSPAlgorithms:
         ## Generate the paths (node indices) use factorial since there are n! paths
         ## and we don't want indices next to each other to be the same.
         ##
-        paths = [
-            list(path) for path in itertools.permutations(graph.nodes, len(graph.nodes))
-        ]
-
+        ## Keep this in iterator to prevent memory error
         ##
-        ## Find the shortest tour
-        ##
-        for path in paths:
+        for path in itertools.permutations(graph.nodes, len(graph.nodes)):
+            path = list(path)
+            
             ##
             ## Calculate the distance of the path
             ##
