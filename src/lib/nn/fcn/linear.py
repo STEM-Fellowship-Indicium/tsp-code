@@ -200,7 +200,7 @@ if __name__ == "__main__":
     ## just use the training dataset.
     ##
     model = LinearFCN(input_features=2, hidden_dim=16, output_features=2).to(device)
-    model.load_state_dict(torch.load("data/nn/gnn/linear.pth"))
+    model.load_state_dict(torch.load("data/nn/fcn/linear.pth"))
     model.eval()
 
     ##

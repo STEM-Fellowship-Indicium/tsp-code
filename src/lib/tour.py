@@ -248,19 +248,13 @@ class Tour:
     ##
     ## Convert the tour to a tensor
     ##
-    def to_tensor(self, dtype=np.float32) -> Tensor:
+    def tensor(self, dtype=np.float32, normalize=(-1, -1)) -> Tensor:
         """Convert the tour to a tensor
 
         Returns:
             Tensor: The tensor representation of the tour
         """
-        nodes = [node for node in self.nodes]
-
-        ## Convert nodes to np array
-        nodes = np.array([node.to_numpy(dtype) for node in nodes])
-
-        ## Return the tensor
-        return Tensor(nodes)
+        return Tensor(self.numpy(dtype, normalize))
 
         ##
         ## End of function
@@ -269,13 +263,13 @@ class Tour:
     ##
     ## Convert the tour to a numpy array
     ##
-    def to_numpy(self, dtype=np.float32) -> np.ndarray:
+    def numpy(self, dtype=np.float32, normalize=(-1, -1)) -> np.ndarray:
         """Convert the tour to a numpy array
 
         Returns:
             np.ndarray: The numpy representation of the tour
         """
-        return np.array([node.to_numpy(dtype) for node in self.nodes])
+        return np.array([node.numpy(dtype, normalize) for node in self.nodes])
 
         ##
         ## End of function
@@ -326,10 +320,10 @@ if __name__ == "__main__":
     tour_map = tour.to_map()
     print(tour_map)
 
-    tour_tensor = tour.to_tensor()
+    tour_tensor = tour.tensor()
     print(tour_tensor)
 
-    tour_numpy = tour.to_numpy()
+    tour_numpy = tour.numpy()
     print(tour_numpy)
 
     tour_from_map = Tour.from_map(tour_map)

@@ -101,11 +101,11 @@ class GraphDataset(Dataset):
         )
 
         ## Convert the graphs to tensors
-        self.graphs = [graph.to_tensor() for graph in self._graphs]
+        self.graphs = [graph.tensor() for graph in self._graphs]
 
         ## Set the shortest tours
         self.tours = [
-            TSPAlgorithms.get_shortest_tour(graph, TSPAlgorithm.BruteForce).to_tensor()
+            TSPAlgorithms.get_shortest_tour(graph, TSPAlgorithm.BruteForce).tensor()
             for graph in self._graphs
         ]
 

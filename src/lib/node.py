@@ -130,13 +130,13 @@ class Node:
     ##
     ## Convert the node to a tensor
     ##
-    def to_tensor(self) -> Tensor:
+    def tensor(self, dtype=np.float32, normalize=(-1, -1)) -> Tensor:
         """Convert the node to a tensor
 
         Returns:
             Tensor: The tensor representation of the node
         """
-        return Tensor([self.x, self.y])
+        return Tensor(self.numpy(dtype, normalize))
 
         ##
         ## End of function
@@ -145,20 +145,22 @@ class Node:
     ##
     ## Convert the node to a numpy array
     ##
-    def to_numpy(self, dtype=np.float32, normalize=True) -> np.ndarray:
+    def numpy(self, dtype=np.float32, normalize=(-1, -1)) -> np.ndarray:
         """Convert the node to a numpy array
 
         Returns:
             np.ndarray: The numpy array representation of the node
         """
 
-        if normalize:
-            self.normalize()
+        norm_min, norm_max = normalize
+
+        if norm_min != -1 and norm_max != -1:
+            self.normalize(norm_min, norm_max)
 
         np_array = np.array([self.x, self.y], dtype=dtype)
 
-        if normalize:
-            self.denormalize()
+        if norm_min != -1 and norm_max != -1:
+            self.denormalize(norm_min, norm_max)
 
         return np_array
 
@@ -246,10 +248,10 @@ if __name__ == "__main__":
     print(node.to_json())
     node.print()
 
-    nump = node.to_numpy()
+    nump = node.numpy()
     print(nump)
 
-    tens = node.to_tensor()
+    tens = node.tensor()
     print(tens)
 
     norm_prev = node.normalize()

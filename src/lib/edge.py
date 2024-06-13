@@ -139,16 +139,13 @@ class Edge:
     ##
     ## Convert the edge to a tensor
     ##
-    def to_tensor(self) -> Tensor:
+    def tensor(self, dtype=np.float32, normalize=(-1, -1)) -> Tensor:
         """Convert the edge to a tensor
 
         Returns:
             Tensor: The tensor representation of the edge
         """
-        start_np = self.start.to_numpy()
-        end_np = self.end.to_numpy()
-
-        return Tensor(np.array([start_np, end_np]))
+        return Tensor(self.numpy(dtype, normalize))
 
         ##
         ## End of function
@@ -157,16 +154,16 @@ class Edge:
     ##
     ## Convert the edge to a numpy array
     ##
-    def to_numpy(self, dtype=np.float32) -> np.ndarray:
+    def numpy(self, dtype=np.float32, normalize=(-1, -1)) -> np.ndarray:
         """Convert the edge to a numpy array
 
         Returns:
             np.ndarray: The numpy array representation of the edge
         """
-        start_np = self.start.to_numpy()
-        end_np = self.end.to_numpy()
+        start_np = self.start.numpy(dtype, normalize)
+        end_np = self.end.numpy(dtype, normalize)
 
-        return np.array([start_np, end_np], dtype=dtype)
+        return np.array([start_np, end_np])
 
         ##
         ## End of function
@@ -248,7 +245,7 @@ if __name__ == "__main__":
 
     e.print()
 
-    print(e.to_tensor())
+    print(e.tensor())
 
 ##
 ## End of file
