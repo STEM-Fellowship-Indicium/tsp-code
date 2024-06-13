@@ -14,7 +14,7 @@ from torch.utils.data import Dataset
 from lib.graph import Graph
 from lib.utils.generate_graphs import generate_graphs
 from lib.tsp.tspalgorithms import TSPAlgorithms
-from lib.types.tspalgorithm import TSPAlgorithm
+from lib.interfaces.tspalgorithm import TSPAlgorithm
 from typing import List
 import torch
 

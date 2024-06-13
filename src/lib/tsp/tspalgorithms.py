@@ -12,7 +12,7 @@ if __name__ == "__main__":
 ##
 from lib.graph import Graph
 from lib.tour import Tour
-from lib.types.tspalgorithm import TSPAlgorithm
+from lib.interfaces.tspalgorithm import TSPAlgorithm
 from lib.utils.create_dist_matrix import create_dist_matrix
 from lib.utils.calculate_tour_distance import calculate_tour_distance
 from lib.utils.three_opt_swap import three_opt_swap

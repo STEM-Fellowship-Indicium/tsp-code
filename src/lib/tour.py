@@ -10,9 +10,9 @@ if __name__ == "__main__":
 ## Imports
 ##
 from lib.node import Node
-from lib.types.tspalgorithm import TSPAlgorithm
+from lib.interfaces.tspalgorithm import TSPAlgorithm
 from lib.utils.create_dist_matrix import create_dist_matrix
-from typing import List
+from typing import List, Union
 from torch import Tensor
 import numpy as np
 import json, math
@@ -55,7 +55,22 @@ class Tour:
         Returns:
             str: The string representation of the tour
         """
-        return f"{[str(node) for node in self.nodes]}"
+        return f"Tour(nodes={[str(node) for node in self.nodes]}, distance='{self.distance}', algorithm='{self.algorithm}')"
+
+        ##
+        ## End of function
+        ##
+
+    ##
+    ## String representation of the tour
+    ##
+    def __repr__(self) -> str:
+        """String representation of the tour
+
+        Returns:
+            str: The string representation of the tour
+        """
+        return self.__str__()
 
         ##
         ## End of function
@@ -173,7 +188,7 @@ class Tour:
     ## Normalize the tour
     ##
     def normalize(
-        self, min: List[float] = [0, 0], max: List[float] = [100, 100]
+        self, min: Union[float, int] = 0, max: Union[float, int] = 100
     ) -> "Tour":
         """Normalize the tour
 
@@ -184,9 +199,9 @@ class Tour:
         Returns:
             Tour: The normalized tour
         """
-        nodes = [node.normalize(min, max) for node in self.nodes]
+        self.nodes = [node.normalize(min, max) for node in self.nodes]
 
-        return Tour(nodes, self.distance, self.algorithm)
+        return self
 
         ##
         ## End of function
@@ -196,7 +211,7 @@ class Tour:
     ## Denormalize the tour
     ##
     def denormalize(
-        self, min: List[float] = [0, 0], max: List[float] = [100, 100]
+        self, min: Union[float, int] = 0, max: Union[float, int] = 100
     ) -> "Tour":
         """Denormalize the tour
 
@@ -207,9 +222,9 @@ class Tour:
         Returns:
             Tour: The denormalized tour
         """
-        nodes = [node.denormalize(min, max) for node in self.nodes]
+        self.nodes = [node.denormalize(min, max) for node in self.nodes]
 
-        return Tour(nodes, self.distance, self.algorithm)
+        return self
 
         ##
         ## End of function
@@ -286,7 +301,7 @@ class Tour:
     ##
     def print(self) -> None:
         """Print the tour"""
-        print(self)
+        print(self.__str__())
 
         ##
         ## End of function

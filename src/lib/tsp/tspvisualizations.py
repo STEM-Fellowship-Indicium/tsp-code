@@ -22,7 +22,7 @@ from lib.utils.three_opt_swap import three_opt_swap
 ##
 ## TSP Visualizations
 ##
-class TSPVisual:
+class TSPVisualizations:
     ##
     ## Brute force algorithm with visualization
     ##
@@ -425,9 +425,9 @@ class TSPVisual:
 
 
 ##
-## This tests the TSPVisual class only if we're executing THIS current file.
+## This tests the TSPVisualizations class only if we're executing THIS current file.
 ##
-## This is so that if we import the TSPVisual class from another file, this
+## This is so that if we import the TSPVisualizations class from another file, this
 ## code (in the 'if' statement) won't run.
 ##
 if __name__ == "__main__":
@@ -436,27 +436,27 @@ if __name__ == "__main__":
 
     ## Greedy heuristic visual
     print("Greedy heuristic visual")
-    TSPVisual.greedy_heuristic(graph)
+    TSPVisualizations.greedy_heuristic(graph)
     plt.pause(5)
 
     ## Brute force visual
     print("Brute force visual")
-    TSPVisual.brute_force(graph)
+    TSPVisualizations.brute_force(graph)
     plt.pause(5)
 
     ## Two-opt visual
     print("Two-opt visual")
-    TSPVisual.two_opt(graph)
+    TSPVisualizations.two_opt(graph)
     plt.pause(5)
 
     ## Three-opt visual
     print("Three-opt visual")
-    TSPVisual.three_opt(graph)
+    TSPVisualizations.three_opt(graph)
     plt.pause(5)
 
     ## Simulated Annealing visual
     print("Simulated Annealing visual")
-    TSPVisual.simulated_annealing(graph)
+    TSPVisualizations.simulated_annealing(graph)
     plt.pause(5)
 
 

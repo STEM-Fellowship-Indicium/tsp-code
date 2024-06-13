@@ -10,10 +10,9 @@ from lib.tsp.tspalgorithms import TSPAlgorithms
 from lib.utils.generate_graphs import generate_graphs
 from lib.utils.import_graphs import import_graphs
 from lib.utils.export_graphs import export_graphs
-from lib.tsp.tspvisual import TSPVisual
-from lib.types.tspalgorithm import TSPAlgorithm
+from lib.tsp.tspvisualizations import TSPVisualizations
+from lib.interfaces.tspalgorithm import TSPAlgorithm
 
-from typing import List
 import time
 
 
@@ -128,22 +127,22 @@ class MainWidget(QtWidgets.QWidget):
                 )
 
             if algorithm == TSPAlgorithm.BruteForce:
-                TSPVisual.brute_force(graph)
+                TSPVisualizations.brute_force(graph)
 
             elif algorithm == TSPAlgorithm.GeneticAlgorithm:
                 pass
 
             elif algorithm == TSPAlgorithm.GreedyHeuristic:
-                TSPVisual.greedy_heuristic(graph)
+                TSPVisualizations.greedy_heuristic(graph)
 
             elif algorithm == TSPAlgorithm.Opt2:
-                TSPVisual.two_opt(graph)
+                TSPVisualizations.two_opt(graph)
 
             elif algorithm == TSPAlgorithm.Opt3:
-                TSPVisual.three_opt(graph)
+                TSPVisualizations.three_opt(graph)
 
             elif algorithm == TSPAlgorithm.SimulatedAnnealing:
-                TSPVisual.simulated_annealing(graph)
+                TSPVisualizations.simulated_annealing(graph)
 
             else:
                 set_response_message("Invalid algorithm selected.")
