@@ -91,18 +91,19 @@ class Tour:
         ## We'll get the real node with the closest position to the predicted node.
         ##
         nodes = []
+
         for node in pred:
             closest_node = None
-            closest_distance = float("inf")
+            closest_distance = math.inf
 
             for real_node in real_nodes:
                 distance = math.sqrt(
-                    (real_node.x - node[0]) ** 2 + (real_node.y - node[1]) ** 2
+                    (node[0] - real_node.x) ** 2 + (node[1] - real_node.y) ** 2
                 )
 
                 if distance < closest_distance and real_node not in nodes:
-                    closest_distance = distance
                     closest_node = real_node
+                    closest_distance = distance
 
             nodes.append(closest_node)
 
@@ -232,13 +233,19 @@ class Tour:
     ##
     ## Convert the tour to a tensor
     ##
-    def to_tensor(self) -> Tensor:
+    def to_tensor(self, dtype=np.float32) -> Tensor:
         """Convert the tour to a tensor
 
         Returns:
             Tensor: The tensor representation of the tour
         """
-        return Tensor([node.to_numpy() for node in self.nodes])
+        nodes = [node for node in self.nodes]
+
+        ## Convert nodes to np array
+        nodes = np.array([node.to_numpy(dtype) for node in nodes])
+
+        ## Return the tensor
+        return Tensor(nodes)
 
         ##
         ## End of function

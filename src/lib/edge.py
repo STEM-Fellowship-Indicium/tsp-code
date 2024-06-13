@@ -133,7 +133,7 @@ class Edge:
         start_np = self.start.to_numpy()
         end_np = self.end.to_numpy()
 
-        return Tensor([start_np, end_np])
+        return Tensor(np.array([start_np, end_np]))
 
         ##
         ## End of function

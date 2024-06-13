@@ -141,6 +141,8 @@ class Graph:
             ## Load the graph from the file
             graph = json.load(file)
 
+        graph = graph[next(iter(graph))]
+
         ## Create the nodes and edges
         adj_matrix = graph["adj_matrix"]
         shortest_tour = Tour.from_map(graph["shortest_tour"])
@@ -219,7 +221,7 @@ class Graph:
             return Graph.from_map(graphs[id])
 
         elif isinstance(graphs, list):
-            return next(graph for graph in graphs if graph["id"] == id)
+            return Graph.from_map(next(graph for graph in graphs if graph["id"] == id))
 
         ##
         ## End of function
@@ -414,7 +416,9 @@ class Graph:
 
         ## Open the file (create it if it doesn't exist)
         with open(filename, "w") as file:
-            json.dump(self.to_map(), file, indent=4)
+            data = {self.id: self.to_map()}
+
+            json.dump(data, file, indent=4)
 
         ##
         ## End of function

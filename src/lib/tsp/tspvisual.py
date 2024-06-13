@@ -18,6 +18,7 @@ import itertools, math, random
 from lib.utils.calculate_tour_distance import calculate_tour_distance
 from lib.utils.three_opt_swap import three_opt_swap
 
+
 ##
 ## TSP Visualizations
 ##
@@ -147,7 +148,7 @@ class TSPVisual:
 
         plt.ioff()  ## Turn off interactive mode
         plt.show()
-        
+
     ##
     ## Three-opt algorithm with visualization
     ##
@@ -162,7 +163,11 @@ class TSPVisual:
         ax.scatter([node.x for node in nodes], [node.y for node in nodes], color="blue")
         for i in range(len(nodes)):
             next_i = (i + 1) % len(nodes)
-            ax.plot([nodes[i].x, nodes[next_i].x], [nodes[i].y, nodes[next_i].y], color="black")
+            ax.plot(
+                [nodes[i].x, nodes[next_i].x],
+                [nodes[i].y, nodes[next_i].y],
+                color="black",
+            )
         plt.draw()
         plt.pause(2)  # Pause to show initial configuration
 
@@ -182,16 +187,23 @@ class TSPVisual:
 
                             # Visualization update
                             ax.clear()
-                            ax.scatter([node.x for node in nodes], [node.y for node in nodes], color="blue")
+                            ax.scatter(
+                                [node.x for node in nodes],
+                                [node.y for node in nodes],
+                                color="blue",
+                            )
                             for l in range(len(nodes)):
                                 next_l = (l + 1) % len(nodes)
-                                ax.plot([nodes[l].x, nodes[next_l].x], [nodes[l].y, nodes[next_l].y], color="black")
+                                ax.plot(
+                                    [nodes[l].x, nodes[next_l].x],
+                                    [nodes[l].y, nodes[next_l].y],
+                                    color="black",
+                                )
                             plt.draw()
                             plt.pause(0.5)
 
         plt.ioff()
         plt.show()
-
 
     ##
     ## Greedy heuristic algorithm with visualization
@@ -319,7 +331,7 @@ class TSPVisual:
     ## Simulated Annealing algorithm with visualization
     ##
     @staticmethod
-    def simulated_annealing_visual(graph: Graph, initial_tour: Tour = None) -> None:
+    def simulated_annealing(graph: Graph, initial_tour: Tour = None) -> None:
         """Applies the Simulated Annealing algorithm with real-time visualization to find an optimal tour for the TSP.
 
         Args:
@@ -345,14 +357,18 @@ class TSPVisual:
         ##
         ## Initial drawing of the graph nodes
         ##
-        ax.scatter([node.x for node in current_nodes], [node.y for node in current_nodes], color="blue")
+        ax.scatter(
+            [node.x for node in current_nodes],
+            [node.y for node in current_nodes],
+            color="blue",
+        )
         # Draw initial tour
         for i in range(len(current_nodes)):
             next_i = (i + 1) % len(current_nodes)
             ax.plot(
                 [current_nodes[i].x, current_nodes[next_i].x],
                 [current_nodes[i].y, current_nodes[next_i].y],
-                color="black"
+                color="black",
             )
         plt.draw()
 
@@ -361,15 +377,14 @@ class TSPVisual:
         ##
         while temperature > 1:
             i, j = sorted(random.sample(range(len(current_nodes)), 2))
-            new_nodes = (
-                current_nodes[:i] +
-                current_nodes[i:j][::-1] +
-                current_nodes[j:]
-            )
+            new_nodes = current_nodes[:i] + current_nodes[i:j][::-1] + current_nodes[j:]
             new_distance = calculate_tour_distance(new_nodes)
 
-            if (new_distance < current_distance or
-                math.exp((current_distance - new_distance) / temperature) > random.random()):
+            if (
+                new_distance < current_distance
+                or math.exp((current_distance - new_distance) / temperature)
+                > random.random()
+            ):
                 current_nodes = new_nodes
                 current_distance = new_distance
 
@@ -381,7 +396,11 @@ class TSPVisual:
                 ax.clear()
 
                 ## Redraw the graph nodes
-                ax.scatter([node.x for node in current_nodes], [node.y for node in current_nodes], color="blue")
+                ax.scatter(
+                    [node.x for node in current_nodes],
+                    [node.y for node in current_nodes],
+                    color="blue",
+                )
 
                 ## Redraw the tour edges
                 for k in range(len(current_nodes)):
@@ -389,7 +408,7 @@ class TSPVisual:
                     ax.plot(
                         [current_nodes[k].x, current_nodes[next_k].x],
                         [current_nodes[k].y, current_nodes[next_k].y],
-                        color="black"
+                        color="black",
                     )
 
                 plt.draw()
@@ -399,7 +418,6 @@ class TSPVisual:
 
         plt.ioff()  ## Turn off interactive mode
         plt.show()
-
 
     ##
     ## End of class
@@ -429,6 +447,16 @@ if __name__ == "__main__":
     ## Two-opt visual
     print("Two-opt visual")
     TSPVisual.two_opt(graph)
+    plt.pause(5)
+
+    ## Three-opt visual
+    print("Three-opt visual")
+    TSPVisual.three_opt(graph)
+    plt.pause(5)
+
+    ## Simulated Annealing visual
+    print("Simulated Annealing visual")
+    TSPVisual.simulated_annealing(graph)
     plt.pause(5)
 
 
