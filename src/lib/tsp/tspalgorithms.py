@@ -104,8 +104,9 @@ class TSPAlgorithms:
         ##
         ## Keep this in iterator to prevent memory error
         ##
-        for path in itertools.permutations(graph.nodes, len(graph.nodes)):
-            path = list(path)
+        indices = [i for i in range(len(graph.nodes))]
+        for _path in itertools.permutations(indices, len(graph.nodes)):
+            path = [graph.nodes[i] for i in _path]
             
             ##
             ## Calculate the distance of the path
