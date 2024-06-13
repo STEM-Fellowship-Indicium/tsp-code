@@ -345,7 +345,7 @@ class TSPVisual:
         current_distance = calculate_tour_distance(current_nodes)
         best_nodes = current_nodes[:]
         best_distance = current_distance
-        temperature = 10000
+        temperature = 195
         cooling_rate = 0.995
 
         ##
