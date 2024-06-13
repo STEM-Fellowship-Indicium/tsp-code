@@ -11,7 +11,7 @@ if __name__ == "__main__":
 ## Imports
 ##
 from torch import Tensor
-from typing import List
+from typing import Union
 import numpy as np
 import json
 
@@ -50,7 +50,22 @@ class Node:
         Returns:
             _type_: The string representation of the node
         """
-        return f"({self.x}, {self.y})"
+        return f"Node(idx='{self.idx}', x='{self.x}', y='{self.y}')"
+
+        ##
+        ## End of function
+        ##
+
+    ##
+    ## String representation of the node
+    ##
+    def __repr__(self) -> str:
+        """String representation of the node
+
+        Returns:
+            _type_: The string representation of the node
+        """
+        return self.__str__()
 
         ##
         ## End of function
@@ -115,13 +130,13 @@ class Node:
     ##
     ## Convert the node to a tensor
     ##
-    def to_tensor(self) -> Tensor:
+    def tensor(self, dtype=np.float32, normalize=(-1, -1)) -> Tensor:
         """Convert the node to a tensor
 
         Returns:
             Tensor: The tensor representation of the node
         """
-        return Tensor([self.x, self.y])
+        return Tensor(self.numpy(dtype, normalize))
 
         ##
         ## End of function
@@ -130,20 +145,22 @@ class Node:
     ##
     ## Convert the node to a numpy array
     ##
-    def to_numpy(self, dtype=np.float32, normalize=True) -> np.ndarray:
+    def numpy(self, dtype=np.float32, normalize=(-1, -1)) -> np.ndarray:
         """Convert the node to a numpy array
 
         Returns:
             np.ndarray: The numpy array representation of the node
         """
 
-        if normalize:
-            self.normalize()
+        norm_min, norm_max = normalize
+
+        if norm_min != -1 and norm_max != -1:
+            self.normalize(norm_min, norm_max)
 
         np_array = np.array([self.x, self.y], dtype=dtype)
 
-        if normalize:
-            self.denormalize()
+        if norm_min != -1 and norm_max != -1:
+            self.denormalize(norm_min, norm_max)
 
         return np_array
 
@@ -154,17 +171,17 @@ class Node:
     ##
     ## Return a normalized version of the node
     ##
-    ## This takes a node and normalizes its x and y values to be between 0 and 1
+    ## This takes a node and normalizes it depending on min and max.
+    ##
+    ## min of 0 and max of 100 is just default since we're typically working
+    ## with 0-100 coordinates.
     ##
     def normalize(
-        self, min: List[float] = [0, 0], max: List[float] = [100, 100]
+        self, min: Union[float, int] = 0, max: Union[float, int] = 100
     ) -> "Node":
         """Normalize the node"""
-        min_x, min_y = min
-        max_x, max_y = max
-
-        self.x = (self.x - min_x) / (max_x - min_x)
-        self.y = (self.y - min_y) / (max_y - min_y)
+        self.x = (self.x - min) / (max - min)
+        self.y = (self.y - min) / (max - min)
 
         return self
 
@@ -176,14 +193,11 @@ class Node:
     ## Denormalize the node
     ##
     def denormalize(
-        self, min: List[float] = [0, 0], max: List[float] = [100, 100]
+        self, min: Union[float, int] = 0, max: Union[float, int] = 100
     ) -> "Node":
         """Denormalize the node"""
-        min_x, min_y = min
-        max_x, max_y = max
-
-        self.x = self.x * (max_x - min_x) + min_x
-        self.y = self.y * (max_y - min_y) + min_y
+        self.x = self.x * (max - min) + min
+        self.y = self.y * (max - min) + min
 
         return self
 
@@ -211,7 +225,7 @@ class Node:
     ##
     def print(self) -> None:
         """Print the node"""
-        print(f"Node {self.idx}: ({self.x}, {self.y})")
+        print(self.__str__())
 
         ##
         ## End of function
@@ -234,10 +248,10 @@ if __name__ == "__main__":
     print(node.to_json())
     node.print()
 
-    nump = node.to_numpy()
+    nump = node.numpy()
     print(nump)
 
-    tens = node.to_tensor()
+    tens = node.tensor()
     print(tens)
 
     norm_prev = node.normalize()

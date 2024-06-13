@@ -11,7 +11,7 @@ if __name__ == "__main__":
 ##
 from lib.graph import Graph
 from lib.tsp.tspalgorithms import TSPAlgorithms
-from lib.types.tspalgorithm import TSPAlgorithm
+from lib.interfaces.tspalgorithm import TSPAlgorithm
 from typing import List
 import json
 

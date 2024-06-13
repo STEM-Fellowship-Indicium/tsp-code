@@ -83,7 +83,22 @@ class Graph:
         Returns:
             _type_: The string representation of the graph
         """
-        return f"[{[str(node) for node in self.nodes]}, {[str(edge) for edge in self.edges]}]"
+        return f"Graph(id='{self.id}', nodes={[str(node) for node in self.nodes]}, edges={[str(edge) for edge in self.edges]}, shortest_tour='{self.shortest_tour}')"
+
+        ##
+        ## End of function
+        ##
+
+    ##
+    ## String representation of the graph
+    ##
+    def __repr__(self) -> str:
+        """String representation of the graph
+
+        Returns:
+            _type_: The string representation of the graph
+        """
+        return self.__str__()
 
         ##
         ## End of function
@@ -433,7 +448,7 @@ class Graph:
         Returns:
             Tensor: The adjacency matrix as a tensor
         """
-        return Tensor(self.adj_matrix)
+        return Tensor(np.array(self.adj_matrix))
 
         ##
         ## End of function
@@ -461,13 +476,13 @@ class Graph:
     ##
     ## Convert the graph to a tensor
     ##
-    def to_tensor(self) -> Tensor:
+    def tensor(self, dtype=np.float32, normalize=(-1, -1)) -> Tensor:
         """Convert the graph to a tensor
 
         Returns:
             Tensor: The tensor representation of the graph
         """
-        return Tensor([node.to_numpy() for node in self.nodes])
+        return Tensor(self.numpy(dtype, normalize))
 
         ##
         ## End of function
@@ -476,13 +491,13 @@ class Graph:
     ##
     ## Convert the graph to a numpy array
     ##
-    def to_numpy(self, dtype=np.float32) -> np.ndarray:
+    def numpy(self, dtype=np.float32, normalize=(-1, -1)) -> np.ndarray:
         """Convert the graph to a numpy array
 
         Returns:
             np.ndarray: The numpy representation of the graph
         """
-        return np.array([node.to_numpy(dtype) for node in self.nodes])
+        return np.array([node.numpy(dtype, normalize) for node in self.nodes])
 
         ##
         ## End of function
@@ -513,11 +528,7 @@ class Graph:
     ##
     def print(self) -> None:
         """Print the graph"""
-        print(f"Graph: {self.id}")
-        print(f"Nodes: {[str(node) for node in self.nodes]}")
-        print(f"Edges: {[str(edge) for edge in self.edges]}")
-        print(f"Shortest tour: {self.shortest_tour}")
-        print(f"Adjacency matrix: {self.adj_matrix}")
+        print(self.__str__())
 
         ##
         ## End of function
@@ -570,7 +581,7 @@ if __name__ == "__main__":
     graph4 = Graph.rand(10)
 
     ## Get the graph as a tensor
-    tensor = graph4.to_tensor()
+    tensor = graph4.tensor()
     print(tensor)
 
     print(graph4.get_adj_matrix_tensor())

@@ -11,7 +11,7 @@ if __name__ == "__main__":
 ## Imports
 ##
 import json
-from typing import List
+from typing import Union
 from torch import Tensor
 import numpy as np
 from lib.node import Node
@@ -53,7 +53,22 @@ class Edge:
         Returns:
             _type_: The string representation of the edge
         """
-        return f"{self.start} --{self.weight}--> {self.end}"
+        return f"Edge(idx={self.idx}, weight={self.weight}, start={self.start}, end={self.end})"
+
+        ##
+        ## End of function
+        ##
+
+    ##
+    ## String representation of the edge
+    ##
+    def __repr__(self) -> str:
+        """String representation of the edge
+
+        Returns:
+            _type_: The string representation of the edge
+        """
+        return self.__str__()
 
         ##
         ## End of function
@@ -124,16 +139,13 @@ class Edge:
     ##
     ## Convert the edge to a tensor
     ##
-    def to_tensor(self) -> Tensor:
+    def tensor(self, dtype=np.float32, normalize=(-1, -1)) -> Tensor:
         """Convert the edge to a tensor
 
         Returns:
             Tensor: The tensor representation of the edge
         """
-        start_np = self.start.to_numpy()
-        end_np = self.end.to_numpy()
-
-        return Tensor(np.array([start_np, end_np]))
+        return Tensor(self.numpy(dtype, normalize))
 
         ##
         ## End of function
@@ -142,16 +154,16 @@ class Edge:
     ##
     ## Convert the edge to a numpy array
     ##
-    def to_numpy(self, dtype=np.float32) -> np.ndarray:
+    def numpy(self, dtype=np.float32, normalize=(-1, -1)) -> np.ndarray:
         """Convert the edge to a numpy array
 
         Returns:
             np.ndarray: The numpy array representation of the edge
         """
-        start_np = self.start.to_numpy()
-        end_np = self.end.to_numpy()
+        start_np = self.start.numpy(dtype, normalize)
+        end_np = self.end.numpy(dtype, normalize)
 
-        return np.array([start_np, end_np], dtype=dtype)
+        return np.array([start_np, end_np])
 
         ##
         ## End of function
@@ -161,7 +173,7 @@ class Edge:
     ## Normalize the edge
     ##
     def normalize(
-        self, min: List[float] = [0, 0], max: List[float] = [100, 100]
+        self, min: Union[float, int] = 0, max: Union[float, int] = 100
     ) -> None:
         """Normalize the edge"""
         self.start.normalize(min, max)
@@ -175,7 +187,7 @@ class Edge:
     ## Denormalize the edge
     ##
     def denormalize(
-        self, min: List[float] = [0, 0], max: List[float] = [100, 100]
+        self, min: Union[float, int] = 0, max: Union[float, int] = 100
     ) -> None:
         """Denormalize the edge"""
         self.start.denormalize(min, max)
@@ -205,7 +217,7 @@ class Edge:
     ##
     def print(self) -> None:
         """Print the edge"""
-        print(f"Edge {self.idx}: {self.start} --{self.weight}--> {self.end}")
+        print(self.__str__())
 
         ##
         ## End of function
@@ -233,7 +245,7 @@ if __name__ == "__main__":
 
     e.print()
 
-    print(e.to_tensor())
+    print(e.tensor())
 
 ##
 ## End of file
