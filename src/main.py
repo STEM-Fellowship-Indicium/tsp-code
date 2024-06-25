@@ -250,6 +250,28 @@ class MainWidget(QtWidgets.QWidget):
                 f"Average speed of {algorithm} for {num_graphs} graphs with {num_nodes} nodes each: {(end - start) / num_graphs} seconds."
             )
 
+        ##
+        ## 9. Get the shortest tour distance
+        ##
+        def _get_shortest_tour_distance(graph: Graph, algorithm: str) -> float:
+            if graph is None:
+                return set_response_message(
+                    "No graph to calculate distance. Please generate (or import) a single graph (4) before this."
+                )
+
+            try:
+                TSPAlgorithms.set_shortest_tour(graph, algorithm)
+
+                dist = graph.shortest_tour.distance
+
+                set_response_message(
+                    f"The shortest tour distance for the graph using '{algorithm}' is {dist}"
+                )
+            except Exception as e:
+                set_response_message(
+                    f"Error calculating the shortest tour distance: {e}"
+                )
+
         ## ## ## ## ## ## ##
         ##                ##
         ## The GUI layout ##
@@ -259,6 +281,10 @@ class MainWidget(QtWidgets.QWidget):
         ## Layout
         self.layout = QtWidgets.QVBoxLayout()
         self.setLayout(self.layout)
+
+        ## Global labels
+        self.new_label = QtWidgets.QLabel("New!")
+        self.new_label.setFont(PySide6.QtGui.QFont("Arial", 20))
 
         ## Text showing the number of graphs
         self.num_graphs_label = QtWidgets.QLabel("Number of graphs: 0")
@@ -402,7 +428,6 @@ class MainWidget(QtWidgets.QWidget):
         ##
         ## Space between the sections
         ##
-        self.layout.addWidget(QtWidgets.QLabel(""))
         self.layout.addWidget(QtWidgets.QLabel(""))
 
         ##
@@ -550,6 +575,44 @@ class MainWidget(QtWidgets.QWidget):
         ## Add to the layout
         self.export_single_graph_layout.addWidget(self.export_single_graph_button)
         self.layout.addLayout(self.export_single_graph_layout)
+
+        ##
+        ## Space between the sections
+        ##
+        self.layout.addWidget(QtWidgets.QLabel(""))
+
+        ##
+        ## 9. Get the shortest tour distance of the current graph
+        ##
+        self.get_shortest_dist_layout = QtWidgets.QHBoxLayout()
+        self.get_shortest_dist_label = QtWidgets.QLabel(
+            "9. Get the shortest tour of a single graph (current)"
+        )
+        self.get_shortest_dist_layout.addWidget(self.new_label)
+        self.get_shortest_dist_layout.addWidget(self.get_shortest_dist_label)
+
+        ## Dropdown to select the algorithm to find the graph shortest tour
+        self.get_shortest_dist_dropdown = QtWidgets.QComboBox()
+        self.get_shortest_dist_dropdown.addItem(TSPAlgorithm.BruteForce)
+        self.get_shortest_dist_dropdown.addItem(TSPAlgorithm.GeneticAlgorithm)
+        self.get_shortest_dist_dropdown.addItem(TSPAlgorithm.GreedyHeuristic)
+        self.get_shortest_dist_dropdown.addItem(TSPAlgorithm.Opt2)
+        self.get_shortest_dist_dropdown.addItem(TSPAlgorithm.Opt3)
+        self.get_shortest_dist_dropdown.addItem(TSPAlgorithm.SimulatedAnnealing)
+        self.get_shortest_dist_layout.addWidget(self.get_shortest_dist_dropdown)
+
+        ## Button to visualize the graph
+        self.get_shortest_dist_button = QtWidgets.QPushButton("Calculate distance")
+        self.get_shortest_dist_layout.addWidget(self.get_shortest_dist_button)
+        self.get_shortest_dist_button.clicked.connect(
+            lambda: _get_shortest_tour_distance(
+                self.graph, self.get_shortest_dist_dropdown.currentText()
+            )
+        )
+
+        ## Add to the layout
+        self.get_shortest_dist_layout.addWidget(self.get_shortest_dist_button)
+        self.layout.addLayout(self.get_shortest_dist_layout)
 
         ## Response message text
         self.response_message = QtWidgets.QLabel("")
