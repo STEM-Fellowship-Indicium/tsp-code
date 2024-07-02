@@ -76,6 +76,9 @@ class TSPAlgorithms:
         elif algorithm == TSPAlgorithm.Opt2:
             return TSPAlgorithms.two_opt(graph)
 
+        elif algorithm == TSPAlgorithm.Opt3:
+            return TSPAlgorithms.three_opt(graph)
+
         ## Return the shortest tour
         return Tour(algorithm=TSPAlgorithm.NoneType)
 
@@ -107,7 +110,7 @@ class TSPAlgorithms:
         indices = [i for i in range(len(graph.nodes))]
         for _path in itertools.permutations(indices, len(graph.nodes)):
             path = [graph.nodes[i] for i in _path]
-            
+
             ##
             ## Calculate the distance of the path
             ##
@@ -197,7 +200,7 @@ class TSPAlgorithms:
     ##
     ## Greedy Heuristic
     ##
-    
+
     @staticmethod
     def three_opt(graph: Graph, tour: Tour = None) -> Tour:
         """Applies the 3-opt algorithm to improve an initial tour and returns the improved tour as a Tour object.
@@ -212,7 +215,7 @@ class TSPAlgorithms:
         nodes = tour.nodes if tour is not None else graph.nodes
         best_distance = calculate_tour_distance(nodes)
         improved = True
-        
+
         while improved:
             improved = False
             n = len(nodes)
@@ -226,14 +229,12 @@ class TSPAlgorithms:
                             nodes, best_distance = new_nodes, new_distance
                             improved = True
 
-
         # Construct and return the improved tour
         return Tour(nodes=nodes, distance=best_distance, algorithm=TSPAlgorithm.Opt3)
         ##
         ## End of function
         ##
 
-      
     ##
     ## Simulated annealing algorithm
     ##
@@ -264,15 +265,14 @@ class TSPAlgorithms:
         ##
         while temperature > 1:
             i, j = sorted(random.sample(range(len(current_nodes)), 2))
-            new_nodes = (
-                current_nodes[:i] +
-                current_nodes[i:j][::-1] +
-                current_nodes[j:]
-            )
+            new_nodes = current_nodes[:i] + current_nodes[i:j][::-1] + current_nodes[j:]
             new_distance = calculate_tour_distance(new_nodes)
 
-            if (new_distance < current_distance or
-                math.exp((current_distance - new_distance) / temperature) > random.random()):
+            if (
+                new_distance < current_distance
+                or math.exp((current_distance - new_distance) / temperature)
+                > random.random()
+            ):
                 current_nodes = new_nodes
                 current_distance = new_distance
 
@@ -283,12 +283,15 @@ class TSPAlgorithms:
             temperature *= cooling_rate
 
         ## Assuming Tour class takes a list of Node objects, distance, and algorithm name
-        return Tour(nodes=best_nodes, distance=best_distance, algorithm=TSPAlgorithm.SimulatedAnnealing)
+        return Tour(
+            nodes=best_nodes,
+            distance=best_distance,
+            algorithm=TSPAlgorithm.SimulatedAnnealing,
+        )
 
         ##
         ## End of function
         ##
-    
 
     @staticmethod
     def greedy_heuristic(graph: Graph) -> Tour:
@@ -365,7 +368,6 @@ class TSPAlgorithms:
         ##
         ## End of function
         ##
-
 
 
 ##
