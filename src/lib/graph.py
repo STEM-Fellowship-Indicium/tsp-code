@@ -11,7 +11,7 @@ if __name__ == "__main__":
 ## Imports
 ##
 import json
-from typing import List
+from typing import List, Union
 from torch import Tensor
 import numpy as np
 from datetime import datetime
@@ -57,7 +57,7 @@ class Graph:
             self.set_nodes_to_edges()
 
         self.node_idxs = [node.idx for node in nodes]
-        self.set_adj_matrix()
+        # self.set_adj_matrix()
 
         ##
         ## Generate a unique id for the graph. Parse everything to JSON then hash it with SHA-512.
@@ -214,7 +214,7 @@ class Graph:
     ## Import a graph from a file with a bunch of maps
     ##
     @staticmethod
-    def from_cache(filename: str, id: str) -> "Graph":
+    def from_cache(filename: str, id: str) -> Union["Graph", None]:
         """Import a graph from a file with a bunch of maps
 
         Args:
@@ -233,10 +233,16 @@ class Graph:
         ## the array to find the graph with the id
         ##
         if isinstance(graphs, dict):
+            ## If there is only one graph, return that
+            if len(graphs) == 1:
+                return Graph.from_map(next(iter(graphs.values())))
+
             return Graph.from_map(graphs[id])
 
         elif isinstance(graphs, list):
             return Graph.from_map(next(graph for graph in graphs if graph["id"] == id))
+
+        return None
 
         ##
         ## End of function

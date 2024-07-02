@@ -1,6 +1,6 @@
 {
-    "6f3059ecd34adba7e68bfad7822391f694c618296f8b9be91a142d2d4af5c0db2d5bafde09715d444361bf587e4428c2917d6b3d5687603a15bb90dda0861752": {
-        "id": "6f3059ecd34adba7e68bfad7822391f694c618296f8b9be91a142d2d4af5c0db2d5bafde09715d444361bf587e4428c2917d6b3d5687603a15bb90dda0861752",
+    "8c74e864eb3d9dc0e75b3e6c315c561294f406e2f65a802dcfd37a0e225a443d6f536c20293cffa55de84dacb7eb1c0aacade6f471057fc65ce3e9ca22888015": {
+        "id": "8c74e864eb3d9dc0e75b3e6c315c561294f406e2f65a802dcfd37a0e225a443d6f536c20293cffa55de84dacb7eb1c0aacade6f471057fc65ce3e9ca22888015",
         "nodes": [
             {
                 "idx": 0,
@@ -29,16 +29,7 @@
                 }
             }
         ],
-        "adj_matrix": [
-            [
-                0,
-                1.0
-            ],
-            [
-                1.0,
-                0
-            ]
-        ],
+        "adj_matrix": [],
         "shortest_tour": null
     }
 }

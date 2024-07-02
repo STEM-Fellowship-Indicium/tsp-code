@@ -151,9 +151,6 @@ class MainWidget(QtWidgets.QWidget):
         ## 6. Import single graph from file
         ##
         def _import_single_graph(file_name: str, graphId: str):
-            if graphId == "":
-                return set_response_message("Please enter a graph ID.")
-
             if file_name == "":
                 return set_response_message(
                     "Please enter a valid file name to import the graph from."
@@ -180,6 +177,7 @@ class MainWidget(QtWidgets.QWidget):
                 )
 
             except Exception as e:
+                print(e)
                 set_response_message(
                     f"Graph {graphId[0:50]}... not found in {file_name}"
                 )
@@ -586,7 +584,7 @@ class MainWidget(QtWidgets.QWidget):
         ##
         self.get_shortest_dist_layout = QtWidgets.QHBoxLayout()
         self.get_shortest_dist_label = QtWidgets.QLabel(
-            "9. Get the shortest tour of a single graph (current)"
+            "9. Get the shortest tour distance of a single graph (current)"
         )
         self.get_shortest_dist_layout.addWidget(self.new_label)
         self.get_shortest_dist_layout.addWidget(self.get_shortest_dist_label)
