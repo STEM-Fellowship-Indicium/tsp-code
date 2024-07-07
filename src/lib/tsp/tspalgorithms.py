@@ -16,6 +16,7 @@ from lib.interfaces.tspalgorithm import TSPAlgorithm
 from lib.utils.create_dist_matrix import create_dist_matrix
 from lib.utils.calculate_tour_distance import calculate_tour_distance
 from lib.utils.three_opt_swap import three_opt_swap
+from lib.utils.genetic_algo import run_generations
 import itertools, math, random
 
 from lib.utils.duration import duration
@@ -69,6 +70,9 @@ class TSPAlgorithms:
 
         elif algorithm == TSPAlgorithm.SimulatedAnnealing:
             return TSPAlgorithms.simulated_annealing(graph)
+        
+        elif algorithm == TSPAlgorithm.SimulatedAnnealingGenetic:
+            return TSPAlgorithms.simulated_annealing_with_genetic(graph)
 
         elif algorithm == TSPAlgorithm.GreedyHeuristic:
             return TSPAlgorithms.greedy_heuristic(graph)
@@ -259,6 +263,8 @@ class TSPAlgorithms:
         best_distance = current_distance
         temperature = 195
         cooling_rate = 0.995
+        #temperature = 270
+        #cooling_rate = 0.99
 
         ##
         ## Our main loop
@@ -292,6 +298,44 @@ class TSPAlgorithms:
         ##
         ## End of function
         ##
+
+    ##
+    ## Simulated annealing algorithm
+    ##
+
+    @staticmethod
+    def simulated_annealing_with_genetic(graph: Graph, initial_tour: Tour = None) -> Tour:
+        """Applies the Simulated Annealing algorithm with genetic mutation to find an optimal tour for the TSP.
+
+        Args:
+            graph (Graph): The graph representing all the cities and distances between them.
+            initial_tour (Tour): An optional initial tour from which to start the optimization.
+
+        Returns:
+            Tour: An optimized tour found using GeAn
+        """
+
+        ##
+        ## Calculate the shortest tour with brute force
+        ##
+        bruteForce = calculate_tour_distance(TSPAlgorithms.get_shortest_tour(graph, "BruteForce").nodes)
+        #bruteForce = 118282
+        #print("BRUTE: ", bruteForce)
+
+        ##
+        ## Initial setup
+        ##
+        current_nodes = initial_tour.nodes if initial_tour is not None else graph.nodes
+        current_distance = calculate_tour_distance(current_nodes)
+        best_nodes = current_nodes[:]
+        best_distance = current_distance
+        
+
+        if (len(best_nodes) > 2):
+            best_nodes, best_distance = run_generations(100, bruteForce, best_nodes, best_distance)
+
+        ## Assuming Tour class takes a list of Node objects, distance, and algorithm name
+        return Tour(nodes=best_nodes, distance=best_distance, algorithm=TSPAlgorithm.SimulatedAnnealing)
 
     @staticmethod
     def greedy_heuristic(graph: Graph) -> Tour:

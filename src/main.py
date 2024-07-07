@@ -261,6 +261,7 @@ class MainWidget(QtWidgets.QWidget):
                 TSPAlgorithms.set_shortest_tour(graph, algorithm)
 
                 dist = graph.shortest_tour.distance
+                #print(str(dist))
 
                 set_response_message(
                     f"The shortest tour distance for the graph using '{algorithm}' is {dist}"
@@ -315,6 +316,7 @@ class MainWidget(QtWidgets.QWidget):
         self.generate_graphs_algorithm.addItem(TSPAlgorithm.Opt2)
         self.generate_graphs_algorithm.addItem(TSPAlgorithm.Opt3)
         self.generate_graphs_algorithm.addItem(TSPAlgorithm.SimulatedAnnealing)
+        self.generate_graphs_algorithm.addItem(TSPAlgorithm.SimulatedAnnealingGenetic)
         self.generate_graphs_layout.addWidget(self.generate_graphs_algorithm)
 
         ## Button to generate the graphs
@@ -407,6 +409,7 @@ class MainWidget(QtWidgets.QWidget):
         self.average_speed_dropdown.addItem(TSPAlgorithm.Opt2)
         self.average_speed_dropdown.addItem(TSPAlgorithm.Opt3)
         self.average_speed_dropdown.addItem(TSPAlgorithm.SimulatedAnnealing)
+        self.average_speed_dropdown.addItem(TSPAlgorithm.SimulatedAnnealingGenetic)
         self.average_speed_layout.addWidget(self.average_speed_dropdown)
 
         ## Button to get the average speed
@@ -453,6 +456,7 @@ class MainWidget(QtWidgets.QWidget):
         self.generate_single_graph_algorithm.addItem(TSPAlgorithm.Opt2)
         self.generate_single_graph_algorithm.addItem(TSPAlgorithm.Opt3)
         self.generate_single_graph_algorithm.addItem(TSPAlgorithm.SimulatedAnnealing)
+        self.generate_single_graph_algorithm.addItem(TSPAlgorithm.SimulatedAnnealingGenetic)
         self.generate_single_graph_layout.addWidget(
             self.generate_single_graph_algorithm
         )
@@ -597,6 +601,7 @@ class MainWidget(QtWidgets.QWidget):
         self.get_shortest_dist_dropdown.addItem(TSPAlgorithm.Opt2)
         self.get_shortest_dist_dropdown.addItem(TSPAlgorithm.Opt3)
         self.get_shortest_dist_dropdown.addItem(TSPAlgorithm.SimulatedAnnealing)
+        self.get_shortest_dist_dropdown.addItem(TSPAlgorithm.SimulatedAnnealingGenetic)
         self.get_shortest_dist_layout.addWidget(self.get_shortest_dist_dropdown)
 
         ## Button to visualize the graph
