@@ -33,6 +33,7 @@ class TSPAlgorithm:
     Opt2: str = "2-Opt"
     Opt3: str = "3-Opt"
     SimulatedAnnealing: str = "SimulatedAnnealing"
+    SimulatedAnnealingGenetic: str = "SimulatedAnnealingGenetic"
 
     ##
     ## End of class
